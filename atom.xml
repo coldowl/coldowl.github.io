@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Coldowl‘s Blog</title>
+  
+  <subtitle>小鸮的博客</subtitle>
+  <link href="http://example.com/atom.xml" rel="self"/>
+  
+  <link href="http://example.com/"/>
+  <updated>2022-01-23T14:21:48.085Z</updated>
+  <id>http://example.com/</id>
+  
+  <author>
+    <name>Coldowl</name>
+    
+  </author>
+  
+  <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>基本的Markdown语法</title>
+    <link href="http://example.com/2022/01/23/%E5%9F%BA%E6%9C%AC%E7%9A%84Markdown%E8%AF%AD%E6%B3%95/"/>
+    <id>http://example.com/2022/01/23/%E5%9F%BA%E6%9C%AC%E7%9A%84Markdown%E8%AF%AD%E6%B3%95/</id>
+    <published>2022-01-23T14:09:08.000Z</published>
+    <updated>2022-01-23T14:21:48.085Z</updated>
+    
+    <content type="html"><![CDATA[<h3 id="标题-Headers"><a href="#标题-Headers" class="headerlink" title="标题(Headers)"></a>标题(Headers)</h3><ul><li><p><strong>#</strong> + <strong>空格</strong> ：放在标题文字前，#号数量1-6代表标题等级1-6</p><pre data-enlighter-language=""># 一级标题## 二级标题### 三级标题#### 四级标题##### 五级标题###### 六级标题</pre></li><li><p><strong>文字下方加”-“或”&#x3D;”</strong> ：用等于号(<strong>&#x3D;</strong>)表示一级标题，用减号(<strong>-</strong>)表示二级标题</p><pre data-enlighter-language="">一级标题=======二级标题-------</pre></li></ul><h3 id="段落-Paragraph-and-line-breaks"><a href="#段落-Paragraph-and-line-breaks" class="headerlink" title="段落(Paragraph and line breaks)"></a>段落(Paragraph and line breaks)</h3><p>一个段落是一个或多个连续的文本行。在markdown源代码中，段落由<strong>两个以上</strong>空行分隔。使用<code>Shift+Return</code>可以创建一个单行换行符(a single line break)。但大多数其他的markdown解析器会忽略单个单行换行符，所以为了让其他标记解析器识别您的换行，您可以在行尾留下两个空格，或者插入<code> &lt;br/&gt;</code>。</p><h3 id="字体样式-Style"><a href="#字体样式-Style" class="headerlink" title="字体样式(Style)"></a>字体样式(Style)</h3><ul><li><p><strong>斜体</strong> ：<code>*斜体文本*</code>  <code>_斜体文本_</code> </p></li><li><p><strong>粗体</strong> ：<code>**粗体文本**</code> <code>__粗体文本__</code></p></li><li><p><strong>粗斜体</strong> ：<code>***粗斜体文本***</code> <code> ___粗斜体文本___</code></p></li><li><p><strong>分割线</strong> ：用三个以上的星号(<em>****)、加号(<strong>+</strong>)、底号(</em>*_**)或是减号(<strong>-</strong>)表示，中间可以用空格隔开</p><pre data-enlighter-language="">**** * ******_____- - -----------</pre></li><li><p><strong>删除线</strong> ：<code>~~划掉文本~~</code></p></li><li><p><strong>下划线</strong> ：<code>&lt;u&gt; 下划线 &lt;/u&gt;</code></p></li><li><p><strong>脚注</strong> ：<code>[^被脚注的文本] </code></p></li></ul><h3 id="列表-List"><a href="#列表-List" class="headerlink" title="列表(List)"></a>列表(List)</h3><ul><li><p><strong>有序列表</strong> ：使用数字并加上点(<strong>.</strong>)来表示</p><pre data-enlighter-language="">1. 第一项2. 第二项3. 第三项</pre></li><li><p><strong>无序列表</strong> ：用星号(<strong>*</strong>)加号(<strong>+</strong>)或是减号(<strong>-</strong>)作为列表标记，标记后添加一个空格</p><pre data-enlighter-language="">* 第一项* 第二项* 第三项</pre></li><li><p><strong>嵌套列表</strong> ：在子列表中的选项前面添加四个空格</p><pre data-enlighter-language="">1. 第一项：    - 第一项嵌套的第一个元素    - 第一项嵌套的第二个元素2. 第二项：    - 第二项嵌套的第一个元素    - 第二项嵌套的第二个元素</pre></li></ul><h3 id="区块-Blockquotes"><a href="#区块-Blockquotes" class="headerlink" title="区块(Blockquotes)"></a>区块(Blockquotes)</h3><p>区块引用是在段落开头使用 <strong>&gt;</strong> 符号 ，然后后面紧跟一个<strong>空格</strong>符号</p><pre data-enlighter-language="">> 这是一个有两段的区块引用。这是第一段> 这是第二段> 这是另一个区块引用，用三个空行分隔两个区块。>区块嵌套第一层>>区块嵌套第二层>>>区块嵌套第三层</pre><hr><p><em>后续会慢慢补充……</em></p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h3 id=&quot;标题-Headers&quot;&gt;&lt;a href=&quot;#标题-Headers&quot; class=&quot;headerlink&quot; title=&quot;标题(Headers)&quot;&gt;&lt;/a&gt;标题(Headers)&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;#&lt;/strong&gt; + &lt;stron</summary>
+      
+    
+    
+    
+    
+    <category term="markdown" scheme="http://example.com/tags/markdown/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Hello World</title>
+    <link href="http://example.com/2021/08/07/hello-world/"/>
+    <id>http://example.com/2021/08/07/hello-world/</id>
+    <published>2021-08-07T03:09:38.918Z</published>
+    <updated>2022-01-08T02:49:00.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p><h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><pre data-enlighter-language="bash">$ hexo new "My New Post"</pre><p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p><h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><pre data-enlighter-language="bash">$ hexo server</pre><p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p><h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><pre data-enlighter-language="bash">$ hexo generate</pre><p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p><h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><pre data-enlighter-language="bash">$ hexo deploy</pre><p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;Welcome to &lt;a href=&quot;https://hexo.io/&quot;&gt;Hexo&lt;/a&gt;! This is your very first post. Check &lt;a href=&quot;https://hexo.io/docs/&quot;&gt;documentation&lt;/a&gt; for</summary>
+      
+    
+    
+    
+    
+  </entry>
+  
+</feed>
