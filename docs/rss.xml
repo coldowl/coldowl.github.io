@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Blog Title</title><link>https://coldowl.github.io</link><description>Blog description</description><copyright>Blog Title</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://github.githubassets.com/favicons/favicon.svg</url><title>avatar</title><link>https://coldowl.github.io</link></image><lastBuildDate>Mon, 08 Jul 2024 09:16:58 +0000</lastBuildDate><managingEditor>Blog Title</managingEditor><ttl>60</ttl><webMaster>Blog Title</webMaster><item><title>第一篇博客</title><link>https://coldowl.github.io/post/di-yi-pian-bo-ke.html</link><description>Hello World！&#13;
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>COldOwL</title><link>https://blog.coldowl.com</link><description>人生的意义在于尽可能多地经历，而不是尽可能少地犯错。</description><copyright>COldOwL</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://coldowl.github.io/favicon.svg</url><title>avatar</title><link>https://blog.coldowl.com</link></image><lastBuildDate>Wed, 10 Jul 2024 07:42:48 +0000</lastBuildDate><managingEditor>COldOwL</managingEditor><ttl>60</ttl><webMaster>COldOwL</webMaster><item><title>第一篇博客</title><link>https://blog.coldowl.com/post/di-yi-pian-bo-ke.html</link><description>Hello World！&#13;
 ----------------------&#13;
 以下为 Markdown 语法测试&#13;
 # Welcome to Leanote! 欢迎来到Leanote!&#13;
@@ -8,4 +8,4 @@
  &#13;
 **粗体** *斜体* &#13;
  &#13;
-~~这是一段错误的文本。</description><guid isPermaLink="true">https://coldowl.github.io/post/di-yi-pian-bo-ke.html</guid><pubDate>Mon, 08 Jul 2024 09:16:32 +0000</pubDate></item></channel></rss>
+~~这是一段错误的文本。</description><guid isPermaLink="true">https://blog.coldowl.com/post/di-yi-pian-bo-ke.html</guid><pubDate>Mon, 08 Jul 2024 09:16:32 +0000</pubDate></item></channel></rss>

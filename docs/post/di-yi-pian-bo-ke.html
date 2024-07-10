@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html data-color-mode="light" data-dark-theme="dark" data-light-theme="light" lang="zh-CN">
+<html data-color-mode="light" data-dark-theme="dark_colorblind" data-light-theme="light" lang="zh-CN">
 <head>
     <meta content="text/html; charset=utf-8" http-equiv="content-type" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <link href='https://mirrors.sustech.edu.cn/cdnjs/ajax/libs/Primer/21.0.7/primer.css' rel='stylesheet' />
-    <link rel="icon" href="https://github.githubassets.com/favicons/favicon.svg"><script>
+    <link rel="icon" href="https://coldowl.github.io/favicon.svg"><script>
         let theme = localStorage.getItem("meek_theme") || "light";
         document.documentElement.setAttribute("data-color-mode", theme);
     </script>
@@ -31,8 +31,8 @@
  
 ~~这是一段错误的文本。">
 <meta property="og:type" content="article">
-<meta property="og:url" content="https://coldowl.github.io/post/di-yi-pian-bo-ke.html">
-<meta property="og:image" content="https://github.githubassets.com/favicons/favicon.svg">
+<meta property="og:url" content="https://blog.coldowl.com/post/di-yi-pian-bo-ke.html">
+<meta property="og:image" content="https://coldowl.github.io/avatar.svg">
 <title>第一篇博客</title>
 <link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
 
@@ -66,7 +66,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
     <div id="header">
 <h1 class="postTitle">第一篇博客</h1>
 <div class="title-right">
-    <a href="https://coldowl.github.io" id="buttonHome" class="btn btn-invisible circle" title="首页">
+    <a href="https://blog.coldowl.com" id="buttonHome" class="btn btn-invisible circle" title="首页">
         <svg class="octicon" width="16" height="16">
             <path id="pathHome" fill-rule="evenodd"></path>
         </svg>
@@ -164,7 +164,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <li>MathJax 公式</li>
 </ul>
 <h2>5.1 表格</h2>
-<table role="table">
+<markdown-accessiblity-table><table role="table">
 <thead>
 <tr>
 <th>Item</th>
@@ -185,9 +185,9 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <td>$1</td>
 </tr>
 </tbody>
-</table>
+</table></markdown-accessiblity-table>
 <p>可以指定对齐方式, 如Item列左对齐, Value列右对齐, Qty列居中对齐</p>
-<table role="table">
+<markdown-accessiblity-table><table role="table">
 <thead>
 <tr>
 <th align="left">Item</th>
@@ -212,7 +212,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <td align="center">234</td>
 </tr>
 </tbody>
-</table>
+</table></markdown-accessiblity-table>
 <h2>5.2 定义型列表</h2>
 <p>名词 1<br>
 :   定义 1（左侧有一个可见的冒号和四个不可见的空格）</p>
@@ -236,7 +236,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
     &lt;/tr&gt;
 &lt;/table&gt;
 </code></pre>
-<table role="table">
+<markdown-accessiblity-table><table role="table">
     <tbody><tr>
         <th rowspan="2">值班人员</th>
         <th>星期一</th>
@@ -248,11 +248,11 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
         <td>张明</td>
         <td>王平</td>
     </tr>
-</tbody></table>
+</tbody></table></markdown-accessiblity-table>
 <p><strong>提示</strong>, 如果想对图片的宽度和高度进行控制, 你也可以通过img标签, 如:</p>
 <p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/0327b349a215505b050f7d761e462d3473b97fdc9fea55a44305dc091244a662/687474703a2f2f6c65616e6f74652e636f6d2f696d616765732f6c6f676f2f6c65616e6f74655f69636f6e5f626c75652e706e67"><img src="https://camo.githubusercontent.com/0327b349a215505b050f7d761e462d3473b97fdc9fea55a44305dc091244a662/687474703a2f2f6c65616e6f74652e636f6d2f696d616765732f6c6f676f2f6c65616e6f74655f69636f6e5f626c75652e706e67" width="50px" data-canonical-src="http://leanote.com/images/logo/leanote_icon_blue.png" style="max-width: 100%;"></a></p>
 <h2>5.4 脚注</h2>
-<p>Leanote<sup><a href="#user-content-fn-footnote-a784b3e2a74133e4c1ca2f44d4e9795e" id="user-content-fnref-footnote-a784b3e2a74133e4c1ca2f44d4e9795e" data-footnote-ref="" aria-describedby="footnote-label">1</a></sup>来创建一个脚注</p>
+<p>Leanote<sup><a href="#user-content-fn-footnote-0a73b2e3bc7715a598fc91e0c561cc2e" id="user-content-fnref-footnote-0a73b2e3bc7715a598fc91e0c561cc2e" data-footnote-ref="" aria-describedby="footnote-label">1</a></sup>来创建一个脚注</p>
 <h2>5.5 目录</h2>
 <p>通过 <code class="notranslate">[TOC]</code> 在文档中插入目录, 如:</p>
 <p>[TOC]</p>
@@ -325,30 +325,30 @@ $$</p>
 <p>访问 <a href="http://meta.math.stackexchange.com/questions/5020/mathjax-basic-tutorial-and-quick-reference" rel="nofollow">MathJax</a> 参考更多使用方法。</p>
 <section data-footnotes="" class="footnotes"><h2 id="footnote-label" class="sr-only">Footnotes</h2>
 <ol>
-<li id="user-content-fn-footnote-a784b3e2a74133e4c1ca2f44d4e9795e">
-<p>Leanote是一款强大的开源云笔记产品. <a href="#user-content-fnref-footnote-a784b3e2a74133e4c1ca2f44d4e9795e" data-footnote-backref="" aria-label="Back to reference 1" class="data-footnote-backref">↩</a></p>
+<li id="user-content-fn-footnote-0a73b2e3bc7715a598fc91e0c561cc2e">
+<p>Leanote是一款强大的开源云笔记产品. <a href="#user-content-fnref-footnote-0a73b2e3bc7715a598fc91e0c561cc2e" data-footnote-backref="" aria-label="Back to reference 1" class="data-footnote-backref">↩</a></p>
 </li>
 </ol>
 </section></div>
-<div style="font-size:small;margin-top:8px;float:right;"></div>
+<div style="font-size:small;margin-top:8px;float:right;">❤️ 转载文章请注明出处，谢谢！❤️</div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
 <div class="comments" id="comments"></div>
 
 </div>
-    <div id="footer">Copyright © <span id="year"></span><a href="https://coldowl.github.io"> Blog Title </a>
-<p>
+    <div id="footer">Copyright © <span id="year"></span><a href="https://blog.coldowl.com"> COldOwL </a>
+<p><a href="https://beian.miit.gov.cn/" target="_blank">浙ICP备20023628号</a>
 <span id="runday"></span>Powered by <a href="https://meekdai.com/Gmeek.html" target="_blank">Gmeek</a>
 </p>
 
 <script>
-if(""!=""){
+if("02/16/2024"!=""){
     var now=new Date();
-    var startSite=new Date("");
+    var startSite=new Date("02/16/2024");
     var diff=now.getTime()-startSite.getTime();
     var diffDay=Math.floor(diff/(1000*60*60*24));
     document.getElementById("year").innerHTML=now.getFullYear();
-    if(""!=""){document.getElementById("runday").innerHTML=" • "+"网站运行"+diffDay+"天"+" • ";}
+    if("浙ICP备20023628号"!=""){document.getElementById("runday").innerHTML=" • "+"网站运行"+diffDay+"天"+" • ";}
     else{document.getElementById("runday").innerHTML="网站运行"+diffDay+"天"+" • ";}
 }
 </script>
