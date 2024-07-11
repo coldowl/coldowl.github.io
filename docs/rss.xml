@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>coldowl</title><link>https://blog.coldowl.com</link><description>生命是一棵长满可能的树</description><copyright>coldowl</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://coldowl.github.io/avatar.svg</url><title>avatar</title><link>https://blog.coldowl.com</link></image><lastBuildDate>Thu, 11 Jul 2024 03:46:54 +0000</lastBuildDate><managingEditor>coldowl</managingEditor><ttl>60</ttl><webMaster>coldowl</webMaster><item><title>Win7查询磁盘序列号的最简单方法</title><link>https://blog.coldowl.com/post/Win7-cha-xun-ci-pan-xu-lie-hao-de-zui-jian-dan-fang-fa.html</link><description>首先，磁盘ID不等于磁盘序列号(S/N)！百度上很多回答是错误的!&#13;
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>coldowl</title><link>https://coldowl.github.io</link><description>生命是一棵长满可能的树</description><copyright>coldowl</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://coldowl.github.io/avatar.svg</url><title>avatar</title><link>https://coldowl.github.io</link></image><lastBuildDate>Thu, 11 Jul 2024 16:10:34 +0000</lastBuildDate><managingEditor>coldowl</managingEditor><ttl>60</ttl><webMaster>coldowl</webMaster><item><title>Win7查询磁盘序列号的最简单方法</title><link>https://coldowl.github.io/post/Win7-cha-xun-ci-pan-xu-lie-hao-de-zui-jian-dan-fang-fa.html</link><description>首先，磁盘ID不等于磁盘序列号(S/N)！百度上很多回答是错误的!&#13;
 &#13;
 比如：[win7怎么查看硬盘序列号](https://jingyan.baidu.com/article/f3e34a12ec500ef5ea653543.html)&#13;
 &#13;
@@ -10,7 +10,7 @@
 &#13;
 如果你使用Win7或者其它老古董系统，你会得到一串40位16进制数：&#13;
 ![命令窗口](https://github.com/coldowl/coldowl.github.io/assets/62004435/7eb60de5-bfcc-4ee6-bdda-95c1fa343268)&#13;
-“2020202057202d44435732433045504c35434350”需要转换为ASCII码，别灰心，继续看下去。</description><guid isPermaLink="true">https://blog.coldowl.com/post/Win7-cha-xun-ci-pan-xu-lie-hao-de-zui-jian-dan-fang-fa.html</guid><pubDate>Thu, 11 Jul 2024 03:43:41 +0000</pubDate></item><item><title>第一篇博客</title><link>https://blog.coldowl.com/post/di-yi-pian-bo-ke.html</link><description>Hello World！&#13;
+“2020202057202d44435732433045504c35434350”需要转换为ASCII码，别灰心，继续看下去。</description><guid isPermaLink="true">https://coldowl.github.io/post/Win7-cha-xun-ci-pan-xu-lie-hao-de-zui-jian-dan-fang-fa.html</guid><pubDate>Thu, 11 Jul 2024 03:43:41 +0000</pubDate></item><item><title>第一篇博客</title><link>https://coldowl.github.io/post/di-yi-pian-bo-ke.html</link><description>Hello World！&#13;
 ----------------------&#13;
 以下为 Markdown 语法测试&#13;
 # Welcome to Leanote! 欢迎来到Leanote!&#13;
@@ -19,4 +19,4 @@
  &#13;
 **粗体** *斜体* &#13;
  &#13;
-~~这是一段错误的文本。</description><guid isPermaLink="true">https://blog.coldowl.com/post/di-yi-pian-bo-ke.html</guid><pubDate>Mon, 08 Jul 2024 09:16:32 +0000</pubDate></item></channel></rss>
+~~这是一段错误的文本。</description><guid isPermaLink="true">https://coldowl.github.io/post/di-yi-pian-bo-ke.html</guid><pubDate>Mon, 08 Jul 2024 09:16:32 +0000</pubDate></item></channel></rss>
