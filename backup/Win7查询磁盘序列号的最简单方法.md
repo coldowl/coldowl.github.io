@@ -9,7 +9,7 @@
 
 如果你使用Win7或者其它老古董系统，你会得到一串40位16进制数：
 ![命令窗口](https://github.com/coldowl/coldowl.github.io/assets/62004435/7eb60de5-bfcc-4ee6-bdda-95c1fa343268)
-“2020202057202d44435732433045504c35434350”是不容易解读的16进制码需要转换为ASCII码，被灰心继续步骤二。
+“2020202057202d44435732433045504c35434350”需要转换为ASCII码，别灰心，继续看下去。
 
 2. 管理者模式下执行bat脚本
 ```bat
@@ -73,5 +73,5 @@ goto :eof
 测试结果：“2020202057202d44435732433045504c35434350”对应“WD-WCC2E0LPC5PC”
 
 经过对比，无误：
-<img src="https://github.com/coldowl/coldowl.github.io/assets/62004435/1550c296-8fdd-4db9-b591-5befa846afcd" height="300px" /img> 
-![硬盘实物](https://github.com/coldowl/coldowl.github.io/assets/62004435/1550c296-8fdd-4db9-b591-5befa846afcd =300x)
+<img src="https://github.com/coldowl/coldowl.github.io/assets/62004435/1550c296-8fdd-4db9-b591-5befa846afcd" height="300px" /> 
+![硬盘实物](https://github.com/coldowl/coldowl.github.io/assets/62004435/1550c296-8fdd-4db9-b591-5befa846afcd)
