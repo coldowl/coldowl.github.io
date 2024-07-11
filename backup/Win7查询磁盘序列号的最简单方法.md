@@ -74,4 +74,3 @@ goto :eof
 
 经过对比，无误：
 <img src="https://github.com/coldowl/coldowl.github.io/assets/62004435/1550c296-8fdd-4db9-b591-5befa846afcd" height="300px" /> 
-![硬盘实物](https://github.com/coldowl/coldowl.github.io/assets/62004435/1550c296-8fdd-4db9-b591-5befa846afcd)
