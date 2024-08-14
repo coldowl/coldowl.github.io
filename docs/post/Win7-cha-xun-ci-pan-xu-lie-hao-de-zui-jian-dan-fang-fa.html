@@ -10,31 +10,9 @@
         let theme = localStorage.getItem("meek_theme") || "light";
         document.documentElement.setAttribute("data-color-mode", theme);
     </script>
-<meta name="description" content="首先，磁盘ID不等于磁盘序列号(S/N)！百度上很多回答是错误的!
-
-比如：[win7怎么查看硬盘序列号](https://jingyan.baidu.com/article/f3e34a12ec500ef5ea653543.html)
-
-
-闲话少说，直接演示步骤吧
-
-1. 使用 `wmic diskdrive get serialnumber`, 如果直接得到序列号，恭喜你！
-
-如果你使用Win7或者其它老古董系统，你会得到一串40位16进制数：
-![命令窗口](https://github.com/coldowl/coldowl.github.io/assets/62004435/7eb60de5-bfcc-4ee6-bdda-95c1fa343268)
-“2020202057202d44435732433045504c35434350”需要转换为ASCII码，别灰心，继续看下去。">
+<meta name="description" content="前言：今天公司新入职一个女同事，我帮忙给她重装电脑系统，公司有现成的PE启动盘，所以很丝滑地就装好了。">
 <meta property="og:title" content="Win7查询磁盘序列号的最简单方法">
-<meta property="og:description" content="首先，磁盘ID不等于磁盘序列号(S/N)！百度上很多回答是错误的!
-
-比如：[win7怎么查看硬盘序列号](https://jingyan.baidu.com/article/f3e34a12ec500ef5ea653543.html)
-
-
-闲话少说，直接演示步骤吧
-
-1. 使用 `wmic diskdrive get serialnumber`, 如果直接得到序列号，恭喜你！
-
-如果你使用Win7或者其它老古董系统，你会得到一串40位16进制数：
-![命令窗口](https://github.com/coldowl/coldowl.github.io/assets/62004435/7eb60de5-bfcc-4ee6-bdda-95c1fa343268)
-“2020202057202d44435732433045504c35434350”需要转换为ASCII码，别灰心，继续看下去。">
+<meta property="og:description" content="前言：今天公司新入职一个女同事，我帮忙给她重装电脑系统，公司有现成的PE启动盘，所以很丝滑地就装好了。">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://coldowl.github.io/post/Win7-cha-xun-ci-pan-xu-lie-hao-de-zui-jian-dan-fang-fa.html">
 <meta property="og:image" content="https://coldowl.github.io/avatar.svg">
@@ -105,18 +83,12 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </div>
 </div>
     <div id="content">
-<div class="markdown-body" id="postBody"><p>首先，磁盘ID不等于磁盘序列号(S/N)！百度上很多回答是错误的!</p>
-<p>比如：<a href="https://jingyan.baidu.com/article/f3e34a12ec500ef5ea653543.html" rel="nofollow">win7怎么查看硬盘序列号</a></p>
-<p>闲话少说，直接演示步骤吧</p>
-<ol>
-<li>使用 <code class="notranslate">wmic diskdrive get serialnumber</code>, 如果直接得到序列号，恭喜你！</li>
-</ol>
-<p>如果你使用Win7或者其它老古董系统，你会得到一串40位16进制数：<br>
-<a target="_blank" rel="noopener noreferrer" href="https://github.com/coldowl/coldowl.github.io/assets/62004435/7eb60de5-bfcc-4ee6-bdda-95c1fa343268"><img src="https://github.com/coldowl/coldowl.github.io/assets/62004435/7eb60de5-bfcc-4ee6-bdda-95c1fa343268" alt="命令窗口" style="max-width: 100%;"></a><br>
-“2020202057202d44435732433045504c35434350”需要转换为ASCII码，别灰心，继续看下去。</p>
-<ol start="2">
-<li>管理者模式下执行bat脚本</li>
-</ol>
+<div class="markdown-body" id="postBody"><p>前言：今天公司新入职一个女同事，我帮忙给她重装电脑系统，公司有现成的PE启动盘，所以很丝滑地就装好了。市场部的电脑很旧了，只能装win7系统凑合用用。按照公司规定，装完系统还要记录一下设备的内网IP、MAC地址以及磁盘序列号。前两个不成问题，一个<code class="notranslate">ipconfig/all</code>命令解决，没想到查个磁盘序列号倒难住我了，颇费一番周折，所以浅浅记录一下。</p>
+<p>首先，批评一下这篇百度经验，<a href="https://jingyan.baidu.com/article/f3e34a12ec500ef5ea653543.html" rel="nofollow">win7怎么查看硬盘序列号</a>，成功把人带进了沟里，但事实上<strong>磁盘ID和磁盘序列号(S/N)压根就不是一个概念</strong>，磁盘序列号出厂前就设定好了，而磁盘ID是操作系统分配的，只是磁盘的标识。</p>
+<p>那么使用 <code class="notranslate">wmic diskdrive get serialnumber</code>命令如何呢？在较新的系统上，能直接得到磁盘序列号。但在眼前这台装载Win7系统的电脑上，执行命令只得到一串40位16进制数：“2020202057202d44435732433045504c35434350”<br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/coldowl/coldowl.github.io/assets/62004435/7eb60de5-bfcc-4ee6-bdda-95c1fa343268"><img src="https://github.com/coldowl/coldowl.github.io/assets/62004435/7eb60de5-bfcc-4ee6-bdda-95c1fa343268" alt="命令窗口" style="max-width: 100%;"></a></p>
+<p>其实这串数字就是磁盘序列号，但是还需要转换为ASCII码才可读。</p>
+<p>找到一个大神写的bat脚本，在管理者模式下执行。</p>
 <div class="highlight highlight-source-batchfile"><pre class="notranslate"><span class="pl-c"><span class="pl-c">::</span>测试环境Win7</span>
 <span class="pl-k">@</span><span class="pl-k">echo</span> <span class="pl-k">off</span>
 <span class="pl-k">SetLocal</span> <span class="pl-k">EnableDelayedExpansion</span>
@@ -173,9 +145,12 @@ set/a as1=0x61+<span class="pl-v">%1</span>,h=as1/16,e=as1<span class="pl-cce">%
 <span class="pl-k">if</span> <span class="pl-k">not</span> <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">%hsn%</span><span class="pl-pds">"</span></span><span class="pl-k">==</span><span class="pl-s"><span class="pl-pds">"</span><span class="pl-pds">"</span></span> <span class="pl-k">goto</span> :<span class="pl-k">ASloop</span>
 <span class="pl-k">set</span> <span class="pl-v">%1</span>=<span class="pl-smi">%as%</span>
 <span class="pl-k">goto</span> :<span class="pl-k">eof</span></pre></div>
-<p>测试结果：“2020202057202d44435732433045504c35434350”对应“WD-WCC2E0LPC5PC”</p>
-<p>经过对比，无误：<br>
-<a target="_blank" rel="noopener noreferrer" href="https://github.com/coldowl/coldowl.github.io/assets/62004435/1550c296-8fdd-4db9-b591-5befa846afcd"><img src="https://github.com/coldowl/coldowl.github.io/assets/62004435/1550c296-8fdd-4db9-b591-5befa846afcd" height="300px" style="max-width: 100%;"></a></p></div>
+<p>最终得到想要的结果“WD-WCC2E0LPC5PC”。</p>
+<p>当我在疯狂找解决方案的时候，妹子直接从满是灰尘的机箱里，把硬盘拆下来了。我一看，好家伙，磁盘序列号不就在硬盘标签上写着嘛！(lll￢ω￢)</p>
+<p>咳咳！果然一力降十会啊，这才是查看硬盘序列号最简单的办法。<br>
+和脚本结果对比了一下，没啥问题。<br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/coldowl/coldowl.github.io/assets/62004435/1550c296-8fdd-4db9-b591-5befa846afcd"><img src="https://github.com/coldowl/coldowl.github.io/assets/62004435/1550c296-8fdd-4db9-b591-5befa846afcd" height="300px" style="max-width: 100%;"></a></p>
+<p>最后提一下，其实很多软件，比如AIDA64、图吧工具箱，除了能查磁盘序列号还能查很多硬件信息，也很方便。无奈公司是保密单位，电脑连不了外网，也不能随便装软件，所以只能多走很多弯路了。</p></div>
 <div style="font-size:small;margin-top:8px;float:right;">❤️ 转载文章请注明出处，谢谢！❤️</div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
