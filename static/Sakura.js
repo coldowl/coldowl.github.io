@@ -19,7 +19,7 @@ function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Sy
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
-function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e2) { throw _e2; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e3) { didErr = true; err = _e3; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
+function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() { }; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e2) { throw _e2; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e3) { didErr = true; err = _e3; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
 
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 
@@ -78,13 +78,13 @@ var Sakura = function Sakura(selector, options) {
     var stamp = Date.now();
 
     var _iterator = _createForOfIteratorHelper(_this.petalsWeak),
-        _step;
+      _step;
 
     try {
       for (_iterator.s(); !(_step = _iterator.n()).done;) {
         var _step$value = _slicedToArray(_step.value, 2),
-            _key = _step$value[0],
-            value = _step$value[1];
+          _key = _step$value[0],
+          value = _step$value[1];
 
         if (_key + _this.settings.lifeTime < stamp) {
           keysForRemove.push(_key);
@@ -230,15 +230,14 @@ Sakura.prototype.stop = function () {
 };
 
 function loadResource(type, attributes) {
-    if (type === 'style') {
-        const style = document.createElement('style');
-        style.textContent = attributes.css;
-        document.head.appendChild(style);
-    }
+  if (type === 'style') {
+    const style = document.createElement('style');
+    style.textContent = attributes.css;
+    document.head.appendChild(style);
+  }
 }
 
-document.addEventListener("DOMContentLoaded", function() {
-	var sakura = new Sakura('body');
+document.addEventListener("DOMContentLoaded", function () {
   const css = `@-webkit-keyframes fall {
   0% {
     opacity: 0.9;
@@ -505,5 +504,26 @@ document.addEventListener("DOMContentLoaded", function() {
   pointer-events: none;
   position: absolute; }
 `;
-loadResource('style', {css: css});
+  loadResource('style', { css: css });
+  var sakura = new Sakura('body', {
+    colors: [
+      {
+        gradientColorStart: 'rgba(255, 183, 197, 0.9)',
+        gradientColorEnd: 'rgba(255, 197, 208, 0.9)',
+        gradientColorDegree: 120,
+      },
+      {
+        gradientColorStart: 'rgba(255,189,255)',
+        gradientColorEnd: 'rgba(227,170,181)',
+        gradientColorDegree: 120,
+      },
+      {
+        gradientColorStart: 'rgba(2,152,163)',
+        gradientColorEnd: 'rgba(200,185,196)',
+        gradientColorDegree: 120,
+      },
+    ],
+    maxSize: 20,
+    lifeTime: 0,
+  });
 });
