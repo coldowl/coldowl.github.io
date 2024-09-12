@@ -524,6 +524,5 @@ document.addEventListener("DOMContentLoaded", function () {
       },
     ],
     maxSize: 20,
-    lifeTime: 0,
   });
 });
