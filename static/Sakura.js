@@ -131,10 +131,21 @@ var Sakura = function Sakura(selector, options) {
   } // Check if the element is in the viewport.
 
 
-  function elementInViewport(el) {
-    var rect = el.getBoundingClientRect();
-    return rect.top >= 0 && rect.left >= 0 && rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) && rect.right <= (window.innerWidth || document.documentElement.clientWidth);
+// 修改 elementInViewport 函数，加入 footer 的判断，避免花瓣堆积在 footer 上
+function elementInViewport(el) {
+  var rect = el.getBoundingClientRect();
+  var footer = document.querySelector('footer'); // 获取 footer 元素
+
+  if (footer) {
+      var footerRect = footer.getBoundingClientRect();
+      if (rect.bottom > footerRect.top) {
+          // 花瓣接触到 footer 顶部时移除花瓣
+          return false;
+      }
   }
+
+  return rect.top >= 0 && rect.left >= 0 && rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) && rect.right <= (window.innerWidth || document.documentElement.clientWidth);
+}
 
   this.createPetal = function () {
     if (_this.el.dataset.sakuraAnimId) {
@@ -169,7 +180,8 @@ var Sakura = function Sakura(selector, options) {
     petal.style.animation = animations;
     petal.style.borderRadius = "".concat(randomInt(_this.settings.maxSize, _this.settings.maxSize + Math.floor(Math.random() * 10)), "px ").concat(randomInt(1, Math.floor(width / 4)), "px");
     petal.style.height = "".concat(height, "px");
-    petal.style.left = "".concat(Math.random() * document.documentElement.clientWidth - 100, "px");
+    // 修改 createPetal 函数中花瓣的生成范围，避免 left 值溢出导致抖动
+    petal.style.left = Math.random() * (document.documentElement.clientWidth - _this.settings.maxSize) + "px"; 
     petal.style.marginTop = "".concat(-(Math.floor(Math.random() * 20) + 15), "px");
     petal.style.width = "".concat(width, "px"); // Remove petals of which the animation ended.
 
