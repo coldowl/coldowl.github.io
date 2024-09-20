@@ -134,8 +134,10 @@ var Sakura = function Sakura(selector, options) {
 // 修改 elementInViewport 函数，加入 footer 的判断，避免花瓣堆积在 footer 上
 function elementInViewport(el) {
   var rect = el.getBoundingClientRect();
-  var footer = document.querySelector('footer'); // 获取 footer 元素
-
+  
+  // 尝试获取 footer 或 div#footer 元素
+  var footer = document.querySelector('footer') || document.getElementById('footer');
+  
   if (footer) {
       var footerRect = footer.getBoundingClientRect();
       if (rect.bottom > footerRect.top) {
@@ -143,9 +145,13 @@ function elementInViewport(el) {
           return false;
       }
   }
-
-  return rect.top >= 0 && rect.left >= 0 && rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) && rect.right <= (window.innerWidth || document.documentElement.clientWidth);
+  
+  return rect.top >= 0 &&
+         rect.left >= 0 &&
+         rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+         rect.right <= (window.innerWidth || document.documentElement.clientWidth);
 }
+
 
   this.createPetal = function () {
     if (_this.el.dataset.sakuraAnimId) {
