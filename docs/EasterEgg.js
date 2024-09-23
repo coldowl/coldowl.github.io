@@ -7,13 +7,13 @@ function loadResource(type, attributes) {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-  const css = `#hidden-content {
+  const css = `#user-content-hidden-content {
     display: none;
     opacity: 0;
     transition: opacity 1s ease;
 }
 
-#hidden-content.show {
+#user-content-hidden-content.show {
     display: block;
     opacity: 1;
 }
@@ -35,11 +35,11 @@ document.addEventListener('keydown', function(event) {
     }
 
     if (userInput.join('').toLowerCase() === secretCode.slice(0, 3)) {
-        document.getElementById('hint-message').style.display = 'block';
+        document.getElementById('user-content-hint-message').style.display = 'block';
     }
 
     if (userInput.join('').toLowerCase() === secretCode) {
-        const hiddenContent = document.getElementById('hidden-content');
+        const hiddenContent = document.getElementById('user-content-hidden-content');
         hiddenContent.classList.add('show');
 
         // 禁用进一步的监听器
