@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", function () {
     transition: opacity 1s ease;
 }
 #user-content-hint-message {
-    diaplay: none;
+    display: none;
 }
 #user-content-hidden-content.show {
     display: block;
