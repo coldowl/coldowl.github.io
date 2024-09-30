@@ -83,9 +83,12 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </div>
 </div>
     <div id="content">
-<div class="markdown-body" id="postBody"><p>开始写博客之后，我一直有个想法。如果在文章中故意隐藏一些内容，只有在键盘上敲击特定密语的用户才能解锁这些信息，那一定会很有趣。就像《阿里巴巴和四十大盗》里，不说出”芝麻开门“的人就无法找到隐藏的宝藏，不知道密语的人也无法看到被我隐藏的消息。这个效果不难实现，只需要一点 JavaScript 知识，在这篇文章的末尾，我设置了一个小彩蛋，当你在文章页上敲击预设的字符序列”open“时，它就会显示出来。</p>
+<div class="markdown-body" id="postBody"><p>开始写博客之后，我一直有个想法。</p>
+<p>如果在文章中故意隐藏一些内容，只有在键盘上敲击特定密语的用户才能解锁这些信息，那一定会很有趣。就像《阿里巴巴和四十大盗》里，不说出”芝麻开门“的人就无法找到隐藏的宝藏，不知道密语的人也无法看到被我隐藏的消息。</p>
+<p>这个效果不难实现，只要熟悉一些 JavaScript 知识就能轻松办到。</p>
+<p>在这篇文章的末尾，我设置了一个小彩蛋，当你在文章页上敲击预设的字符序列”open“时，隐藏的内容就会显示出来。</p>
 <h3>1. 基础页面结构</h3>
-<p>首先，至少需要一个简单的 HTML 页面，其中包含需要隐藏的文字或图片。为了让隐藏内容起效，先通过 CSS 设置其默认隐藏。</p>
+<p>首先，先写一个简单的 HTML 页面，其中包含需要隐藏的文字或图片。为了让隐藏内容起效，先通过 CSS 设置其默认隐藏。</p>
 <details>
   <summary>一个基本的 HTML 模板</summary>
 <div class="highlight highlight-text-html-basic"><pre class="notranslate"><span class="pl-c1">&lt;!DOCTYPE html<span class="pl-kos">&gt;</span></span>
@@ -151,9 +154,9 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <li>每次用户按下键盘时，事件监听器会捕获该字符并检查它是否与 <code class="notranslate">secretCode</code> 匹配。如果匹配，就会把隐藏的内容显示出来。</li>
 </ol>
 <h3>3. 完善用户体验</h3>
-<p>虽然现在已经可以实现基本效果了，但还可以进一步优化用。比如，当内容被显示后，就禁用事件监听器，防止效果被用户多次触发。同样，还可以添加一些动画效果，使内容显示得更平滑。</p>
+<p>虽然现在已经可以实现基本效果了，但还可以进一步优化。比如，当内容被显示后，就禁用事件监听器，防止效果被用户多次触发。还可以添加一些动画效果，使内容显示得更平滑。</p>
 <h4>3.1 添加显示动画</h4>
-<p>通过 CSS 过渡来为隐藏内容的显示添加淡入动画。首先，修改一下 CSS 代码：</p>
+<p>通过 CSS 过渡来为隐藏内容的显示添加淡入动画。修改一下 CSS 代码：</p>
 <div class="highlight highlight-source-css"><pre class="notranslate"><span class="pl-kos">#</span><span class="pl-c1">hidden-content</span> {
     <span class="pl-c1">display</span><span class="pl-kos">:</span> none;
     <span class="pl-c1">opacity</span><span class="pl-kos">:</span> <span class="pl-c1">0</span>;
@@ -181,7 +184,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
     <span class="pl-kos">}</span>
 <span class="pl-kos">}</span><span class="pl-kos">)</span><span class="pl-kos">;</span></pre></div>
 <h4>3.2 增加彩蛋提示</h4>
-<p>最后，我希望给读者一些提示，告诉他们即将解锁隐藏内容。在用户快要完成输入时显示一些简单的提示信息，增强互动体验。</p>
+<p>最后，我希望给读者一些提示，告诉他们即将解锁隐藏内容。在用户快要完成输入时，显示简单的提示信息，增强互动体验。</p>
 <div class="highlight highlight-text-html-basic"><pre class="notranslate"><span class="pl-kos">&lt;</span><span class="pl-ent">p</span> <span class="pl-c1">id</span>="<span class="pl-s">hint-message</span>" <span class="pl-c1">style</span>="<span class="pl-s">display: none;</span>"<span class="pl-kos">&gt;</span>接近了！再按一个键试试！<span class="pl-kos">&lt;/</span><span class="pl-ent">p</span><span class="pl-kos">&gt;</span></pre></div>
 <p>然后在 JavaScript 中，监听用户的输入，如果已经输入了前三个字符，就显示提示信息：</p>
 <div class="highlight highlight-source-js"><pre class="notranslate"><span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-s1">userInput</span><span class="pl-kos">.</span><span class="pl-en">join</span><span class="pl-kos">(</span><span class="pl-s">''</span><span class="pl-kos">)</span><span class="pl-kos">.</span><span class="pl-en">toLowerCase</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-c1">===</span> <span class="pl-s1">secretCode</span><span class="pl-kos">.</span><span class="pl-en">slice</span><span class="pl-kos">(</span><span class="pl-c1">0</span><span class="pl-kos">,</span> <span class="pl-c1">3</span><span class="pl-kos">)</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
