@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html data-color-mode="light" data-dark-theme="dark_colorblind" data-light-theme="light" lang="zh-CN">
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href='https://mirrors.sustech.edu.cn/cdnjs/ajax/libs/Primer/21.0.7/primer.css' rel='stylesheet' />
+    <script src='https://blog.meekdai.com/Gmeek/plugins/GmeekBSZ.js'></script><script src='https://coldowl.github.io/Sakura.js'></script>
+    <link rel="icon" href="https://coldowl.github.io/avatar.svg"><script>
+        let theme = localStorage.getItem("meek_theme") || "light";
+        document.documentElement.setAttribute("data-color-mode", theme);
+    </script>
+<meta name="description" content="> 转载自 [freeCodeCamp](https://www.freecodecamp.org/chinese/news/relational-vs-nonrelational-databases-difference-between-sql-db-and-nosql-db/) ，有所修改。">
+<meta property="og:title" content="关系型数据库 VS 非关系型数据库">
+<meta property="og:description" content="> 转载自 [freeCodeCamp](https://www.freecodecamp.org/chinese/news/relational-vs-nonrelational-databases-difference-between-sql-db-and-nosql-db/) ，有所修改。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://coldowl.github.io/post/guan-xi-xing-shu-ju-ku-%20VS%20-fei-guan-xi-xing-shu-ju-ku.html">
+<meta property="og:image" content="https://coldowl.github.io/avatar.svg">
+<title>关系型数据库 VS 非关系型数据库</title>
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
+
+
+</head>
+<style>
+body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;padding: 45px;font-size: 16px;font-family: sans-serif;line-height: 1.25;}
+#header{display:flex;padding-bottom:8px;border-bottom: 1px solid var(--borderColor-muted, var(--color-border-muted));margin-bottom: 16px;}
+#footer {margin-top:64px; text-align: center;font-size: small;}
+
+</style>
+
+<style>
+.postTitle{margin: auto 0;font-size:40px;font-weight:bold;}
+.title-right{display:flex;margin:auto 0 0 auto;}
+.title-right .circle{padding: 14px 16px;margin-right:8px;}
+#postBody{border-bottom: 1px solid var(--color-border-default);padding-bottom:36px;}
+#postBody hr{height:2px;}
+#cmButton{height:48px;margin-top:48px;}
+#comments{margin-top:64px;}
+.g-emoji{font-size:24px;}
+@media (max-width: 600px) {
+    body {padding: 8px;}
+    .postTitle{font-size:24px;}
+}
+.copy-feedback {
+    display: none;
+    position: absolute;
+    top: 10px;
+    right: 50px;
+    color: var(--color-fg-on-emphasis);
+    background-color: var(--color-fg-muted);
+    border-radius: 3px;
+    padding: 5px 8px;
+    font-size: 12px;
+}
+</style>
+
+
+
+
+<body>
+    <div id="header">
+<h1 class="postTitle">关系型数据库 VS 非关系型数据库</h1>
+<div class="title-right">
+    <a href="https://coldowl.github.io" id="buttonHome" class="btn btn-invisible circle" title="首页">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathHome" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+    <a href="https://github.com/coldowl/coldowl.github.io/issues/5" target="_blank" class="btn btn-invisible circle" title="Issue">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathIssue" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+
+    <a class="btn btn-invisible circle" onclick="modeSwitch();" title="切换主题">
+        <svg class="octicon" width="16" height="16" >
+            <path id="themeSwitch" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+
+</div>
+</div>
+    <div id="content">
+<div class="markdown-body" id="postBody"><blockquote>
+<p>转载自 <a href="https://www.freecodecamp.org/chinese/news/relational-vs-nonrelational-databases-difference-between-sql-db-and-nosql-db/" rel="nofollow">freeCodeCamp</a> ，有所修改。<br>
+原文：<a href="https://www.freecodecamp.org/news/relational-vs-nonrelational-databases-difference-between-sql-db-and-nosql-db/" rel="nofollow">Relational VS Nonrelational Databases</a><br>
+作者： Dionysia Lemonaki</p>
+</blockquote>
+<h2>什么是数据库？</h2>
+<p>在计算机里，数据是以不同形式出现的信息片段。它可以是文本、数字、图像、音频片段或视频。</p>
+<p>信息集合需要被存储、处理和解释。这时就需要一种可按需轻松搜索、访问、提取和检索已保存资源的方法。</p>
+<p>该方法可以使计算机或人类分析可访问的数据、执行计算和比较、做出逻辑决策得出结论。</p>
+<p>当然可以使用 Excel 电子表格等软件将数据存储在文件中，这样也可以完成有限的工作。</p>
+<p>但是，如果数据量很大，使用 Excel 处理就捉襟见肘了。在数据量增大时，Excel 无法快速检索。并且 Excel 很难固定其数据结构。</p>
+<p><strong>数据库</strong>是一种更易于访问、更高效且更有条理的长期存储和处理信息的方式。</p>
+<p>数据库存储数据的规范性和系统性以及其检索数据的便捷性使其成为基于 Web 的应用程序中重要的部分。</p>
+<p>数据库几乎可以用于所有应用程序。它们可以用来存储用户信息，例如用户名、电子邮件地址、加密密码和物理地址。它们还存储用户行为。例如，在电商网站中，数据库会保存并跟踪“收藏”的商品。</p>
+<p>一般使用<strong>数据库管理系统</strong>（或简称 DBMS）来管理数据库。</p>
+<p>数据库管理系统是一个软件程序，充当最终用户和数据库中间的媒介。可以通过数据库管理系统创建和管理数据库。也可以执行查询来访问、修改和操作存储在数据库中的数据。只需通过一些命令就可以方便轻松地存储、检索、更新和删除数据。</p>
+<p>谈到数据库管理系统，通常有两种类型可供选择：</p>
+<ul>
+<li><strong>关系型数据库</strong>（也就是 SQL 数据库）</li>
+<li><strong>非关系型数据库</strong>（也就是 NoSQL 数据库）</li>
+</ul>
+<h2>SQL 是什么?</h2>
+<p>SQL 是 Structured Query Language 的缩写。</p>
+<p>你可能会听过它以两种发音方式 - “S. Q. L.”（ess-kew-ell）或“se-quel”（/ˈsēkwəl/）。</p>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/a88bd736-6699-4d07-9796-edc11c741936"><img src="https://github.com/user-attachments/assets/a88bd736-6699-4d07-9796-edc11c741936" alt="NtGaNA8" style="max-width: 100%;"></a></p>
+<p>无论哪种方式，SQL 都代表数据库处理的语言。</p>
+<p>具体来说，使用 SQL，可以编写数据库“查询”（queries）以和数据库进行通信。“查询”可以是用于执行任何 CRUD（Create、 Read、 Update、Delete）操作的命令。</p>
+<p>SQL 是关系数据库管理系统的首选语言。</p>
+<h2>什么是关系数据库？</h2>
+<p>关系数据库（或 SQL 数据库）已经存在了一段时间。第一个关系数据库出现在 1970 年，关系数据库至今仍然很流行，一些最常见的如：</p>
+<ul>
+<li>PostgreSQL</li>
+<li>Microsoft SQL Server</li>
+<li>MySQL</li>
+<li>Oracle</li>
+<li>SQLite</li>
+</ul>
+<p>关系数据库以结构化和表的方式存储数据。也就是说，它将信息存储在表中，可以将其视为数据的存储容器。例如，一家公司可以有一个 employees 表来存储其员工的数据。</p>
+<p>关系数据库具有严格的、静态的预定义逻辑<strong>架构</strong>（schema）。可以将数据库架构视为一个组织蓝图———一组规则：哪些可以插入表、哪些不能插入表、以及如何设置数据。</p>
+<p>在每个表中，至少有一个<strong>列</strong>（column）。这些列具有特定的数据类型，例如 INTEGER 或 VARCHAR。在 employees 表中，一些列可能是 <code class="notranslate">employee_id</code>、<code class="notranslate">name</code>、<code class="notranslate">department</code>、<code class="notranslate">email</code> 和 <code class="notranslate">salary</code>。</p>
+<p><strong>所有列和其数据类型构成架构。</strong></p>
+<div class="highlight highlight-source-python"><pre class="notranslate">                    <span class="pl-v">EMPLOYEES</span>
+<span class="pl-c1">+</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">+</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">+</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">+</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">+</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">+</span>
+<span class="pl-c1">|</span> <span class="pl-s1">employee_id</span> <span class="pl-c1">|</span> <span class="pl-s1">name</span> <span class="pl-c1">|</span> <span class="pl-s1">department</span> <span class="pl-c1">|</span> <span class="pl-s1">email</span> <span class="pl-c1">|</span> <span class="pl-s1">salary</span> <span class="pl-c1">|</span>
+<span class="pl-c1">+</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">+</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">+</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">+</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">+</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">+</span></pre></div>
+<p>一个表也会包含<strong>行</strong>（rows） 或 <strong>记录</strong>（records）。记录是遵守预定义架构的单个数据条目。本质上，它是一个数据项。</p>
+<div class="highlight highlight-source-python"><pre class="notranslate">                                    <span class="pl-v">EMPLOYEES</span>
+<span class="pl-c1">+</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">+</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">+</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">+</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">+</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">+</span>
+<span class="pl-c1">|</span> <span class="pl-s1">employee_id</span> <span class="pl-c1">|</span>       <span class="pl-s1">name</span>       <span class="pl-c1">|</span> <span class="pl-s1">department</span> <span class="pl-c1">|</span>         <span class="pl-s1">email</span>         <span class="pl-c1">|</span> <span class="pl-s1">salary</span> <span class="pl-c1">|</span>
+<span class="pl-c1">+</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">+</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">+</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">+</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">+</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">+</span>
+<span class="pl-c1">|</span>           <span class="pl-c1">1</span> <span class="pl-c1">|</span>  <span class="pl-v">John</span> <span class="pl-v">Doe</span>        <span class="pl-c1">|</span> <span class="pl-v">IT</span>         <span class="pl-c1">|</span> <span class="pl-s1">johndoe</span>@<span class="pl-s1">company</span>.<span class="pl-s1">com</span>   <span class="pl-c1">|</span>   <span class="pl-c1">3500</span> <span class="pl-c1">|</span>
+<span class="pl-c1">|</span>           <span class="pl-c1">2</span> <span class="pl-c1">|</span>  <span class="pl-v">Kelly</span> <span class="pl-v">Kellinson</span> <span class="pl-c1">|</span> <span class="pl-v">Marketing</span>  <span class="pl-c1">|</span> <span class="pl-s1">kelly</span>@<span class="pl-s1">company</span>.<span class="pl-s1">com</span>     <span class="pl-c1">|</span>   <span class="pl-c1">1500</span> <span class="pl-c1">|</span>
+<span class="pl-c1">|</span>           <span class="pl-c1">3</span> <span class="pl-c1">|</span>  <span class="pl-v">Mike</span> <span class="pl-v">Manson</span>     <span class="pl-c1">|</span> <span class="pl-v">Product</span>    <span class="pl-c1">|</span> <span class="pl-s1">mikekane</span>@<span class="pl-s1">company</span>.<span class="pl-s1">com</span>  <span class="pl-c1">|</span>   <span class="pl-c1">2300</span> <span class="pl-c1">|</span>
+<span class="pl-c1">+</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">+</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">+</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">+</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">+</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">+</span></pre></div>
+<p>由于关系数据库支持 SQL，所以可以直接执行查询。例如，如果想 view 月薪 greater than 2000 dollars 的 employees 的 names，那么可以编写如下 SQL 查询：</p>
+<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-k">SELECT</span> name <span class="pl-k">FROM</span> employees
+<span class="pl-k">WHERE</span> salary <span class="pl-k">&gt;</span> <span class="pl-c1">2000</span>;</pre></div>
+<p>执行上面的查询，会获得以下输出：</p>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-c1">+</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">+</span>
+<span class="pl-c1">|</span>    <span class="pl-s1">name</span>     <span class="pl-c1">|</span>
+<span class="pl-c1">+</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">+</span>
+<span class="pl-c1">|</span> <span class="pl-v">John</span> <span class="pl-v">Doe</span>    <span class="pl-c1">|</span>
+<span class="pl-c1">|</span> <span class="pl-v">Mike</span> <span class="pl-v">Manson</span> <span class="pl-c1">|</span>
+<span class="pl-c1">+</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-c1">+</span></pre></div>
+<h3>关系数据库的特点</h3>
+<p>到目前为止，已经了解了关系数据库：</p>
+<ul>
+<li>是表格格式</li>
+<li>非常有条理，并且数据以某种结构存储</li>
+<li>具有严格、预定义的架构</li>
+<li>使用 SQL 执行数据库查询和操作数据</li>
+</ul>
+<p>此外，一个关系数据库可以有多个表，正如数据库管理系统的名称所暗示的那样，这些表可以是相互关联的。</p>
+<p>例如，一家电商公司可能有一个 <code class="notranslate">products</code> 表、一个 <code class="notranslate">users</code> 表、一个 <code class="notranslate">emails</code> 表和一个 <code class="notranslate">orders</code> 表。</p>
+<p>由于表和存储在其中的信息之间存在连接和关联，可以使用命令来连接表。</p>
+<p>关系数据库有一个<strong>主键</strong>（primary key），它作为标识符，确保表中的每一项都是唯一的，从而确保表中没有重复和冗余的数据。</p>
+<p><strong>外键</strong>（foreign key）用于表示在表之间的关系。</p>
+<p>不同表中的数据可以有不同的关系：</p>
+<ul>
+<li><strong>一对一的关系</strong>：在这种情况下，一个表中的记录仅与另一个表中的一条记录相关。电商网站中一对一关系的示例是，一个用户只能拥有一个电子邮件地址，且一个电子邮件地址只能属于一个用户。</li>
+<li><strong>一对多关系</strong>：在这种情况下，一张表中的一条记录与另一张表中的多条其他记录相关。例如，在电商网站中，一个用户可以下许多订单，但每个订单都是由一个用户下的。</li>
+<li><strong>多对多关系</strong>：在这种情况下，一个表中的一个或多个记录可以与另一个表中的一个或多个记录相关。例如，在电商网站中，一个订单可以有很多产品，而一个产品可以被购买多次。</li>
+</ul>
+<p>外键一般是数据库表中的一列或多列，用于链接到另一个表中的列，通常是另一个表的主键。</p>
+<p>这种链接建立了一种“父子”关系，其中包含外键的表是“子表”，被引用的表是“父表”。 外键确保子表中的值必须与父表中已存在的对应值匹配。</p>
+<p>例如，orders 表中的 user_id 列可以作为外键，引用 users 表中的 user_id 列（主键），从而确保每个订单都与一个有效存在的用户关联。</p>
+<h3>关系数据库中的 ACID 属性</h3>
+<p>关系数据库提供 ACID 数据一致性模型。</p>
+<p>ACID 是原子性（Atomicity）、一致性（Consistency）、事务隔离（Isolation）、持久性（Durability） 的首字母缩写词。</p>
+<p><strong>原子性</strong>意味着事务是原子的（足够小，且不可再分）并且采取 “all or nothing” 的方法。</p>
+<p>也就是，要么整个操作成功，从头到尾完成，要么不成功，整个操作“回滚”。</p>
+<p>所有操作都保证以成功或失败结束，不存在部分成功。</p>
+<p><strong>一致性</strong>是确保数据库结构从事务开始到结束保持不变。一致性确保进入数据库的任何数据都遵循已设置的规则和约束。它可以保护和维护关系数据库中数据的完整性。</p>
+<p><strong>事务隔离</strong>意味着，尽管在任何时候都发生了许多事务，但每个事务都被视为一个原子的、独立的单元，并且事务似乎是按顺序发生的。</p>
+<p>例如，如果两个事务同时发生，事务隔离可确保一个事务以及那里发生的更改不会以任何方式影响另一个事务。</p>
+<p>最后，<strong>持久性</strong>意味着事务的任何结果和更改都已提交，因此是永久性的，并且将持续存在，即使出现系统故障也是如此。</p>
+<p>ACID 模型可确保数据库可靠且安全。</p>
+<h2>什么是非关系数据库？</h2>
+<p>非关系型数据库也称为 NoSQL 数据库。经常会看到 NoSQL 代表“Not only SQL”和“Non-SQL”。</p>
+<p>无论哪种方式，非关系数据库都是指不使用关系数据模型的数据库。</p>
+<p>尽管这个术语和这种类型的数据库已经存在了几十年，但 NoSQL 数据库在 1990 年代后期才开始受欢迎，当时 Internet 也变得越来越流行。</p>
+<p>关系数据库已无法满足互联网海量且复杂的数据。</p>
+<p>一些最流行的非关系数据库：</p>
+<ul>
+<li>MongoDB</li>
+<li>Redis</li>
+<li>Apache Cassandra</li>
+<li>Google Cloud Bigtable</li>
+<li>Amazon DynamoDB</li>
+</ul>
+<p>非关系数据库不以表格式存储和组织数据。不同数据点之间没有表、行、列或关系。</p>
+<p>相反，数据存储在<strong>集合</strong>中。数据库通常是非结构化的，并使用动态架构。</p>
+<h3>非关系数据库的类型</h3>
+<p>有四种主要类型的非关系数据库：</p>
+<ul>
+<li>列式数据库</li>
+<li>键-值数据库</li>
+<li>面向文档的数据库</li>
+<li>图数据库</li>
+</ul>
+<p><strong>列式数据库</strong>在概念上类似于关系数据库，但它们使用<code class="notranslate">组</code>或<code class="notranslate">列集</code>（也称为列族）而不是行来逻辑组织相关数据。可以通过使用与单个列关联的唯一行键来独立访问列族。列式数据库搜索特定数据的速度很快，因为无需通过不相关的信息行来查找要搜索的内容。</p>
+<p><strong>键-值数据库</strong>是最简单的非关系数据库类型之一。数据以<code class="notranslate">键值对集合</code>的形式存储在字典或哈希表中。这种类型的数据库具有唯一的键。键充当指向特定值的指针并与该值相关联。分配给键的值可以是任何信息和数据类型。要检索和访问该值，请使用唯一键作为引用。</p>
+<p><strong>面向文档的数据库</strong>也以<code class="notranslate">键值对</code>的方式存储数据。但是其值是一个文档，它有一个唯一的键作为它的标识符。文档可以是任何格式，例如 XML、YAML 或二进制，通常采用 JSON 格式。这种类型的数据库以半结构化的方式存储数据。没有架构或预定义的结构。正因为如此，它更灵活，可以在项目需求发生变化时重新安排和重新设计数据库结构。它还提供了类似 SQL 的查询语言或者通过 API 来对数据执行查询以及 CRUD 操作。</p>
+<p><strong>图数据库</strong>是最复杂的非关系数据库类型，它们可以处理大量数据。图数据库专注于数据元素之间的连接和关系，并使用<code class="notranslate">图论</code>来存储、搜索和管理这些关系。图数据库使用 nodes 来存储数据，用 nodes 表示单个实体或数据。一个节点连接到另一个节点。为了表示实体之间的连接或关系，图数据库还用到了 edges。</p>
+<h3>非关系数据库中的 BASE 属性</h3>
+<p>非关系数据库提供 BASE 数据库一致性模型。该模型不像关系数据库的 ACID 模型那样严格。</p>
+<p>BASE 是以下的首字母缩写词：</p>
+<ul>
+<li><strong>B</strong>asic <strong>A</strong>vailability 基本可用，该模型不关注数据的即时一致性。但是，该系统似乎在持续工作，并始终保证数据的可用性。</li>
+<li><strong>S</strong>oft 软状态，由于缺乏即时一致性，系统的状态可能会随着时间而改变。软状态意味着系统不需要写一致性。</li>
+<li><strong>E</strong>ventual 最终一致性，主要优先事项是数据的持续可用，而不是数据一致性。但是，最终在某个时候，可以期望数据是一致的。当系统停止接收输入时，可能会发生这种情况。</li>
+</ul>
+<h2>如何在 SQL 和 NoSQL 数据库之间进行选择？</h2>
+<p>在学习了 SQL 和 NoSQL 数据库的基础知识之后，可能想知道如何为项目选择适合类型的数据库。</p>
+<p>嗯，这个问题没有明确的答案。</p>
+<p>两种数据库都有优点和缺点，这在很大程度上取决于正在构建的应用程序的类型、将使用的数据的类型以及的未来目标。</p>
+<p>通常在产品中都会涉及到这两种类型的数据库。</p>
+<p>以下是它们特征的快速摘要，可帮助决定哪一个可能更适合。</p>
+<h3>何时使用 SQL 数据库？</h3>
+<ul>
+<li>需要分布在多个表中的高度结构化的数据，需要数据遵守严格的、可预测的、预定义的和已经计划好的模式。</li>
+<li>数据将保持相对不变。如果不打算频繁更改数据库的结构并且不需要定期更新项目，SQL 数据库会很方便。请记住，它们提供的灵活性很小。</li>
+<li>需要一致的数据。</li>
+<li>数据完整性和安全性是重中之重。</li>
+<li>需要复杂查询的准确结果。</li>
+</ul>
+<p>SQL 数据库的一个缺点是它们是垂直扩展的。当存储变多时，需要增加当前机器上的硬件和提高计算能力。这可能代价高昂。需要增加处理能力和内存存储来处理增加的负载以提高性能。</p>
+<h3>何时使用 NoSQL 数据库？</h3>
+<ul>
+<li>在一个快速的开发环境中工作，需要经常调整需求并不断更改数据库结构。</li>
+<li>正在处理大量性质不同但不需要大量结构或准确性的数据。</li>
+<li>正在处理需要频繁更新的数据。NoSQL 数据库提供了一个松散、灵活和动态的模式，允许对数据进行定期更改。</li>
+<li>需要快速的查询结果和系统的持续可用性。</li>
+<li>不想对数据库进行任何前期规划、准备或设计，而是想立即开始构建。</li>
+</ul>
+<p>NoSQL 数据库的一大优势是它们可以水平扩展。</p>
+<p>它们的设计方式可以将更多机器添加到现有机器（例如云服务器）中。与需要额外 CPU（中央处理单元）或 RAM（随机存取存储器）资源的垂直缩放相比，这种行为更可取。</p>
+<p>但当然，NoSQL 数据库的一个缺点是它们不能确保数据的完整性和一致性。</p></div>
+<div style="font-size:small;margin-top:8px;float:right;">❤️ 转载文章请注明出处，谢谢！❤️</div>
+
+<button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
+<div class="comments" id="comments"></div>
+
+</div>
+    <div id="footer"><div id="footer1">Copyright © <span id="copyrightYear"></span> <a href="https://coldowl.github.io">coldowl</a></div>
+<div id="footer2"><span id="filingNum"><a href="https://beian.miit.gov.cn/" target="_blank">皖ICP备2023023469号</a> • </span>
+    <span id="runday"></span><span>Powered by <a href="https://meekdai.com/Gmeek.html" target="_blank">Gmeek</a></span>
+</div>
+
+<script>
+var now=new Date();
+document.getElementById("copyrightYear").innerHTML=now.getFullYear();
+
+if("07/10/2024"!=""){
+    var startSite=new Date("07/10/2024");
+    var diff=now.getTime()-startSite.getTime();
+    var diffDay=Math.floor(diff/(1000*60*60*24));
+    document.getElementById("runday").innerHTML="网站运行"+diffDay+"天"+" • ";
+}
+</script></div>
+</body>
+<script>
+var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z', 'copy': 'M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z', 'check': 'M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z'};
+var utterancesLoad=0;
+
+let themeSettings={
+    "dark": ["dark","moon","#00f0ff","dark-blue"],
+    "light": ["light","sun","#ff5000","github-light"],
+    "auto": ["auto","sync","","preferred-color-scheme"]
+};
+function changeTheme(mode, icon, color, utheme){
+    document.documentElement.setAttribute("data-color-mode",mode);
+    document.getElementById("themeSwitch").setAttribute("d",value=IconList[icon]);
+    document.getElementById("themeSwitch").parentNode.style.color=color;
+    if(utterancesLoad==1){utterancesTheme(utheme);}
+}
+function modeSwitch(){
+    let currentMode=document.documentElement.getAttribute('data-color-mode');
+    let newMode = currentMode === "light" ? "dark" : currentMode === "dark" ? "auto" : "light";
+    localStorage.setItem("meek_theme", newMode);
+    if(themeSettings[newMode]){
+        changeTheme(...themeSettings[newMode]);
+    }
+}
+function utterancesTheme(theme){
+    const message={type:'set-theme',theme: theme};
+    const iframe=document.getElementsByClassName('utterances-frame')[0];
+    iframe.contentWindow.postMessage(message,'https://utteranc.es');
+}
+if(themeSettings[theme]){changeTheme(...themeSettings[theme]);}
+console.log("\n %c Gmeek last https://github.com/Meekdai/Gmeek \n","padding:5px 0;background:#02d81d;color:#fff");
+</script>
+
+<script>
+document.getElementById("pathHome").setAttribute("d",IconList["home"]);
+document.getElementById("pathIssue").setAttribute("d",IconList["github"]);
+
+
+
+function openComments(){
+    cm=document.getElementById("comments");
+    cmButton=document.getElementById("cmButton");
+    cmButton.innerHTML="loading";
+    span=document.createElement("span");
+    span.setAttribute("class","AnimatedEllipsis");
+    cmButton.appendChild(span);
+
+    script=document.createElement("script");
+    script.setAttribute("src","https://utteranc.es/client.js");
+    script.setAttribute("repo","coldowl/coldowl.github.io");
+    script.setAttribute("issue-term","title");
+    
+    if(localStorage.getItem("meek_theme")=="dark"){script.setAttribute("theme","dark-blue");}
+    else if(localStorage.getItem("meek_theme")=="light") {script.setAttribute("theme","github-light");}
+    else{script.setAttribute("theme","preferred-color-scheme");}
+    
+    script.setAttribute("crossorigin","anonymous");
+    script.setAttribute("async","");
+    cm.appendChild(script);
+
+    int=self.setInterval("iFrameLoading()",200);
+}
+
+function iFrameLoading(){
+    var utterances=document.getElementsByClassName('utterances');
+    if(utterances.length==1){
+        if(utterances[0].style.height!=""){
+            utterancesLoad=1;
+            int=window.clearInterval(int);
+            document.getElementById("cmButton").style.display="none";
+            console.log("utterances Load OK");
+        }
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const createClipboardHTML = (codeContent, additionalClasses = '') => `
+        <pre class="notranslate"><code class="notranslate">${codeContent}</code></pre>
+        <div class="clipboard-container position-absolute right-0 top-0 ${additionalClasses}">
+            <clipboard-copy class="ClipboardButton btn m-2 p-0" role="button" style="display: inherit;">
+                <svg height="16" width="16" class="octicon octicon-copy m-2"><path d="${IconList["copy"]}"></path></svg>
+                <svg height="16" width="16" class="octicon octicon-check color-fg-success m-2 d-none"><path d="${IconList["check"]}"></path></svg>
+            </clipboard-copy>
+            <div class="copy-feedback">Copied!</div>
+        </div>
+    `;
+
+    const handleCodeElements = (selector = '') => {
+        document.querySelectorAll(selector).forEach(codeElement => {
+            const codeContent = codeElement.innerHTML;
+            const newStructure = document.createElement('div');
+            newStructure.className = 'snippet-clipboard-content position-relative overflow-auto';
+            newStructure.innerHTML = createClipboardHTML(codeContent);
+
+            const parentElement = codeElement.parentElement;
+            if (selector.includes('highlight')) {
+                parentElement.insertBefore(newStructure, codeElement.nextSibling);
+                parentElement.removeChild(codeElement);
+            } else {
+                parentElement.parentElement.replaceChild(newStructure, parentElement);
+            }
+        });
+    };
+
+    handleCodeElements('pre.notranslate > code.notranslate');
+    handleCodeElements('div.highlight > pre.notranslate');
+
+    let currentFeedback = null;
+    document.querySelectorAll('clipboard-copy').forEach(copyButton => {
+        copyButton.addEventListener('click', () => {
+            const codeContent = copyButton.closest('.snippet-clipboard-content').innerText;
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = codeContent;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempTextArea);
+
+            const copyIcon = copyButton.querySelector('.octicon-copy');
+            const checkIcon = copyButton.querySelector('.octicon-check');
+            const copyFeedback = copyButton.nextElementSibling;
+
+            if (currentFeedback && currentFeedback !== copyFeedback) {currentFeedback.style.display = 'none';}
+            currentFeedback = copyFeedback;
+
+            copyIcon.classList.add('d-none');
+            checkIcon.classList.remove('d-none');
+            copyFeedback.style.display = 'block';
+            copyButton.style.borderColor = 'var(--color-success-fg)';
+
+            setTimeout(() => {
+                copyIcon.classList.remove('d-none');
+                checkIcon.classList.add('d-none');
+                copyFeedback.style.display = 'none';
+                copyButton.style.borderColor = '';
+            }, 2000);
+        });
+    });
+});
+
+</script>
+<script src='https://blog.meekdai.com/Gmeek/plugins/GmeekTOC.js'></script><script src='https://blog.meekdai.com/Gmeek/plugins/lightbox.js'></script>
+
+</html>
