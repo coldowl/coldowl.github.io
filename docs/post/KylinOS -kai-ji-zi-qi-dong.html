@@ -10,17 +10,13 @@
         let theme = localStorage.getItem("meek_theme") || "light";
         document.documentElement.setAttribute("data-color-mode", theme);
     </script>
-<meta name="description" content="## KylinOS 开机自启动
+<meta name="description" content="### 前言
 
-### 前言
-
-当前的 Qt 桌面程序，需要以 Kiosk模式（自助服务终端模式）运行在设备上。">
+最近在跟的项目，甲方要求能以 Kiosk模式（自助服务终端模式）运行在麒麟操作系统上。">
 <meta property="og:title" content="KylinOS 开机自启动">
-<meta property="og:description" content="## KylinOS 开机自启动
+<meta property="og:description" content="### 前言
 
-### 前言
-
-当前的 Qt 桌面程序，需要以 Kiosk模式（自助服务终端模式）运行在设备上。">
+最近在跟的项目，甲方要求能以 Kiosk模式（自助服务终端模式）运行在麒麟操作系统上。">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://coldowl.github.io/post/KylinOS%20-kai-ji-zi-qi-dong.html">
 <meta property="og:image" content="https://coldowl.github.io/avatar.svg">
@@ -91,17 +87,18 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </div>
 </div>
     <div id="content">
-<div class="markdown-body" id="postBody"><h2>KylinOS 开机自启动</h2>
-<h3>前言</h3>
-<p>当前的 Qt 桌面程序，需要以 Kiosk模式（自助服务终端模式）运行在设备上。</p>
-<p>在这种模式下，设备会在开机时自动启动特定的应用程序或软件，且用户只能操作这个软件，无法访问其他系统功能。<br>
-退出该软件或关闭终端时，设备也会关闭或重启。</p>
+<div class="markdown-body" id="postBody"><h3>前言</h3>
+<p>最近在跟的项目，甲方要求能以 Kiosk模式（自助服务终端模式）运行在麒麟操作系统上。</p>
+<blockquote>
+<p>Kiosk模式下，设备会在开机时自动启动特定的应用程序或软件，且用户只能操作这个软件，无法访问其他系统功能。<br>
+退出该软件或关闭终端时，设备也会关闭或重启。常常用于自助机（如银行柜员机、机场自助售票机等）。</p>
+</blockquote>
 <p>当前的项目运行环境：<br>
 系统：银河麒麟桌面操作系统 V10 SP1 2303<br>
 架构：X86_64</p>
 <h3>踩坑</h3>
-<p>想实现“关闭软件的同时也关闭设备”是容易的。</p>
-<p>真正棘手的是“如何在开机的时候就启动软件”。</p>
+<p>想实现“<strong>关闭软件的同时也关闭设备</strong>”是容易的。<br>
+真正棘手的是“<strong>如何在开机的时候就启动软件</strong>”。</p>
 <p>通过摸索，找到在 Linux 环境下实现开机自启动的方案有三个：</p>
 <ul>
 <li>a.修改/etc/rc.local文件</li>
@@ -119,10 +116,10 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 总之，这个方案确实可以实现开机启动时执行某些命令，但是不能启动软件。</p>
 <p>b方案，没有尝试。但网上反馈可能会导致系统错误，设备不能正常使用。</p>
 <p>遂尝试c方案，最终完美解决了我的问题。</p>
-<p>值得一提的是，当我采用 <a href="https://blog.csdn.net/mumumu222/article/details/124566656" rel="nofollow">银河麒麟踩坑笔记——sh文件设置开机自启</a> 中的desktop方法时，软件确实可实现开机自启动，但是在软件内不能正常使用中文输入法。<br>
-表现在我直接双击执行Apprun或直接运行start.sh脚本时，程序可以运行，也可以切换并使用中文输入法。<br>
-但是当我通过desktop文件运行程序时，程序运行正常，除了在程序内我不能切换，也不能使用中文输入法。</p>
-<p>最终直接把命令写在Exec中，才最终解决问题。</p>
+<p>值得一提的是，当我采用 <a href="https://blog.csdn.net/mumumu222/article/details/124566656" rel="nofollow">银河麒麟踩坑笔记——sh文件设置开机自启</a> 中的desktop方法时，软件确实可实现开机自启动，但是在软件内<strong>不能正常使用中文输入法</strong>。<br>
+表现在我直接双击执行 Apprun 或直接运行启动程序的脚本时，程序运行时可以正常使用中文输入法。<br>
+但是当我通过 Desktop 快捷方式运行程序时，在程序内就不能使用中文输入法了。</p>
+<p>最终直接把命令写在 Desktop 快捷方式的 Exec 字段中，才解决中文无法输入的问题。</p>
 <h3>最终方案</h3>
 <ol>
 <li>
