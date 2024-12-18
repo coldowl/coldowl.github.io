@@ -12,11 +12,11 @@
     </script>
 <meta name="description" content="## 前言
 
-root 密码，指得是用于执行管理员权限操作的密码，而不一定是开机密码。">
+root 密码，指得是用于执行管理员权限操作的密码，不一定是开机密码。">
 <meta property="og:title" content="GRUB 重置 Linux Root 密码">
 <meta property="og:description" content="## 前言
 
-root 密码，指得是用于执行管理员权限操作的密码，而不一定是开机密码。">
+root 密码，指得是用于执行管理员权限操作的密码，不一定是开机密码。">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://coldowl.github.io/post/GRUB%20-zhong-zhi-%20Linux%20Root%20-mi-ma.html">
 <meta property="og:image" content="https://coldowl.github.io/avatar.svg">
@@ -88,17 +88,17 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </div>
     <div id="content">
 <div class="markdown-body" id="postBody"><h2>前言</h2>
-<p>root 密码，指得是用于执行管理员权限操作的密码，而不一定是开机密码。开机密码，实际上是用户登录系统时使用的密码。两者不能混为一谈。如果你只是忘记了开机密码，但记得 root 密码，你可以直接在 root 身份下修改密码。</p>
-<p>但是如果同时遗忘了 root 密码和自己的用户密码。那么你可能只剩下这最后的手段了。</p>
+<p>root 密码，指得是用于执行管理员权限操作的密码，不一定是开机密码。开机密码，实际上是用户登录系统时使用的密码。两者不能混为一谈。如果只是忘记了开机密码，但记得 root 密码，你可以直接在 root 身份下修改密码。</p>
+<p>同时遗忘了 root 密码和用户密码，又不愿重装系统，那么可能只剩下最后这条路了。</p>
 <h2>使用 GRUB 重置密码</h2>
-<div class="markdown-alert markdown-alert-important"><p class="markdown-alert-title"><svg class="octicon octicon-report mr-2" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v9.5A1.75 1.75 0 0 1 14.25 13H8.06l-2.573 2.573A1.458 1.458 0 0 1 3 14.543V13H1.75A1.75 1.75 0 0 1 0 11.25Zm1.75-.25a.25.25 0 0 0-.25.25v9.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h6.5a.25.25 0 0 0 .25-.25v-9.5a.25.25 0 0 0-.25-.25Zm7 2.25v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>Important</p><p>此方法需要对系统进行物理访问，也就是说你得能触碰到这台设备。</p>
+<div class="markdown-alert markdown-alert-important"><p class="markdown-alert-title"><svg class="octicon octicon-report mr-2" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v9.5A1.75 1.75 0 0 1 14.25 13H8.06l-2.573 2.573A1.458 1.458 0 0 1 3 14.543V13H1.75A1.75 1.75 0 0 1 0 11.25Zm1.75-.25a.25.25 0 0 0-.25.25v9.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h6.5a.25.25 0 0 0 .25-.25v-9.5a.25.25 0 0 0-.25-.25Zm7 2.25v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>Important</p><p>此方法需要对系统进行物理访问（也就是说你的手指能触碰到这台设备）。</p>
 </div>
 <div class="markdown-alert markdown-alert-note"><p class="markdown-alert-title"><svg class="octicon octicon-info mr-2" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.5 7.75A.75.75 0 0 1 7.25 7h1a.75.75 0 0 1 .75.75v2.75h.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1 0-1.5h.25v-2h-.25a.75.75 0 0 1-.75-.75ZM8 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"></path></svg>Note</p><p>GRUB（Grand Unified Bootloader）是大多数Linux发行版和其他类Unix操作系统的默认引导程序。它负责引导计算机加载操作系统内核，并将控制权交给操作系统。因此，我们有机会在这里重置密码。</p>
 </div>
 <p>要使用 GRUB 菜单重置或更改 root 密码，请执行以下步骤：</p>
 <ol>
 <li>
-<p>重新启动系统并按住 <code class="notranslate">Shift</code> 键或按 <code class="notranslate">Esc</code> 键进入安全模式（恢复模式）。进入安全模式后，将看到 GRUB 菜单。</p>
+<p>重新启动系统并按住 <code class="notranslate">Shift</code> 键或按 <code class="notranslate">Esc</code> 键进入安全模式（恢复模式）。进入后，将看到 GRUB 菜单。</p>
 </li>
 <li>
 <p>在菜单中，导航到高级选项。</p>
@@ -119,7 +119,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </code></pre>
 <blockquote>
 <p>在上面的行中添加 'rw' 和 'init=/bin/bash' 是告诉系统，将以读/写权限登录bash。<br>
-此配置仅对当前启动生效，在以后的启动中不起作用。</p>
+不要担心，此配置仅对当前启动生效，以后的启动中就不起作用。</p>
 </blockquote>
 </li>
 <li>
@@ -127,13 +127,13 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <div class="highlight highlight-source-shell"><pre class="notranslate">passwd root</pre></div>
 </li>
 <li>
-<p>在系统提示下，输入 root 密码，并按 <code class="notranslate">Enter</code> 键。（你也可以在这里更改任何用户的密码。）</p>
+<p>在系统提示下，输入一个新的 root 密码，并按 <code class="notranslate">Enter</code> 键。（你也可以在这里更改任何用户的密码。）</p>
 </li>
 <li>
 <p>输入密码后，将看到一条消息，说明新密码已更新。</p>
 </li>
 <li>
-<p>最后，使用 <code class="notranslate">Ctrl+Alt+Delete</code> 快捷键或在命令提示符下键入以下命令退出并重新启动系统。</p>
+<p>最后，使用 <code class="notranslate">Ctrl+Alt+Delete</code> 快捷键，或在命令提示符下键入以下命令，来退出并重新启动系统。</p>
 <div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c1">exec</span> /sbin/init</pre></div>
 </li>
 </ol></div>
