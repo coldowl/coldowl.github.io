@@ -1,8 +1,45 @@
 ## 前言
-从 MySQL5.6 开始，主从复制有两种方式：基于日志（binlog）、基于 GTID（全局事务标示符）。两者无法同时使用。
+为了实现下图里的架构，我们需要实现 MySQL 的主从复制。
+```mermaid
+graph TD
+    Server["Server (Online)"] -->|Updates| Database[("Central Database")]
+    Client1["Client 1"] -->|Online: Read/Write| Server
+    Client2["Client 2"] -->|Online: Read/Write| Server
+    Client3["Client 3"] -->|Online: Read/Write| Server
+    Server -->|Sync Data| Client1
+    Server -->|Sync Data| Client2
+    Server -->|Sync Data| Client3
+    Client1 -->|Offline: Read Only| LocalDB1[("Local Database (Client 1)")]
+    Client2 -->|Offline: Read Only| LocalDB2[("Local Database (Client 2)")]
+    Client3 -->|Offline: Read Only| LocalDB3[("Local Database (Client 3)")]
+
+    classDef serverStyle fill:#f9f,stroke:#333,stroke-width:2px;
+    classDef clientStyle fill:#bbf,stroke:#333,stroke-width:2px;
+    classDef dbStyle fill:#bfb,stroke:#333,stroke-width:2px;
+
+    class Server serverStyle;
+    class Client1,Client2,Client3 clientStyle;
+    class Database,LocalDB1,LocalDB2,LocalDB3 dbStyle;
+
+```
+项目需求可以总结为以下逻辑：  
+
+1. **客户端启动时的模式选择**：  
+   - 检测服务器状态：  
+     - 如果服务器在线，客户端以**在线模式**登录，能够写入服务器数据库。  
+     - 如果服务器不在线或通信中断，客户端以**离线模式**登录，仅能读取本地数据库，不能写入。
+
+2. **服务器在线时的同步逻辑**：  
+   - 服务器检测数据库更新，将变动数据同步到所有客户端的本地数据库。
+
+3. **数据一致性和冲突处理**：  
+   - 客户端离线时，无法写入数据库，避免了数据冲突问题。
+
 参考链接：https://zhuanlan.zhihu.com/p/685697386
 
 ## 对比总结
+从 MySQL5.6 开始，主从复制有两种方式：基于日志（binlog）、基于 GTID（全局事务标示符）。两者无法同时使用。
+
 | 特性                    | 基于 GTID 的复制                    | 基于日志文件及位置的复制          |
 |-------------------------|------------------------------------|----------------------------------|
 | **断点续传**            | 自动完成，易管理                   | 手动指定，操作复杂               |

@@ -11,10 +11,10 @@
         document.documentElement.setAttribute("data-color-mode", theme);
     </script>
 <meta name="description" content="## 前言
-从 MySQL5.6 开始，主从复制有两种方式：基于日志（binlog）、基于 GTID（全局事务标示符）。">
+为了实现下图里的架构，我们需要实现 MySQL 的主从复制。">
 <meta property="og:title" content="MySQL 主从复制">
 <meta property="og:description" content="## 前言
-从 MySQL5.6 开始，主从复制有两种方式：基于日志（binlog）、基于 GTID（全局事务标示符）。">
+为了实现下图里的架构，我们需要实现 MySQL 的主从复制。">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://coldowl.github.io/post/MySQL%20-zhu-cong-fu-zhi.html">
 <meta property="og:image" content="https://coldowl.github.io/avatar.svg">
@@ -86,9 +86,56 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </div>
     <div id="content">
 <div class="markdown-body" id="postBody"><h2>前言</h2>
-<p>从 MySQL5.6 开始，主从复制有两种方式：基于日志（binlog）、基于 GTID（全局事务标示符）。两者无法同时使用。<br>
-参考链接：<a href="https://zhuanlan.zhihu.com/p/685697386" rel="nofollow">https://zhuanlan.zhihu.com/p/685697386</a></p>
+<p>为了实现下图里的架构，我们需要实现 MySQL 的主从复制。</p>
+<div class="highlight highlight-source-mermaid"><pre class="notranslate"><span class="pl-k">graph</span> <span class="pl-c1">TD</span>
+    <span class="pl-ent">Server</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">[</span></span><span class="pl-s"><span class="pl-pds">"</span>Server (Online)<span class="pl-pds">"</span></span><span class="pl-pds"><span class="pl-sg">]</span></span></span> <span class="pl-k">--&gt;</span><span class="pl-k">|</span><span class="pl-s">Updates</span><span class="pl-k">|</span> <span class="pl-ent">Database</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">[(</span></span><span class="pl-s"><span class="pl-pds">"</span>Central Database<span class="pl-pds">"</span></span><span class="pl-pds"><span class="pl-sg">)]</span></span></span>
+    <span class="pl-ent">Client1</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">[</span></span><span class="pl-s"><span class="pl-pds">"</span>Client 1<span class="pl-pds">"</span></span><span class="pl-pds"><span class="pl-sg">]</span></span></span> <span class="pl-k">--&gt;</span><span class="pl-k">|</span><span class="pl-s">Online: Read/Write</span><span class="pl-k">|</span> <span class="pl-ent">Server</span>
+    <span class="pl-ent">Client2</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">[</span></span><span class="pl-s"><span class="pl-pds">"</span>Client 2<span class="pl-pds">"</span></span><span class="pl-pds"><span class="pl-sg">]</span></span></span> <span class="pl-k">--&gt;</span><span class="pl-k">|</span><span class="pl-s">Online: Read/Write</span><span class="pl-k">|</span> <span class="pl-ent">Server</span>
+    <span class="pl-ent">Client3</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">[</span></span><span class="pl-s"><span class="pl-pds">"</span>Client 3<span class="pl-pds">"</span></span><span class="pl-pds"><span class="pl-sg">]</span></span></span> <span class="pl-k">--&gt;</span><span class="pl-k">|</span><span class="pl-s">Online: Read/Write</span><span class="pl-k">|</span> <span class="pl-ent">Server</span>
+    <span class="pl-ent">Server</span> <span class="pl-k">--&gt;</span><span class="pl-k">|</span><span class="pl-s">Sync Data</span><span class="pl-k">|</span> <span class="pl-ent">Client1</span>
+    <span class="pl-ent">Server</span> <span class="pl-k">--&gt;</span><span class="pl-k">|</span><span class="pl-s">Sync Data</span><span class="pl-k">|</span> <span class="pl-ent">Client2</span>
+    <span class="pl-ent">Server</span> <span class="pl-k">--&gt;</span><span class="pl-k">|</span><span class="pl-s">Sync Data</span><span class="pl-k">|</span> <span class="pl-ent">Client3</span>
+    <span class="pl-ent">Client1</span> <span class="pl-k">--&gt;</span><span class="pl-k">|</span><span class="pl-s">Offline: Read Only</span><span class="pl-k">|</span> <span class="pl-ent">LocalDB1</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">[(</span></span><span class="pl-s"><span class="pl-pds">"</span>Local Database (Client 1)<span class="pl-pds">"</span></span><span class="pl-pds"><span class="pl-sg">)]</span></span></span>
+    <span class="pl-ent">Client2</span> <span class="pl-k">--&gt;</span><span class="pl-k">|</span><span class="pl-s">Offline: Read Only</span><span class="pl-k">|</span> <span class="pl-ent">LocalDB2</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">[(</span></span><span class="pl-s"><span class="pl-pds">"</span>Local Database (Client 2)<span class="pl-pds">"</span></span><span class="pl-pds"><span class="pl-sg">)]</span></span></span>
+    <span class="pl-ent">Client3</span> <span class="pl-k">--&gt;</span><span class="pl-k">|</span><span class="pl-s">Offline: Read Only</span><span class="pl-k">|</span> <span class="pl-ent">LocalDB3</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">[(</span></span><span class="pl-s"><span class="pl-pds">"</span>Local Database (Client 3)<span class="pl-pds">"</span></span><span class="pl-pds"><span class="pl-sg">)]</span></span></span>
+
+    <span class="pl-k">classDef</span> <span class="pl-en">serverStyle</span> <span class="pl-s1"><span class="pl-c1"><span class="pl-c1">fill</span></span>:<span class="pl-c1">#f9f</span></span><span class="pl-sg">,</span><span class="pl-s1"><span class="pl-c1"><span class="pl-c1">stroke</span></span>:<span class="pl-c1">#333</span></span><span class="pl-sg">,</span><span class="pl-s1"><span class="pl-c1"><span class="pl-c1">stroke-width</span></span>:<span class="pl-c1">2<span class="pl-k">px</span></span></span><span class="pl-sg">;</span>
+    <span class="pl-k">classDef</span> <span class="pl-en">clientStyle</span> <span class="pl-s1"><span class="pl-c1"><span class="pl-c1">fill</span></span>:<span class="pl-c1">#bbf</span></span><span class="pl-sg">,</span><span class="pl-s1"><span class="pl-c1"><span class="pl-c1">stroke</span></span>:<span class="pl-c1">#333</span></span><span class="pl-sg">,</span><span class="pl-s1"><span class="pl-c1"><span class="pl-c1">stroke-width</span></span>:<span class="pl-c1">2<span class="pl-k">px</span></span></span><span class="pl-sg">;</span>
+    <span class="pl-k">classDef</span> <span class="pl-en">dbStyle</span> <span class="pl-s1"><span class="pl-c1"><span class="pl-c1">fill</span></span>:<span class="pl-c1">#bfb</span></span><span class="pl-sg">,</span><span class="pl-s1"><span class="pl-c1"><span class="pl-c1">stroke</span></span>:<span class="pl-c1">#333</span></span><span class="pl-sg">,</span><span class="pl-s1"><span class="pl-c1"><span class="pl-c1">stroke-width</span></span>:<span class="pl-c1">2<span class="pl-k">px</span></span></span><span class="pl-sg">;</span>
+
+    <span class="pl-k">class</span> <span class="pl-ent">Server</span> <span class="pl-en">serverStyle</span><span class="pl-sg">;</span>
+    <span class="pl-k">class</span> <span class="pl-ent">Client1</span>,<span class="pl-ent">Client2</span>,<span class="pl-ent">Client3</span> <span class="pl-en">clientStyle</span><span class="pl-sg">;</span>
+    <span class="pl-k">class</span> <span class="pl-ent">Database</span>,<span class="pl-ent">LocalDB1</span>,<span class="pl-ent">LocalDB2</span>,<span class="pl-ent">LocalDB3</span> <span class="pl-en">dbStyle</span><span class="pl-sg">;</span>
+</pre></div>
+<p>项目需求可以总结为以下逻辑：</p>
+<ol>
+<li>
+<p><strong>客户端启动时的模式选择</strong>：</p>
+<ul>
+<li>检测服务器状态：
+<ul>
+<li>如果服务器在线，客户端以<strong>在线模式</strong>登录，能够写入服务器数据库。</li>
+<li>如果服务器不在线或通信中断，客户端以<strong>离线模式</strong>登录，仅能读取本地数据库，不能写入。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>服务器在线时的同步逻辑</strong>：</p>
+<ul>
+<li>服务器检测数据库更新，将变动数据同步到所有客户端的本地数据库。</li>
+</ul>
+</li>
+<li>
+<p><strong>数据一致性和冲突处理</strong>：</p>
+<ul>
+<li>客户端离线时，无法写入数据库，避免了数据冲突问题。</li>
+</ul>
+</li>
+</ol>
+<p>参考链接：<a href="https://zhuanlan.zhihu.com/p/685697386" rel="nofollow">https://zhuanlan.zhihu.com/p/685697386</a></p>
 <h2>对比总结</h2>
+<p>从 MySQL5.6 开始，主从复制有两种方式：基于日志（binlog）、基于 GTID（全局事务标示符）。两者无法同时使用。</p>
 <markdown-accessiblity-table><table role="table">
 <thead>
 <tr>
