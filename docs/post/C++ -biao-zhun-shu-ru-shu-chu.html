@@ -105,7 +105,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 个窗口。</p>
 </blockquote>
 <hr>
-<p>📌 为什么不用一个 <code class="notranslate">cout</code> 就好了？</p>
+<h3>为什么要定义多个输出对象？</h3>
 <p><strong>职责分离</strong>是核心原因。不同类型的信息放不同的通道里，有几个好处：</p>
 <h4>① 可以单独重定向</h4>
 <p>比如在 Linux Shell 命令行执行：</p>
@@ -144,9 +144,8 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <li><code class="notranslate">cout</code> 和 <code class="notranslate">clog</code> 一起进标准输出</li>
 <li><code class="notranslate">cerr</code> 直接去标准错误输出</li>
 </ul>
-<details><summary>📌拓展阅读</summary>
+<details><summary>📌拓展阅读：标准 I/O 文件描述符编号说明</summary>
 <p>
-标准 I/O 文件描述符编号说明
 </p><markdown-accessiblity-table><table role="table">
 <thead>
 <tr>
