@@ -52,8 +52,8 @@ test.exe > out.txt 2> err.txt
 * 哪些是程序员需要看的调试信息或错误提示
 
 ---
-
-📌 实际应用示例
+<details><summary>📌 实际应用示例</summary>
+<p>
 
 ```cpp
 #include <iostream>
@@ -72,7 +72,11 @@ int main() {
 * `cout` 和 `clog` 一起进标准输出
 * `cerr` 直接去标准错误输出
 
-<details><summary>📌拓展阅读：标准 I/O 文件描述符编号说明</summary>
+</p>
+</details>
+
+
+<details><summary>📌 拓展阅读：标准 I/O 文件描述符编号说明</summary>
 <p>
 
 名称 | 文件描述符编号 | 说明
