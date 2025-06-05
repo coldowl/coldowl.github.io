@@ -11,10 +11,10 @@
         document.documentElement.setAttribute("data-color-mode", theme);
     </script>
 <meta name="description" content="
-大型项目对构建工具的依赖，就好比大厦对地基的依赖。">
+> 大型项目对构建工具的依赖，就好比大厦对地基的依赖。">
 <meta property="og:title" content="从 qmake 到 CMake：Qt 构建工具的进化与取舍">
 <meta property="og:description" content="
-大型项目对构建工具的依赖，就好比大厦对地基的依赖。">
+> 大型项目对构建工具的依赖，就好比大厦对地基的依赖。">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://coldowl.github.io/post/cong-%20qmake%20-dao-%20CMake%EF%BC%9AQt%20-gou-jian-gong-ju-de-jin-hua-yu-qu-she.html">
 <meta property="og:image" content="https://coldowl.github.io/avatar.svg">
@@ -85,7 +85,9 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </div>
 </div>
     <div id="content">
-<div class="markdown-body" id="postBody"><p>大型项目对构建工具的依赖，就好比大厦对地基的依赖。它看不见、却撑起了整个工程的框架，一旦出问题，整个项目分分钟就会“坍塌”。一个好用的构建工具，能够极大提升项目的开发效率，简化环境配置的构建流程，让开发者专注于业务逻辑本身，而不用把精力浪费在各种“奇怪的问题”和“玄学的兼容性”上。</p>
+<div class="markdown-body" id="postBody"><blockquote>
+<p>大型项目对构建工具的依赖，就好比大厦对地基的依赖。它看不见、却撑起了整个工程的框架，一旦出问题，整个项目分分钟就会“坍塌”。一个好用的构建工具，能够极大提升项目的开发效率，简化环境配置的构建流程，让开发者专注于业务逻辑本身，而不用把精力浪费在各种“奇怪的问题”和“玄学的兼容性”上。</p>
+</blockquote>
 <p>谈到 C++ 的构建工具 <code class="notranslate">CMake</code> ，常常被人诟病的一点就是配置繁琐、语法晦涩。相比之下，Java 世界里的 Gradle、Maven 就显得人性化太多，它们配置文件结构清晰，语义友好，插件生态也更完善，更像是“现代化”的构建工具范本。</p>
 <p>Qt 作为老牌的 C++ 框架，曾雄心勃勃地主推自家的 <code class="notranslate">qmake</code> 和 <code class="notranslate">qbs</code>来取代它。无奈 <code class="notranslate">CMake</code> 已经凭借其广泛的社区支持、生态和强大的适配能力，成为了 C++ 项目事实上的标准。所以，深感无望的Qt 官方，自 Qt 6.0 后也逐渐放弃了 <code class="notranslate">qmake</code>，全面转向 <code class="notranslate">CMake</code>。至于曾经被寄予厚望的 <code class="notranslate">qbs</code>，早就凉了不止一两天了。</p>
 <p>所以，对于后来的 Qt 开发者们， 尽早放弃使用 <code class="notranslate">qmake</code> 而改用 <code class="notranslate">CMake</code> 是一个明智的决定。</p>
