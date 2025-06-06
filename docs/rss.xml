@@ -1,5 +1,91 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>coldowl</title><link>https://coldowl.github.io</link><description>完美不在于无以复加，而在于无可删减。</description><copyright>coldowl</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://coldowl.github.io/avatar.svg</url><title>avatar</title><link>https://coldowl.github.io</link></image><lastBuildDate>Thu, 05 Jun 2025 06:23:36 +0000</lastBuildDate><managingEditor>coldowl</managingEditor><ttl>60</ttl><webMaster>coldowl</webMaster><item><title>C++ 标准输入输出</title><link>https://coldowl.github.io/post/C%2B%2B%20-biao-zhun-shu-ru-shu-chu.html</link><description>读 C++ Primer 有感
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>coldowl</title><link>https://coldowl.github.io</link><description>完美不在于无以复加，而在于无可删减。</description><copyright>coldowl</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://coldowl.github.io/avatar.svg</url><title>avatar</title><link>https://coldowl.github.io</link></image><lastBuildDate>Fri, 06 Jun 2025 06:25:42 +0000</lastBuildDate><managingEditor>coldowl</managingEditor><ttl>60</ttl><webMaster>coldowl</webMaster><item><title>Qt Widgets 常用类关系图</title><link>https://coldowl.github.io/post/Qt%20Widgets%20-chang-yong-lei-guan-xi-tu.html</link><description>```mermaid
+classDiagram
+    %% 核心基类
+    class QObject
+    class QPaintDevice
+    class QWidget
+
+    QObject &lt;|-- QPaintDevice
+    QObject &lt;|-- QWidget
+    QPaintDevice &lt;|-- QWidget
+
+    %% 顶层窗口类
+    class QMainWindow
+    class QDialog
+    class QMessageBox
+    class QFileDialog
+    class QColorDialog
+    class QFontDialog
+    class QInputDialog
+
+    QWidget &lt;|-- QMainWindow
+    QWidget &lt;|-- QDialog
+    QDialog &lt;|-- QMessageBox
+    QDialog &lt;|-- QFileDialog
+    QDialog &lt;|-- QColorDialog
+    QDialog &lt;|-- QFontDialog
+    QDialog &lt;|-- QInputDialog
+
+    %% 常用控件类
+    class QLabel
+    class QPushButton
+    class QToolButton
+    class QRadioButton
+    class QCheckBox
+    class QLineEdit
+    class QTextEdit
+    class QPlainTextEdit
+    class QComboBox
+    class QSpinBox
+    class QDoubleSpinBox
+    class QSlider
+    class QProgressBar
+    class QDial
+
+    QWidget &lt;|-- QLabel
+    QWidget &lt;|-- QPushButton
+    QWidget &lt;|-- QToolButton
+    QWidget &lt;|-- QRadioButton
+    QWidget &lt;|-- QCheckBox
+    QWidget &lt;|-- QLineEdit
+    QWidget &lt;|-- QTextEdit
+    QWidget &lt;|-- QPlainTextEdit
+    QWidget &lt;|-- QComboBox
+    QWidget &lt;|-- QSpinBox
+    QWidget &lt;|-- QDoubleSpinBox
+    QWidget &lt;|-- QSlider
+    QWidget &lt;|-- QProgressBar
+    QWidget &lt;|-- QDial
+
+    %% 容器控件类
+    class QGroupBox
+    class QTabWidget
+    class QStackedWidget
+    class QScrollArea
+    class QSplitter
+    class QMdiArea
+
+    QWidget &lt;|-- QGroupBox
+    QWidget &lt;|-- QTabWidget
+    QWidget &lt;|-- QStackedWidget
+    QWidget &lt;|-- QScrollArea
+    QWidget &lt;|-- QSplitter
+    QWidget &lt;|-- QMdiArea
+
+    %% 布局类（不继承 QWidget）
+    class QLayout
+    class QVBoxLayout
+    class QHBoxLayout
+    class QGridLayout
+    class QFormLayout
+
+    QObject &lt;|-- QLayout
+    QLayout &lt;|-- QVBoxLayout
+    QLayout &lt;|-- QHBoxLayout
+    QLayout &lt;|-- QGridLayout
+    QLayout &lt;|-- QFormLayout
+```。</description><guid isPermaLink="true">https://coldowl.github.io/post/Qt%20Widgets%20-chang-yong-lei-guan-xi-tu.html</guid><pubDate>Fri, 06 Jun 2025 06:25:16 +0000</pubDate></item><item><title>C++ 标准输入输出</title><link>https://coldowl.github.io/post/C%2B%2B%20-biao-zhun-shu-ru-shu-chu.html</link><description>读 C++ Primer 有感
 
 &gt; 标准输入输出对象
 &gt;
