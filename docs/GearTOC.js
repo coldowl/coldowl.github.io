@@ -33,11 +33,49 @@ function createLineMenuTOC() {
     link.style.paddingLeft = `${(parseInt(heading.tagName.charAt(1)) - 1) * 10}px`;
     tocPanel.appendChild(link);
   });
+  
+  // 点击目录链接，滑动定位，并高亮正文对应标题
+tocPanel.querySelectorAll('a').forEach(link => {
+  link.addEventListener('click', (e) => {
+    e.preventDefault();  // 阻止 <a href> 默认跳转
+
+    const targetId = link.getAttribute('href').substring(1);
+    const targetHeading = document.getElementById(targetId);
+
+    if (targetHeading) {
+      // 平滑滚动到目标标题
+      targetHeading.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+      // 添加高亮
+      targetHeading.classList.add('highlight-heading');
+      setTimeout(() => {
+        targetHeading.classList.remove('highlight-heading');
+      }, 1000);
+    }
+
+    // 关闭目录面板
+    tocPanel.style.display = 'none';
+  });
+});
+
+
 
   // 点击横线，展开/关闭目录面板
-  lineGroup.addEventListener('click', () => {
+  lineGroup.addEventListener('click', (event) => {
+    event.stopPropagation();  // 阻止事件冒泡到 document
     tocPanel.style.display = tocPanel.style.display === 'block' ? 'none' : 'block';
   });
+
+  // 点击目录面板内，阻止冒泡
+  tocPanel.addEventListener('click', (event) => {
+    event.stopPropagation();
+  });
+
+  // 点击其它位置，关闭目录面板
+  document.addEventListener('click', () => {
+    tocPanel.style.display = 'none';
+  });
+
 
   // 滚动高亮当前章节对应横线
   window.addEventListener('scroll', () => {
@@ -137,6 +175,18 @@ const css = `
 #toc-panel a:hover {
   color: #000;
 }
+
+@keyframes highlight-fade {
+  0%   { background: #C333D0; }
+  100% { background: transparent; }
+}
+
+.highlight-heading {
+  border-radius: 3px;
+  padding: 2px 4px;
+  animation: highlight-fade 3s ease forwards;
+}
+
 
 /* 自定义滚动条样式 */
 #toc-panel::-webkit-scrollbar {
