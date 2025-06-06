@@ -1,5 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
-  const mermaidBlocks = document.querySelectorAll(".highlight-source-mermaid pre");
+  const mermaidBlocks = document.querySelectorAll(
+    ".highlight-source-mermaid pre"
+  );
 
   mermaidBlocks.forEach((block, index) => {
     const graphDefinition = block.innerText;
@@ -68,14 +70,18 @@ document.addEventListener("DOMContentLoaded", function () {
     content.style.padding = "20px";
     content.style.borderRadius = "8px";
     content.style.textAlign = "center";
-    
 
     const bigMermaid = document.createElement("div");
     bigMermaid.className = "mermaid";
     bigMermaid.textContent = graphDefinition;
-    bigMermaid.style.display = "inline-block"
+    // bigMermaid.style.display = "inline-block";
     bigMermaid.style.minWidth = "1200px";
     bigMermaid.style.minHeight = "600px";
+    bigMermaid.style.maxWidth = "90vw";
+    bigMermaid.style.maxHeight = "80vh";
+    bigMermaid.style.margin = "0 auto";
+    bigMermaid.style.display = "block";
+    bigMermaid.style.border = "2px dashed #999";
 
     const closeBtn = document.createElement("button");
     closeBtn.innerText = "×";
@@ -103,5 +109,67 @@ document.addEventListener("DOMContentLoaded", function () {
 
     mermaid.initialize({ startOnLoad: false });
     mermaid.init(undefined, bigMermaid);
+
+    let scale = 1.0;
+    let translateX = 0;
+    let translateY = 0;
+    let isDragging = false;
+    let startX = 0;
+    let startY = 0;
+
+    // 缩放功能（以鼠标为中心）
+    bigMermaid.addEventListener("wheel", (e) => {
+      e.preventDefault();
+      const delta = e.deltaY;
+
+      const rect = bigMermaid.getBoundingClientRect();
+      const offsetX = e.clientX - rect.left;
+      const offsetY = e.clientY - rect.top;
+
+      bigMermaid.style.transformOrigin = `${offsetX}px ${offsetY}px`;
+
+      if (delta < 0) {
+        scale += 0.1;
+      } else {
+        scale = Math.max(0.1, scale - 0.1);
+      }
+
+      updateTransform();
+    });
+
+    // 拖动功能
+    bigMermaid.addEventListener("mousedown", (e) => {
+      e.preventDefault();
+      isDragging = true;
+      startX = e.clientX;
+      startY = e.clientY;
+    });
+
+    document.addEventListener("mousemove", (e) => {
+      if (!isDragging) return;
+      const dx = e.clientX - startX;
+      const dy = e.clientY - startY;
+      startX = e.clientX;
+      startY = e.clientY;
+      translateX += dx;
+      translateY += dy;
+      updateTransform();
+    });
+
+    document.addEventListener("mouseup", () => {
+      isDragging = false;
+    });
+
+    bigMermaid.addEventListener("dblclick", () => {
+      scale = 1.0;
+      translateX = 0;
+      translateY = 0;
+      updateTransform();
+    });
+
+    // 更新 transform 样式
+    function updateTransform() {
+      bigMermaid.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
+    }
   }
 });
