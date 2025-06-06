@@ -52,9 +52,6 @@ tocPanel.querySelectorAll('a').forEach(link => {
         targetHeading.classList.remove('highlight-heading');
       }, 1000);
     }
-
-    // 关闭目录面板
-    tocPanel.style.display = 'none';
   });
 });
 
