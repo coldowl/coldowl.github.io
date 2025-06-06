@@ -118,75 +118,75 @@ qnx: <span class="pl-smi">target.path</span> = <span class="pl-c1">/tmp/</span>$
 else: <span class="pl-k">unix</span>:!android: <span class="pl-smi">target.path</span> = <span class="pl-c1">/opt/</span>$${<span class="pl-c1">TARGET</span>}<span class="pl-c1">/bin</span>
 !<span class="pl-en">isEmpty</span>(<span class="pl-v">target.path</span>): <span class="pl-smi">INSTALLS</span> += <span class="pl-c1">target</span>
 </pre></div>
-<div class="highlight highlight-source-cmake"><pre class="notranslate"><span class="pl-k">cmake_minimum_required</span>(<span class="pl-e">VERSION</span> 3.16)
+<div class="highlight highlight-source-cmake"><pre class="notranslate"><span class="pl-c1">cmake_minimum_required</span>(<span class="pl-c1">VERSION</span> <span class="pl-s">3.16</span>)
 
-<span class="pl-k">project</span>(untitled8 <span class="pl-e">VERSION</span> 0.1 LANGUAGES CXX)
+<span class="pl-c1">project</span>(<span class="pl-s">untitled8</span> <span class="pl-c1">VERSION</span> <span class="pl-s">0.1</span> <span class="pl-s">LANGUAGES</span> <span class="pl-s">CXX</span>)
 
-<span class="pl-k">set</span>(CMAKE_AUTOUIC <span class="pl-k">ON</span>)
-<span class="pl-k">set</span>(<span class="pl-v">CMAKE_AUTOMOC</span> <span class="pl-k">ON</span>)
-<span class="pl-k">set</span>(CMAKE_AUTORCC <span class="pl-k">ON</span>)
+<span class="pl-c1">set</span>(<span class="pl-s">CMAKE_AUTOUIC</span> <span class="pl-c1">ON</span>)
+<span class="pl-c1">set</span>(<span class="pl-c1">CMAKE_AUTOMOC</span> <span class="pl-c1">ON</span>)
+<span class="pl-c1">set</span>(<span class="pl-s">CMAKE_AUTORCC</span> <span class="pl-c1">ON</span>)
 
-<span class="pl-k">set</span>(CMAKE_CXX_STANDARD 17)
-<span class="pl-k">set</span>(CMAKE_CXX_STANDARD_REQUIRED <span class="pl-k">ON</span>)
+<span class="pl-c1">set</span>(<span class="pl-c1">CMAKE_CXX_STANDARD</span> <span class="pl-s">17</span>)
+<span class="pl-c1">set</span>(<span class="pl-s">CMAKE_CXX_STANDARD_REQUIRED</span> <span class="pl-c1">ON</span>)
 
-<span class="pl-k">find_package</span>(QT <span class="pl-k">NAMES</span> Qt6 Qt5 REQUIRED COMPONENTS Widgets)
-<span class="pl-k">find_package</span>(Qt<span class="pl-k">${QT_VERSION_MAJOR}</span> REQUIRED COMPONENTS Widgets)
+<span class="pl-c1">find_package</span>(<span class="pl-s">QT</span> <span class="pl-c1">NAMES</span> <span class="pl-s">Qt6</span> <span class="pl-s">Qt5</span> <span class="pl-s">REQUIRED</span> <span class="pl-s">COMPONENTS</span> <span class="pl-s">Widgets</span>)
+<span class="pl-c1">find_package</span>(<span class="pl-s">Qt${QT_VERSION_MAJOR}</span> <span class="pl-s">REQUIRED</span> <span class="pl-s">COMPONENTS</span> <span class="pl-s">Widgets</span>)
 
-<span class="pl-k">set</span>(PROJECT_SOURCES
-        main.cpp
-        mainwindow.cpp
-        mainwindow.h
-        mainwindow.ui
+<span class="pl-c1">set</span>(<span class="pl-en">PROJECT_SOURCES</span>
+        <span class="pl-s">main.cpp</span>
+        <span class="pl-s">mainwindow.cpp</span>
+        <span class="pl-s">mainwindow.h</span>
+        <span class="pl-s">mainwindow.ui</span>
 )
 
-<span class="pl-k">if</span>(<span class="pl-k">${QT_VERSION_MAJOR}</span> <span class="pl-k">GREATER_EQUAL</span> 6)
-    qt_add_executable(untitled8
-        MANUAL_FINALIZATION
-        <span class="pl-k">${PROJECT_SOURCES}</span>
+<span class="pl-k">if</span>(<span class="pl-smi">${QT_VERSION_MAJOR}</span> <span class="pl-k">GREATER_EQUAL</span> <span class="pl-s">6</span>)
+    <span class="pl-en">qt_add_executable</span>(<span class="pl-en">untitled8</span>
+        <span class="pl-en">MANUAL_FINALIZATION</span>
+        <span class="pl-smi">${PROJECT_SOURCES}</span>
     )
-<span class="pl-c"># Define target properties for Android with Qt 6 as:</span>
-<span class="pl-c">#    set_property(TARGET untitled8 APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR</span>
-<span class="pl-c">#                 ${CMAKE_CURRENT_SOURCE_DIR}/android)</span>
-<span class="pl-c"># For more information, see https://doc.qt.io/qt-6/qt-add-executable.html#target-creation</span>
+<span class="pl-c">#<span class="pl-c"> Define target properties for Android with Qt 6 as:</span></span>
+<span class="pl-c">#<span class="pl-c">    set_property(TARGET untitled8 APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR</span></span>
+<span class="pl-c">#<span class="pl-c">                 ${CMAKE_CURRENT_SOURCE_DIR}/android)</span></span>
+<span class="pl-c">#<span class="pl-c"> For more information, see https://doc.qt.io/qt-6/qt-add-executable.html#target-creation</span></span>
 <span class="pl-k">else</span>()
-<span class="pl-k">    if</span>(ANDROID)
-<span class="pl-k">        add_library</span>(untitled8 SHARED
-            <span class="pl-k">${PROJECT_SOURCES}</span>
+<span class="pl-k">    if</span>(<span class="pl-s">ANDROID</span>)
+        <span class="pl-c1">add_library</span>(<span class="pl-s">untitled8</span> <span class="pl-en">SHARED</span>
+            <span class="pl-smi">${PROJECT_SOURCES}</span>
         )
-<span class="pl-c"># Define properties for Android with Qt 5 after find_package() calls as:</span>
-<span class="pl-c">#    set(ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android")</span>
+<span class="pl-c">#<span class="pl-c"> Define properties for Android with Qt 5 after find_package() calls as:</span></span>
+<span class="pl-c">#<span class="pl-c">    set(ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android")</span></span>
 <span class="pl-k">    else</span>()
-<span class="pl-k">        add_executable</span>(untitled8
-            <span class="pl-k">${PROJECT_SOURCES}</span>
+        <span class="pl-c1">add_executable</span>(<span class="pl-en">untitled8</span>
+            <span class="pl-smi">${PROJECT_SOURCES}</span>
         )
 <span class="pl-k">    endif</span>()
 <span class="pl-k">endif</span>()
 
-<span class="pl-k">target_link_libraries</span>(untitled8 <span class="pl-e">PRIVATE</span> Qt<span class="pl-k">${QT_VERSION_MAJOR}</span>::Widgets)
+<span class="pl-c1">target_link_libraries</span>(<span class="pl-s">untitled8</span> <span class="pl-c1">PRIVATE</span> <span class="pl-s">Qt${QT_VERSION_MAJOR}::Widgets</span>)
 
-<span class="pl-c"># Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.</span>
-<span class="pl-c"># If you are developing for iOS or macOS you should consider setting an</span>
-<span class="pl-c"># explicit, fixed bundle identifier manually though.</span>
-<span class="pl-k">if</span>(<span class="pl-k">${QT_VERSION}</span> <span class="pl-k">VERSION_LESS</span> 6.1.0)
-<span class="pl-k">  set</span>(BUNDLE_ID_OPTION MACOSX_BUNDLE_GUI_IDENTIFIER com.example.untitled8)
+<span class="pl-c">#<span class="pl-c"> Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.</span></span>
+<span class="pl-c">#<span class="pl-c"> If you are developing for iOS or macOS you should consider setting an</span></span>
+<span class="pl-c">#<span class="pl-c"> explicit, fixed bundle identifier manually though.</span></span>
+<span class="pl-k">if</span>(<span class="pl-smi">${QT_VERSION}</span> <span class="pl-k">VERSION_LESS</span> <span class="pl-s">6.1.0</span>)
+  <span class="pl-c1">set</span>(<span class="pl-s">BUNDLE_ID_OPTION</span> <span class="pl-s">MACOSX_BUNDLE_GUI_IDENTIFIER</span> <span class="pl-s">com.example.untitled8</span>)
 <span class="pl-k">endif</span>()
-<span class="pl-k">set_target_properties</span>(untitled8 PROPERTIES
-    <span class="pl-k">${BUNDLE_ID_OPTION}</span>
-    MACOSX_BUNDLE_BUNDLE_VERSION <span class="pl-k">${PROJECT_VERSION}</span>
-    MACOSX_BUNDLE_SHORT_VERSION_STRING <span class="pl-k">${PROJECT_VERSION_MAJOR}</span>.<span class="pl-k">${PROJECT_VERSION_MINOR}</span>
-    <span class="pl-v">MACOSX_BUNDLE</span> <span class="pl-k">TRUE</span>
-    <span class="pl-v">WIN32_EXECUTABLE</span> <span class="pl-k">TRUE</span>
+<span class="pl-c1">set_target_properties</span>(<span class="pl-s">untitled8</span> <span class="pl-en">PROPERTIES</span>
+    <span class="pl-smi">${BUNDLE_ID_OPTION}</span>
+    <span class="pl-s">MACOSX_BUNDLE_BUNDLE_VERSION</span> <span class="pl-smi">${PROJECT_VERSION}</span>
+    <span class="pl-s">MACOSX_BUNDLE_SHORT_VERSION_STRING</span> <span class="pl-smi">${PROJECT_VERSION_MAJOR}</span><span class="pl-s">.${PROJECT_VERSION_MINOR}</span>
+    <span class="pl-c1">MACOSX_BUNDLE</span> <span class="pl-en">TRUE</span>
+    <span class="pl-c1">WIN32_EXECUTABLE</span> <span class="pl-en">TRUE</span>
 )
 
-<span class="pl-k">include</span>(GNUInstallDirs)
-<span class="pl-k">install</span>(TARGETS untitled8
-    <span class="pl-e">BUNDLE</span> <span class="pl-e">DESTINATION</span> .
-    LIBRARY <span class="pl-e">DESTINATION</span> <span class="pl-k">${CMAKE_INSTALL_LIBDIR}</span>
-    RUNTIME <span class="pl-e">DESTINATION</span> <span class="pl-k">${CMAKE_INSTALL_BINDIR}</span>
+<span class="pl-c1">include</span>(<span class="pl-s">GNUInstallDirs</span>)
+<span class="pl-c1">install</span>(<span class="pl-s">TARGETS</span> <span class="pl-en">untitled8</span>
+    <span class="pl-c1">BUNDLE</span> <span class="pl-c1">DESTINATION</span> <span class="pl-s">.</span>
+    <span class="pl-s">LIBRARY</span> <span class="pl-c1">DESTINATION</span> <span class="pl-smi">${CMAKE_INSTALL_LIBDIR}</span>
+    <span class="pl-s">RUNTIME</span> <span class="pl-c1">DESTINATION</span> <span class="pl-smi">${CMAKE_INSTALL_BINDIR}</span>
 )
 
-<span class="pl-k">if</span>(QT_VERSION_MAJOR <span class="pl-k">EQUAL</span> 6)
-    qt_finalize_executable(untitled8)
+<span class="pl-k">if</span>(<span class="pl-s">QT_VERSION_MAJOR</span> <span class="pl-k">EQUAL</span> <span class="pl-s">6</span>)
+    <span class="pl-en">qt_finalize_executable</span>(<span class="pl-s">untitled8</span>)
 <span class="pl-k">endif</span>()</pre></div></div>
 <div style="font-size:small;margin-top:8px;float:right;">❤️ 转载文章请注明出处，谢谢！❤️</div>
 
