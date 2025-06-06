@@ -93,6 +93,7 @@ document.addEventListener("DOMContentLoaded", function () {
     closeBtn.style.background = "transparent";
     closeBtn.style.border = "none";
     closeBtn.style.color = "#333";
+    closeBtn.style.zIndex = "10";  // 确保它盖在上方
 
     closeBtn.addEventListener("click", () => {
       overlay.remove();
