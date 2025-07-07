@@ -90,7 +90,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </blockquote>
 <p>首先，批评一下这篇百度经验，<a href="https://jingyan.baidu.com/article/f3e34a12ec500ef5ea653543.html" rel="nofollow">win7怎么查看硬盘序列号</a>，成功把人带进了沟里，但事实上<strong>磁盘ID和磁盘序列号(S/N)压根就不是一个概念</strong>，磁盘序列号出厂前就设定好了，而磁盘ID是操作系统分配的，只是磁盘的标识。</p>
 <p>那么使用 <code class="notranslate">wmic diskdrive get serialnumber</code>命令如何呢？在较新的系统上，能直接得到磁盘序列号。但在眼前这台装载Win7系统的电脑上，执行命令只得到一串40位16进制数：“2020202057202d44435732433045504c35434350”<br>
-<a target="_blank" rel="noopener noreferrer" href="https://github.com/coldowl/coldowl.github.io/assets/62004435/7eb60de5-bfcc-4ee6-bdda-95c1fa343268"><img src="https://github.com/coldowl/coldowl.github.io/assets/62004435/7eb60de5-bfcc-4ee6-bdda-95c1fa343268" alt="命令窗口" style="max-width: 100%; height: auto;"></a></p>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/coldowl/coldowl.github.io/assets/62004435/7eb60de5-bfcc-4ee6-bdda-95c1fa343268"><img src="https://github.com/coldowl/coldowl.github.io/assets/62004435/7eb60de5-bfcc-4ee6-bdda-95c1fa343268" alt="命令窗口" style="max-width: 100%;"></a></p>
 <p>其实这串数字就是磁盘序列号，但是还需要转换为ASCII码才称得上 <strong>human-readable format</strong> 。</p>
 <p>找到一个大神写的bat脚本，在管理者模式下执行。</p>
 <div class="highlight highlight-source-batchfile"><pre class="notranslate"><span class="pl-c"><span class="pl-c">::</span>测试环境Win7</span>
@@ -153,7 +153,7 @@ set/a as1=0x61+<span class="pl-v">%1</span>,h=as1/16,e=as1<span class="pl-cce">%
 <p>当我在疯狂找解决方案的时候，妹子直接从满是灰尘的机箱里，把硬盘拆下来了。我一看，好家伙，磁盘序列号不就在硬盘标签上写着嘛！(lll￢ω￢)</p>
 <p>咳咳！果然一力降十会啊，这才是查看硬盘序列号最简单的办法。<br>
 和脚本结果对比了一下，没啥问题。<br>
-<a target="_blank" rel="noopener noreferrer" href="https://github.com/coldowl/coldowl.github.io/assets/62004435/1550c296-8fdd-4db9-b591-5befa846afcd"><img src="https://github.com/coldowl/coldowl.github.io/assets/62004435/1550c296-8fdd-4db9-b591-5befa846afcd" height="300px" style="max-width: 100%; height: auto;"></a></p>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/coldowl/coldowl.github.io/assets/62004435/1550c296-8fdd-4db9-b591-5befa846afcd"><img src="https://github.com/coldowl/coldowl.github.io/assets/62004435/1550c296-8fdd-4db9-b591-5befa846afcd" height="300px" style="max-width: 100%;"></a></p>
 <p>最后提一下，其实很多软件，比如AIDA64、图吧工具箱，除了能查磁盘序列号还能查很多硬件信息，也很方便。无奈公司是保密单位，限制颇多，电脑连不了外网，也不能随便装软件，所以只能多走些弯路了。</p></div>
 <div style="font-size:small;margin-top:8px;float:right;">❤️ 转载文章请注明出处，谢谢！❤️</div>
 
