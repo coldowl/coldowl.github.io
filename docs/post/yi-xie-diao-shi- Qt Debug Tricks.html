@@ -10,15 +10,13 @@
         let theme = localStorage.getItem("meek_theme") || "light";
         document.documentElement.setAttribute("data-color-mode", theme);
     </script>
-<meta name="description" content="
-> 大型项目对构建工具的依赖，就好比大厦对地基的依赖。">
-<meta property="og:title" content="从 qmake 到 CMake：Qt 构建工具的进化与取舍">
-<meta property="og:description" content="
-> 大型项目对构建工具的依赖，就好比大厦对地基的依赖。">
+<meta name="description" content="1. 在 main 函数中添加 [qSetMessagePattern](https://doc.qt.io/archives/qt-5.15/qtglobal.html#qSetMessagePattern) 函数，能帮助打印出更多有用的信息。">
+<meta property="og:title" content="一些调试 Qt Debug Tricks">
+<meta property="og:description" content="1. 在 main 函数中添加 [qSetMessagePattern](https://doc.qt.io/archives/qt-5.15/qtglobal.html#qSetMessagePattern) 函数，能帮助打印出更多有用的信息。">
 <meta property="og:type" content="article">
-<meta property="og:url" content="https://coldowl.github.io/post/cong-%20qmake%20-dao-%20CMake%EF%BC%9AQt%20-gou-jian-gong-ju-de-jin-hua-yu-qu-she.html">
+<meta property="og:url" content="https://coldowl.github.io/post/yi-xie-diao-shi-%20Qt%20Debug%20Tricks.html">
 <meta property="og:image" content="https://coldowl.github.io/avatar.svg">
-<title>从 qmake 到 CMake：Qt 构建工具的进化与取舍</title>
+<title>一些调试 Qt Debug Tricks</title>
 <link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
 
 
@@ -61,7 +59,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 
 <body>
     <div id="header">
-<h1 class="postTitle">从 qmake 到 CMake：Qt 构建工具的进化与取舍</h1>
+<h1 class="postTitle">一些调试 Qt Debug Tricks</h1>
 <div class="title-right">
     <a href="https://coldowl.github.io" id="buttonHome" class="btn btn-invisible circle" title="首页">
         <svg class="octicon" width="16" height="16">
@@ -69,7 +67,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
         </svg>
     </a>
     
-    <a href="https://github.com/coldowl/coldowl.github.io/issues/12" target="_blank" class="btn btn-invisible circle" title="Issue">
+    <a href="https://github.com/coldowl/coldowl.github.io/issues/16" target="_blank" class="btn btn-invisible circle" title="Issue">
         <svg class="octicon" width="16" height="16">
             <path id="pathIssue" fill-rule="evenodd"></path>
         </svg>
@@ -85,109 +83,99 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </div>
 </div>
     <div id="content">
-<div class="markdown-body" id="postBody"><blockquote>
-<p>大型项目对构建工具的依赖，就好比大厦对地基的依赖。它看不见、却撑起了整个工程的框架，一旦出问题，整个项目分分钟就会“坍塌”。一个好用的构建工具，能够极大提升项目的开发效率，简化环境配置的构建流程，让开发者专注于业务逻辑本身，而不用把精力浪费在各种“奇怪的问题”和“玄学的兼容性”上。</p>
+<div class="markdown-body" id="postBody"><ol>
+<li>在 main 函数中添加 <a href="https://doc.qt.io/archives/qt-5.15/qtglobal.html#qSetMessagePattern" rel="nofollow">qSetMessagePattern</a> 函数，能帮助打印出更多有用的信息。</li>
+</ol>
+<p><strong>void qSetMessagePattern(const QString &amp;pattern)</strong></p>
+<p>函数功能：</p>
+<blockquote>
+<p><strong>Qt 5.0</strong> 引入的函数，用于更改默认消息处理程序的输出。</p>
+<p>允许调整 qDebug()、qInfo()、qWarning()、qCritical() 和 qFatal() 的输出。此外，qCDebug()、qCInfo()、qCWarning() 和 qCCritical() 的这样的分类日志输出（category logging output）格式也会进行调整。</p>
 </blockquote>
-<p>谈到 C++ 的构建工具 <code class="notranslate">CMake</code> ，常常被人诟病的一点就是配置繁琐、语法晦涩。相比之下，Java 世界里的 Gradle、Maven 就显得人性化太多，它们配置文件结构清晰，语义友好，插件生态也更完善，更像是“现代化”的构建工具范本。</p>
-<p>Qt 作为老牌的 C++ 框架，曾雄心勃勃地主推自家的 <code class="notranslate">qmake</code> 和 <code class="notranslate">qbs</code>来取代它。无奈 <code class="notranslate">CMake</code> 已经凭借其广泛的社区支持、生态和强大的适配能力，成为了 C++ 项目事实上的标准。所以，深感无望的Qt 官方，自 Qt 6.0 后也逐渐放弃了 <code class="notranslate">qmake</code>，全面转向 <code class="notranslate">CMake</code>。至于曾经被寄予厚望的 <code class="notranslate">qbs</code>，早就凉了不止一两天了。</p>
-<p>所以，对于后来的 Qt 开发者们， 尽早放弃使用 <code class="notranslate">qmake</code> 而改用 <code class="notranslate">CMake</code> 是一个明智的决定。</p>
-<p>现在，让我们看看 Qt Widgets 项目里，qmake 的 .pro 文件和 CMake 的 CMakeLists.txt 分别长什么样，顺便比较一下它们各自的优劣。</p>
-<p>构建套件：Desktop Qt 5.15.2 MSVC2019 64bit</p>
-<div class="highlight highlight-source-qmake"><pre class="notranslate"><span class="pl-c1">QT</span>    += <span class="pl-k">core</span> <span class="pl-k">gui</span>
-
-greaterThan(QT_MAJOR_VERSION, 4): <span class="pl-c1">QT</span> += widgets
-
-<span class="pl-c1">CONFIG</span> += c++17
-
-<span class="pl-c"><span class="pl-c">#</span> You can make your code fail to compile if it uses deprecated APIs.</span>
-<span class="pl-c"><span class="pl-c">#</span> In order to do so, uncomment the following line.</span>
-<span class="pl-c"><span class="pl-c">#</span>DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0</span>
-
-<span class="pl-c1">SOURCES</span> += <span class="pl-sr">\</span>
-    <span class="pl-c1">main.cpp</span> <span class="pl-sr">\</span>
-    <span class="pl-c1">mainwindow.cpp</span>
-
-<span class="pl-c1">HEADERS</span> += <span class="pl-sr">\</span>
-    <span class="pl-c1">mainwindow.h</span>
-
-<span class="pl-c1">FORMS</span> += <span class="pl-sr">\</span>
-    <span class="pl-c1">mainwindow.ui</span>
-
-<span class="pl-c"><span class="pl-c">#</span> Default rules for deployment.</span>
-qnx: <span class="pl-smi">target.path</span> = <span class="pl-c1">/tmp/</span>$${<span class="pl-c1">TARGET</span>}<span class="pl-c1">/bin</span>
-else: <span class="pl-k">unix</span>:!android: <span class="pl-smi">target.path</span> = <span class="pl-c1">/opt/</span>$${<span class="pl-c1">TARGET</span>}<span class="pl-c1">/bin</span>
-!<span class="pl-en">isEmpty</span>(<span class="pl-v">target.path</span>): <span class="pl-smi">INSTALLS</span> += <span class="pl-c1">target</span>
-</pre></div>
-<div class="highlight highlight-source-cmake"><pre class="notranslate"><span class="pl-c1">cmake_minimum_required</span>(<span class="pl-c1">VERSION</span> <span class="pl-s">3.16</span>)
-
-<span class="pl-c1">project</span>(<span class="pl-s">untitled8</span> <span class="pl-c1">VERSION</span> <span class="pl-s">0.1</span> <span class="pl-s">LANGUAGES</span> <span class="pl-s">CXX</span>)
-
-<span class="pl-c1">set</span>(<span class="pl-s">CMAKE_AUTOUIC</span> <span class="pl-c1">ON</span>)
-<span class="pl-c1">set</span>(<span class="pl-c1">CMAKE_AUTOMOC</span> <span class="pl-c1">ON</span>)
-<span class="pl-c1">set</span>(<span class="pl-s">CMAKE_AUTORCC</span> <span class="pl-c1">ON</span>)
-
-<span class="pl-c1">set</span>(<span class="pl-c1">CMAKE_CXX_STANDARD</span> <span class="pl-s">17</span>)
-<span class="pl-c1">set</span>(<span class="pl-s">CMAKE_CXX_STANDARD_REQUIRED</span> <span class="pl-c1">ON</span>)
-
-<span class="pl-c1">find_package</span>(<span class="pl-s">QT</span> <span class="pl-c1">NAMES</span> <span class="pl-s">Qt6</span> <span class="pl-s">Qt5</span> <span class="pl-s">REQUIRED</span> <span class="pl-s">COMPONENTS</span> <span class="pl-s">Widgets</span>)
-<span class="pl-c1">find_package</span>(<span class="pl-s">Qt${QT_VERSION_MAJOR}</span> <span class="pl-s">REQUIRED</span> <span class="pl-s">COMPONENTS</span> <span class="pl-s">Widgets</span>)
-
-<span class="pl-c1">set</span>(<span class="pl-en">PROJECT_SOURCES</span>
-        <span class="pl-s">main.cpp</span>
-        <span class="pl-s">mainwindow.cpp</span>
-        <span class="pl-s">mainwindow.h</span>
-        <span class="pl-s">mainwindow.ui</span>
-)
-
-<span class="pl-k">if</span>(<span class="pl-smi">${QT_VERSION_MAJOR}</span> <span class="pl-k">GREATER_EQUAL</span> <span class="pl-s">6</span>)
-    <span class="pl-en">qt_add_executable</span>(<span class="pl-en">untitled8</span>
-        <span class="pl-en">MANUAL_FINALIZATION</span>
-        <span class="pl-smi">${PROJECT_SOURCES}</span>
-    )
-<span class="pl-c">#<span class="pl-c"> Define target properties for Android with Qt 6 as:</span></span>
-<span class="pl-c">#<span class="pl-c">    set_property(TARGET untitled8 APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR</span></span>
-<span class="pl-c">#<span class="pl-c">                 ${CMAKE_CURRENT_SOURCE_DIR}/android)</span></span>
-<span class="pl-c">#<span class="pl-c"> For more information, see https://doc.qt.io/qt-6/qt-add-executable.html#target-creation</span></span>
-<span class="pl-k">else</span>()
-<span class="pl-k">    if</span>(<span class="pl-s">ANDROID</span>)
-        <span class="pl-c1">add_library</span>(<span class="pl-s">untitled8</span> <span class="pl-en">SHARED</span>
-            <span class="pl-smi">${PROJECT_SOURCES}</span>
-        )
-<span class="pl-c">#<span class="pl-c"> Define properties for Android with Qt 5 after find_package() calls as:</span></span>
-<span class="pl-c">#<span class="pl-c">    set(ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android")</span></span>
-<span class="pl-k">    else</span>()
-        <span class="pl-c1">add_executable</span>(<span class="pl-en">untitled8</span>
-            <span class="pl-smi">${PROJECT_SOURCES}</span>
-        )
-<span class="pl-k">    endif</span>()
-<span class="pl-k">endif</span>()
-
-<span class="pl-c1">target_link_libraries</span>(<span class="pl-s">untitled8</span> <span class="pl-c1">PRIVATE</span> <span class="pl-s">Qt${QT_VERSION_MAJOR}::Widgets</span>)
-
-<span class="pl-c">#<span class="pl-c"> Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.</span></span>
-<span class="pl-c">#<span class="pl-c"> If you are developing for iOS or macOS you should consider setting an</span></span>
-<span class="pl-c">#<span class="pl-c"> explicit, fixed bundle identifier manually though.</span></span>
-<span class="pl-k">if</span>(<span class="pl-smi">${QT_VERSION}</span> <span class="pl-k">VERSION_LESS</span> <span class="pl-s">6.1.0</span>)
-  <span class="pl-c1">set</span>(<span class="pl-s">BUNDLE_ID_OPTION</span> <span class="pl-s">MACOSX_BUNDLE_GUI_IDENTIFIER</span> <span class="pl-s">com.example.untitled8</span>)
-<span class="pl-k">endif</span>()
-<span class="pl-c1">set_target_properties</span>(<span class="pl-s">untitled8</span> <span class="pl-en">PROPERTIES</span>
-    <span class="pl-smi">${BUNDLE_ID_OPTION}</span>
-    <span class="pl-s">MACOSX_BUNDLE_BUNDLE_VERSION</span> <span class="pl-smi">${PROJECT_VERSION}</span>
-    <span class="pl-s">MACOSX_BUNDLE_SHORT_VERSION_STRING</span> <span class="pl-smi">${PROJECT_VERSION_MAJOR}</span><span class="pl-s">.${PROJECT_VERSION_MINOR}</span>
-    <span class="pl-c1">MACOSX_BUNDLE</span> <span class="pl-en">TRUE</span>
-    <span class="pl-c1">WIN32_EXECUTABLE</span> <span class="pl-en">TRUE</span>
-)
-
-<span class="pl-c1">include</span>(<span class="pl-s">GNUInstallDirs</span>)
-<span class="pl-c1">install</span>(<span class="pl-s">TARGETS</span> <span class="pl-en">untitled8</span>
-    <span class="pl-c1">BUNDLE</span> <span class="pl-c1">DESTINATION</span> <span class="pl-s">.</span>
-    <span class="pl-s">LIBRARY</span> <span class="pl-c1">DESTINATION</span> <span class="pl-smi">${CMAKE_INSTALL_LIBDIR}</span>
-    <span class="pl-s">RUNTIME</span> <span class="pl-c1">DESTINATION</span> <span class="pl-smi">${CMAKE_INSTALL_BINDIR}</span>
-)
-
-<span class="pl-k">if</span>(<span class="pl-s">QT_VERSION_MAJOR</span> <span class="pl-k">EQUAL</span> <span class="pl-s">6</span>)
-    <span class="pl-en">qt_finalize_executable</span>(<span class="pl-s">untitled8</span>)
-<span class="pl-k">endif</span>()</pre></div></div>
+<p>支持以下占位符：</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>占位符</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="notranslate">%{appname}</code></td>
+<td><code class="notranslate">QCoreApplication::applicationName()</code> 返回的应用程序名称</td>
+</tr>
+<tr>
+<td><code class="notranslate">%{category}</code></td>
+<td>日志类别</td>
+</tr>
+<tr>
+<td><code class="notranslate">%{file}</code></td>
+<td>源文件路径</td>
+</tr>
+<tr>
+<td><code class="notranslate">%{function}</code></td>
+<td>函数名</td>
+</tr>
+<tr>
+<td><code class="notranslate">%{line}</code></td>
+<td>源文件中的行号</td>
+</tr>
+<tr>
+<td><code class="notranslate">%{message}</code></td>
+<td>实际的日志消息内容</td>
+</tr>
+<tr>
+<td><code class="notranslate">%{pid}</code></td>
+<td><code class="notranslate">QCoreApplication::applicationPid()</code> 返回的进程 ID</td>
+</tr>
+<tr>
+<td><code class="notranslate">%{threadid}</code></td>
+<td>当前线程的系统级 ID（如果可获取）</td>
+</tr>
+<tr>
+<td><code class="notranslate">%{qthreadptr}</code></td>
+<td>指向当前 <code class="notranslate">QThread</code> 的指针（<code class="notranslate">QThread::currentThread()</code> 的结果）</td>
+</tr>
+<tr>
+<td><code class="notranslate">%{type}</code></td>
+<td>日志类型："debug"、"warning"、"critical" 或 "fatal"</td>
+</tr>
+<tr>
+<td><code class="notranslate">%{time process}</code></td>
+<td>日志消息发生的时间（以进程启动后的秒数计算，"process" 为字面量）</td>
+</tr>
+<tr>
+<td><code class="notranslate">%{time boot}</code></td>
+<td>日志消息发生的时间（以系统启动后的秒数计算，"boot" 为字面量）。如果无法获取系统启动时间，输出值不确定（参见 <code class="notranslate">QElapsedTimer::msecsSinceReference()</code>）</td>
+</tr>
+<tr>
+<td><code class="notranslate">%{time [format]}</code></td>
+<td>日志消息发生时的系统时间，格式由传入的 <code class="notranslate">format</code> 参数控制（传给 <code class="notranslate">QDateTime::toString()</code>）。若未指定 <code class="notranslate">format</code>，则使用 <code class="notranslate">Qt::ISODate</code> 格式</td>
+</tr>
+<tr>
+<td><code class="notranslate">%{backtrace [depth=N] [separator="..."]}</code></td>
+<td>调用栈，帧数由可选参数 <code class="notranslate">depth</code> 指定（默认 5），帧间分隔符由可选参数 <code class="notranslate">separator</code> 指定（默认 `"</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<blockquote>
+<p>还可以根据消息的类型使用条件判断，如果希望只当类型匹配时才输出，可以使用 <code class="notranslate">%{if-debug}</code>、<code class="notranslate">%{if-info}</code>、<code class="notranslate">%{if-warning}</code>、<code class="notranslate">%{if-critical}</code> 或 <code class="notranslate">%{if-fatal}</code>，并以 <code class="notranslate">%{endif}</code> 结束。</p>
+<p>此外，<code class="notranslate">%{if-category} ... %{endif}</code> 之间的文本仅在类别不是默认类别时才会被输出。</p>
+<p>示例：</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">QT_MESSAGE_PATTERN=<span class="pl-s"><span class="pl-pds">"</span>[%{time yyyyMMdd h:mm:ss.zzz t} %{if-debug}D%{endif}%{if-info}I%{endif}%{if-warning}W%{endif}%{if-critical}C%{endif}%{if-fatal}F%{endif}] %{file}:%{line} - %{message}<span class="pl-pds">"</span></span></pre></div>
+<p>默认的模式是：</p>
+<pre class="notranslate"><code class="notranslate">"%{if-category}%{category}: %{endif}%{message}"
+</code></pre>
+<p>模式也可以在运行时通过设置环境变量 <code class="notranslate">QT_MESSAGE_PATTERN</code> 来更改；如果同时调用了 <code class="notranslate">qSetMessagePattern()</code> 且设置了 <code class="notranslate">QT_MESSAGE_PATTERN</code>，则<strong>环境变量优先</strong>。</p>
+<p><strong>注意：</strong> 消息模式仅适用于<strong>非结构化日志</strong>（例如默认输出到 stderr 的日志）。像 <strong>systemd</strong> 这样的结构化日志系统会直接记录原始消息，并尽可能附带更多可获取的结构化信息。</p>
+<p>自定义消息处理程序可以使用 <code class="notranslate">qFormatLogMessage()</code> 来考虑消息模式。</p>
+</blockquote>
+<ol start="2">
+<li>在生产环境调试一个 GUI 程序，只要一点改动，就可以让程序运行时附带控制台，来方便调试。</li>
+</ol>
+<p>生产环境是 Windows 平台，在.pro文件中添加 <code class="notranslate">CONFIG += console</code>，然后在 Qt Creator 中，勾选 <code class="notranslate">项目&gt;构建和运行&gt;运行设置&gt;在终端中运行</code> 的单选框。若使 MS Dev studio，在等价于在菜单选项 Project Properties&gt;Configuration Properties&gt;Linker&gt;System&gt;Subsystem&gt;Console 。</p>
+<p>生产环境是 Linux 平台，直接在命令行窗口启动可执行文件，可在命令行窗口查看调试信息。</p></div>
 <div style="font-size:small;margin-top:8px;float:right;">❤️ 转载文章请注明出处，谢谢！❤️</div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
