@@ -10,13 +10,13 @@
         let theme = localStorage.getItem("meek_theme") || "light";
         document.documentElement.setAttribute("data-color-mode", theme);
     </script>
-<meta name="description" content="读 C++ Primer 有感
+<meta name="description" content="再读 C++ Primer 有感
 
 > 标准输入输出对象
 >
 > 标准库定义了4个IO对象。">
 <meta property="og:title" content="C++ 标准输入输出">
-<meta property="og:description" content="读 C++ Primer 有感
+<meta property="og:description" content="再读 C++ Primer 有感
 
 > 标准输入输出对象
 >
@@ -91,7 +91,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </div>
 </div>
     <div id="content">
-<div class="markdown-body" id="postBody"><p>读 C++ Primer 有感</p>
+<div class="markdown-body" id="postBody"><p>再读 C++ Primer 有感</p>
 <blockquote>
 <p>标准输入输出对象</p>
 <p>标准库定义了4个IO对象。为了处理输入，我们使用一个名为cin（发音为see-in）<br>
@@ -117,6 +117,8 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <li><code class="notranslate">2&gt;</code> 会重定向 <code class="notranslate">stderr</code>（<code class="notranslate">cerr</code>）</li>
 </ul>
 <p>这样就可以把正常信息、错误信息分开保存，便于排查。</p>
+<p>比如：使用 find 命令查找文件位置时，每每遍历到一些需要 root 权限的系统目录，就会恼人地在结果里提示该路径“权限不够”，这时候就可使用这个技巧，将所有错误信息（包括权限错误）重定向到空设备，只显示成功找到的结果。</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo find / -name <span class="pl-s"><span class="pl-pds">"</span>.ssh<span class="pl-pds">"</span></span> -type d <span class="pl-k">2&gt;</span>/dev/null</pre></div>
 <h4>② 输出时机不同</h4>
 <ul>
 <li><code class="notranslate">cerr</code> 是<strong>无缓冲</strong>的，程序崩溃前的最后一个错误消息能保证马上显示出来。</li>
