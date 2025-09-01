@@ -1,3 +1,4 @@
+[how-to-contribute](https://opensource.guide/zh-hans/how-to-contribute/)
 https://github.com/firstcontributions/first-contributions
 
 ### 怎么给开源项目提拉取请求（Pull Request）？
