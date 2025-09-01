@@ -10,11 +10,11 @@
         let theme = localStorage.getItem("meek_theme") || "light";
         document.documentElement.setAttribute("data-color-mode", theme);
     </script>
-<meta name="description" content="## Qt C++ 中的 qDebug：调试利器还是性能陷阱？
+<meta name="description" content="qDebug：调试利器还是性能陷阱？
 
 在 Qt C++ 开发中，`qDebug()` 是开发者最常使用的调试工具之一。">
 <meta property="og:title" content="Qt C++ 中的 qDebug：调试利器还是性能陷阱？">
-<meta property="og:description" content="## Qt C++ 中的 qDebug：调试利器还是性能陷阱？
+<meta property="og:description" content="qDebug：调试利器还是性能陷阱？
 
 在 Qt C++ 开发中，`qDebug()` 是开发者最常使用的调试工具之一。">
 <meta property="og:type" content="article">
@@ -87,7 +87,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </div>
 </div>
     <div id="content">
-<div class="markdown-body" id="postBody"><h2>Qt C++ 中的 qDebug：调试利器还是性能陷阱？</h2>
+<div class="markdown-body" id="postBody"><p>qDebug：调试利器还是性能陷阱？</p>
 <p>在 Qt C++ 开发中，<code class="notranslate">qDebug()</code> 是开发者最常使用的调试工具之一。它提供了简洁的语法和强大的输出功能，极大地便利了调试过程。然而，许多开发者也会产生疑问：<strong>在 Release 模式下保留 <code class="notranslate">qDebug()</code> 语句，会不会对程序性能产生影响？是否应该彻底移除这些语句？</strong></p>
 <p>本文将从原理、实际行为、性能影响以及最佳实践四个方面，对 <code class="notranslate">qDebug()</code> 进行深入浅出的剖析。</p>
 <hr>
