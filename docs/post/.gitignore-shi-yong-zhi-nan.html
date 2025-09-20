@@ -122,8 +122,8 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <ul>
 <li>忽略某个特定路径的文件，但允许其他路径的相同文件</li>
 </ul>
-<div class="highlight highlight-source-gitignore"><pre class="notranslate">/<span class="pl-e">config</span>/<span class="pl-k">*</span><span class="pl-e">.json</span>   <span class="pl-c"><span class="pl-c">#</span> 忽略 config 目录下的所有 .json 文件</span>
-<span class="pl-k">!</span>/<span class="pl-e">config</span>/<span class="pl-e">keep.json</span>  <span class="pl-c"><span class="pl-c">#</span> 但保留 keep.json</span></pre></div>
+<div class="highlight highlight-source-gitignore"><pre class="notranslate">/<span class="pl-e">config</span>/<span class="pl-k">*</span><span class="pl-e">.json</span>   # <span class="pl-e">忽略</span> <span class="pl-e">config</span> <span class="pl-e">目录下的所有</span> <span class="pl-e">.json</span> <span class="pl-e">文件</span>
+<span class="pl-k">!</span>/<span class="pl-e">config</span>/<span class="pl-e">keep.json</span>  # <span class="pl-e">但保留</span> <span class="pl-e">keep.json</span></pre></div>
 <h2>3. 如何使 <code class="notranslate">.gitignore</code> 规则生效？</h2>
 <h3><strong>（1）新文件忽略</strong></h3>
 <p>如果 <code class="notranslate">.gitignore</code> 文件在提交之前已经存在，那么 Git 会自动忽略匹配的文件。</p>
