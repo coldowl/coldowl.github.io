@@ -1,5 +1,30 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>coldowl</title><link>https://coldowl.github.io</link><description>完美不在于无以复加，而在于无可删减。</description><copyright>coldowl</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://coldowl.github.io/avatar.svg</url><title>avatar</title><link>https://coldowl.github.io</link></image><lastBuildDate>Mon, 27 Oct 2025 03:59:14 +0000</lastBuildDate><managingEditor>coldowl</managingEditor><ttl>60</ttl><webMaster>coldowl</webMaster><item><title>我有了一块 Arm 板，然后呢？</title><link>https://coldowl.github.io/post/wo-you-le-yi-kuai-%20Arm%20-ban-%EF%BC%8C-ran-hou-ni-%EF%BC%9F.html</link><description>当然是要在 Arm 跑程序啦！
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>coldowl</title><link>https://coldowl.github.io</link><description>完美不在于无以复加，而在于无可删减。</description><copyright>coldowl</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://coldowl.github.io/avatar.svg</url><title>avatar</title><link>https://coldowl.github.io</link></image><lastBuildDate>Mon, 27 Oct 2025 06:58:59 +0000</lastBuildDate><managingEditor>coldowl</managingEditor><ttl>60</ttl><webMaster>coldowl</webMaster><item><title>探秘 C++ 编译流程</title><link>https://coldowl.github.io/post/tan-mi-%20C%2B%2B%20-bian-yi-liu-cheng.html</link><description>```mermaid
+graph TD
+    subgraph 'C++ 编译全过程'
+        A['&lt;b&gt;源代码文件&lt;/b&gt;&lt;br/&gt;main.cpp'] -- '包含头文件、宏替换等' --&gt; B{'1. 预处理器&lt;br/&gt;(Preprocessor)'};
+        B --&gt; C['&lt;b&gt;预处理后的文件&lt;/b&gt;&lt;br/&gt;main.i'];
+        C -- '词法分析、语法分析、优化' --&gt; D{'2. 编译器&lt;br/&gt;(Compiler)'};
+        D --&gt; E['&lt;b&gt;汇编代码&lt;/b&gt;&lt;br/&gt;main.s'];
+        E -- '翻译成机器指令' --&gt; F{'3. 汇编器&lt;br/&gt;(Assembler)'};
+        F --&gt; G['&lt;b&gt;目标文件 / 对象文件&lt;/b&gt;&lt;br/&gt;main.o'];
+        
+        subgraph '链接阶段 (Linking)'
+            G --&gt; H{'4. 链接器&lt;br/&gt;(Linker)'};
+            I['&lt;b&gt;库文件和其他目标文件&lt;/b&gt;&lt;br/&gt;.lib, .a, .so, other.o'] --&gt; H;
+        end
+
+        H -- '符号解析、地址重定位' --&gt; J['✨ &lt;b&gt;可执行文件&lt;/b&gt;&lt;br/&gt;main.exe 或 main'];
+    end
+
+    %% Styling
+    style A fill:#cde4ff,stroke:#6699ff,stroke-width:2px
+    style C fill:#cde4ff,stroke:#6699ff,stroke-width:2px
+    style E fill:#cde4ff,stroke:#6699ff,stroke-width:2px
+    style G fill:#cde4ff,stroke:#6699ff,stroke-width:2px
+    style I fill:#f9f,stroke:#939,stroke-width:2px
+    style J fill:#aaffaa,stroke:#339933,stroke-width:2px
+```。</description><guid isPermaLink="true">https://coldowl.github.io/post/tan-mi-%20C%2B%2B%20-bian-yi-liu-cheng.html</guid><pubDate>Mon, 27 Oct 2025 06:58:28 +0000</pubDate></item><item><title>我有了一块 Arm 板，然后呢？</title><link>https://coldowl.github.io/post/wo-you-le-yi-kuai-%20Arm%20-ban-%EF%BC%8C-ran-hou-ni-%EF%BC%9F.html</link><description>当然是要在 Arm 跑程序啦！
 
 问题是怎么才能在 Arm 板上运行自己的程序呢？这就要提到交叉编译的概念了。</description><guid isPermaLink="true">https://coldowl.github.io/post/wo-you-le-yi-kuai-%20Arm%20-ban-%EF%BC%8C-ran-hou-ni-%EF%BC%9F.html</guid><pubDate>Thu, 28 Aug 2025 09:29:05 +0000</pubDate></item><item><title>初探 Socket 通信</title><link>https://coldowl.github.io/post/chu-tan-%20Socket%20-tong-xin.html</link><description>什么是 Socket ？
 
