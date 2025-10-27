@@ -94,19 +94,13 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <div class="markdown-body" id="postBody"><p>再读 C++ Primer 有感</p>
 <blockquote>
 <p>标准输入输出对象</p>
-<p>标准库定义了4个IO对象。为了处理输入，我们使用一个名为cin（发音为see-in）<br>
-的istream类型的对象。这个对象也被称为标准输入（standardinput）。对于输出，我们<br>
-使用一个名为cout（发音为see-out）的ostream类型的对象。此对象也被称为标准输<br>
-出（standardoutput）。标准库还定义了其他两个ostream对象，名为cerr和clog（发<br>
-音分别为see-err和see-log）。我们通常用cerr来输出警告和错误消息，因此它也被称为<br>
-标准错误（standarderror）。而clog用来输出程序运行时的一般性信息。</p>
-<p>系统通常将程序所运行的窗口与这些对象关联起来。因此，当我们读取cin，数据将<br>
-从程序正在运行的窗口读入，当我们向cout、cerr和clog写入数据时，将会写到同一<br>
-个窗口。</p>
+<p>标准库定义了4个IO对象。为了处理输入，我们使用一个名为cin（发音为see-in） 的istream类型的对象。这个对象也被称为标准输入（standardinput）。对于输出，我们 使用一个名为cout（发音为see-out）的ostream类型的对象。此对象也被称为标准输出（standardoutput）。</p>
+<p>标准库还定义了其他两个ostream对象，名为cerr和clog（发音分别为see-err和see-log）。我们通常用cerr来输出警告和错误消息，因此它也被称为 标准错误（standarderror）。而clog用来输出程序运行时的一般性信息。</p>
+<p>系统通常将程序所运行的窗口与这些对象关联起来。因此，当我们读取cin，数据将从程序正在运行的窗口读入，当我们向cout、cerr和clog写入数据时，将会写到同一个窗口。</p>
 </blockquote>
 <hr>
 <h3>为什么要定义多个输出对象？</h3>
-<p><strong>职责分离</strong>是核心原因。不同类型的信息放不同的通道里，有几个好处：</p>
+<p>主要是为了<strong>职责分离</strong>。不同类型的信息放不同的通道里，有几个好处：</p>
 <h4>① 可以单独重定向</h4>
 <p>比如在 Linux Shell 命令行执行：</p>
 <div class="highlight highlight-source-shell"><pre class="notranslate">./myapp <span class="pl-k">&gt;</span> out.log <span class="pl-k">2&gt;</span> err.log</pre></div>
@@ -117,7 +111,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <li><code class="notranslate">2&gt;</code> 会重定向 <code class="notranslate">stderr</code>（<code class="notranslate">cerr</code>）</li>
 </ul>
 <p>这样就可以把正常信息、错误信息分开保存，便于排查。</p>
-<p>比如：使用 find 命令查找文件位置时，每每遍历到一些需要 root 权限的系统目录，就会恼人地在结果里提示该路径“权限不够”，这时候就可使用这个技巧，将所有错误信息（包括权限错误）重定向到空设备，只显示成功找到的结果。</p>
+<p>比如：使用 find 命令查找文件位置时，每每遍历到需要 root 权限的系统目录，就会恼人地提示该路径“权限不够”。若将所有错误信息（包括权限错误）重定向到空设备，只显示成功找到的目录，输出会清爽很多。</p>
 <div class="highlight highlight-source-shell"><pre class="notranslate">sudo find / -name <span class="pl-s"><span class="pl-pds">"</span>.ssh<span class="pl-pds">"</span></span> -type d <span class="pl-k">2&gt;</span>/dev/null</pre></div>
 <h4>② 输出时机不同</h4>
 <ul>
