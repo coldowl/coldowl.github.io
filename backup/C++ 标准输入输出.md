@@ -1,6 +1,11 @@
 C++语言本身并未定义任何输入输出语句，转而通过 STL 标准库来提供 IO 机制。
 
-IO 库中使用最多的可能是 iostream 库，库名中的术语“stream（流）”的概念在计算机领域被广泛使用，根据书里的说法：_The term stream is intended to suggest that the characters are generated, or consumed, sequentially over time._即术语“流”想要表达的是字符是顺序生成或消耗的。简单来说，iostream 库里将 IO 设备中写入或读出的一个字符序列视为一个流。
+### 流的概念
+IO 库中使用最多的可能是 iostream 库。库名中的“stream”，即“流”，是计算机邻域的核心概念。
+
+根据书里的说法：_The term stream is intended to suggest that the characters are generated, or consumed, sequentially over time._ （术语“流”想要表达的是，随着时间的推移，字符是顺序生成或消耗的。）
+
+简单来说，可以认为 IO 设备中写入或读出的字符序列，就像水流一样，从一个地方"流"到另一个地方。
 
 > 标准输入输出对象
 >
