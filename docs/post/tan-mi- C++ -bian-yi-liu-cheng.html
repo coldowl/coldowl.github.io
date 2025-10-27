@@ -35,7 +35,16 @@ graph TD
     style G fill:#cde4ff,stroke:#6699ff,stroke-width:2px
     style I fill:#f9f,stroke:#939,stroke-width:2px
     style J fill:#aaffaa,stroke:#339933,stroke-width:2px
-```。">
+```
+
+C++ 的编译过程通常可以分为四个主要阶段：
+
+1. 预处理（Preprocessing）
+2. 编译（Compilation）
+3. 汇编（Assembly）
+4. 链接（Linking）
+
+下面以一个简单的 C++ 程序为例，逐步剖析这个过程。">
 <meta property="og:title" content="探秘 C++ 编译流程">
 <meta property="og:description" content="```mermaid
 graph TD
@@ -62,7 +71,16 @@ graph TD
     style G fill:#cde4ff,stroke:#6699ff,stroke-width:2px
     style I fill:#f9f,stroke:#939,stroke-width:2px
     style J fill:#aaffaa,stroke:#339933,stroke-width:2px
-```。">
+```
+
+C++ 的编译过程通常可以分为四个主要阶段：
+
+1. 预处理（Preprocessing）
+2. 编译（Compilation）
+3. 汇编（Assembly）
+4. 链接（Linking）
+
+下面以一个简单的 C++ 程序为例，逐步剖析这个过程。">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://coldowl.github.io/post/tan-mi-%20C%2B%2B%20-bian-yi-liu-cheng.html">
 <meta property="og:image" content="https://coldowl.github.io/avatar.svg">
@@ -156,7 +174,201 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
     <span class="pl-k">style</span> <span class="pl-ent">E</span> <span class="pl-s1"><span class="pl-c1"><span class="pl-c1">fill</span></span>:<span class="pl-c1">#cde4ff</span></span><span class="pl-sg">,</span><span class="pl-s1"><span class="pl-c1"><span class="pl-c1">stroke</span></span>:<span class="pl-c1">#6699ff</span></span><span class="pl-sg">,</span><span class="pl-s1"><span class="pl-c1"><span class="pl-c1">stroke-width</span></span>:<span class="pl-c1">2<span class="pl-k">px</span></span></span>
     <span class="pl-k">style</span> <span class="pl-ent">G</span> <span class="pl-s1"><span class="pl-c1"><span class="pl-c1">fill</span></span>:<span class="pl-c1">#cde4ff</span></span><span class="pl-sg">,</span><span class="pl-s1"><span class="pl-c1"><span class="pl-c1">stroke</span></span>:<span class="pl-c1">#6699ff</span></span><span class="pl-sg">,</span><span class="pl-s1"><span class="pl-c1"><span class="pl-c1">stroke-width</span></span>:<span class="pl-c1">2<span class="pl-k">px</span></span></span>
     <span class="pl-k">style</span> <span class="pl-ent">I</span> <span class="pl-s1"><span class="pl-c1"><span class="pl-c1">fill</span></span>:<span class="pl-c1">#f9f</span></span><span class="pl-sg">,</span><span class="pl-s1"><span class="pl-c1"><span class="pl-c1">stroke</span></span>:<span class="pl-c1">#939</span></span><span class="pl-sg">,</span><span class="pl-s1"><span class="pl-c1"><span class="pl-c1">stroke-width</span></span>:<span class="pl-c1">2<span class="pl-k">px</span></span></span>
-    <span class="pl-k">style</span> <span class="pl-ent">J</span> <span class="pl-s1"><span class="pl-c1"><span class="pl-c1">fill</span></span>:<span class="pl-c1">#aaffaa</span></span><span class="pl-sg">,</span><span class="pl-s1"><span class="pl-c1"><span class="pl-c1">stroke</span></span>:<span class="pl-c1">#339933</span></span><span class="pl-sg">,</span><span class="pl-s1"><span class="pl-c1"><span class="pl-c1">stroke-width</span></span>:<span class="pl-c1">2<span class="pl-k">px</span></span></span></pre></div></div>
+    <span class="pl-k">style</span> <span class="pl-ent">J</span> <span class="pl-s1"><span class="pl-c1"><span class="pl-c1">fill</span></span>:<span class="pl-c1">#aaffaa</span></span><span class="pl-sg">,</span><span class="pl-s1"><span class="pl-c1"><span class="pl-c1">stroke</span></span>:<span class="pl-c1">#339933</span></span><span class="pl-sg">,</span><span class="pl-s1"><span class="pl-c1"><span class="pl-c1">stroke-width</span></span>:<span class="pl-c1">2<span class="pl-k">px</span></span></span></pre></div>
+<p>C++ 的编译过程通常可以分为四个主要阶段：</p>
+<ol>
+<li>预处理（Preprocessing）</li>
+<li>编译（Compilation）</li>
+<li>汇编（Assembly）</li>
+<li>链接（Linking）</li>
+</ol>
+<p>下面以一个简单的 C++ 程序为例，逐步剖析这个过程。</p>
+<div class="highlight highlight-source-c++"><pre class="notranslate">#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>iostream<span class="pl-pds">&gt;</span></span>
+
+#<span class="pl-k">define</span> <span class="pl-en">GREETING</span> <span class="pl-s"><span class="pl-pds">"</span>Hello, C++!<span class="pl-pds">"</span></span>
+
+<span class="pl-k">int</span> <span class="pl-en">main</span>() {
+    std::cout &lt;&lt; GREETING &lt;&lt; std::endl;
+    <span class="pl-k">return</span> <span class="pl-c1">0</span>;
+}</pre></div>
+<p>预处理<br>
+好的！我们来探秘 C++ 编译的过程，用通俗的中文讲解，尽量清晰简洁，同时深入剖析关键点。如果有具体问题或想深入某部分，随时告诉我！</p>
+<h3>C++ 编译过程概览</h3>
+<p>C++ 程序从源代码（<code class="notranslate">.cpp</code> 文件）到可执行文件（<code class="notranslate">.exe</code> 或其他格式），需要经过几个关键步骤。这个过程通常由 <strong>编译器</strong>（如 GCC、Clang、MSVC）完成，主要包括以下四个阶段：</p>
+<ol>
+<li><strong>预处理 (Preprocessing)</strong></li>
+<li><strong>编译 (Compilation)</strong></li>
+<li><strong>汇编 (Assembly)</strong></li>
+<li><strong>链接 (Linking)</strong></li>
+</ol>
+<p>为了更直观地理解，以下是 C++ 编译过程的示意图：</p>
+<p><a href="https://icarus.cs.weber.edu/~dab/cs1410/textbook/1.Basics/images/compiler.png" rel="nofollow"></a></p>
+<p>下面我们逐一拆解这些步骤，带你看看代码背后发生了什么。</p>
+<hr>
+<h3>1. 预处理 (Preprocessing)</h3>
+<p><strong>这是编译的第一步，处理源代码中的“宏指令”和预处理器命令。</strong></p>
+<ul>
+<li>
+<p><strong>做什么？</strong></p>
+<ul>
+<li>处理以 <code class="notranslate">#</code> 开头的指令，比如 <code class="notranslate">#include</code>、<code class="notranslate">#define</code>、<code class="notranslate">#ifdef</code> 等。</li>
+<li>展开宏定义（把宏替换为实际内容）。</li>
+<li>删除注释（代码中的 <code class="notranslate">//</code> 或 <code class="notranslate">/* */</code> 会被移除）。</li>
+<li>处理条件编译（根据 <code class="notranslate">#ifdef</code>、<code class="notranslate">#else</code> 等决定哪些代码保留）。</li>
+<li>将 <code class="notranslate">#include</code> 的头文件内容插入到源文件中。</li>
+</ul>
+</li>
+<li>
+<p><strong>例子：</strong><br>
+假设你有以下代码：</p>
+<div class="highlight highlight-source-c++"><pre class="notranslate">#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>iostream<span class="pl-pds">&gt;</span></span>
+#<span class="pl-k">define</span> <span class="pl-en">MAX</span> <span class="pl-c1">100</span>
+<span class="pl-k">int</span> <span class="pl-en">main</span>() {
+    std::cout &lt;&lt; MAX &lt;&lt; std::endl;
+    <span class="pl-k">return</span> <span class="pl-c1">0</span>;
+}</pre></div>
+<p>预处理器会：</p>
+<ul>
+<li>把 <code class="notranslate">#include &lt;iostream&gt;</code> 替换为 <code class="notranslate">iostream</code> 头文件的实际内容（一大堆标准库代码）。</li>
+<li>把 <code class="notranslate">MAX</code> 替换为 <code class="notranslate">100</code>。</li>
+<li>删除所有注释（如果有）。</li>
+<li>输出一个“纯净”的临时文件（通常以 <code class="notranslate">.i</code> 或 <code class="notranslate">.ii</code> 后缀保存）。</li>
+</ul>
+</li>
+</ul>
+<p>以下是预处理阶段的详细示意图：</p>
+<ul>
+<li>
+<p><strong>如何查看？</strong><br>
+用 GCC 可以运行：</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">g++ -E source.cpp -o source.i</pre></div>
+<p>打开 <code class="notranslate">source.i</code>，你会看到展开后的代码，可能有几千行，因为头文件内容被全部插入。</p>
+</li>
+<li>
+<p><strong>注意点：</strong><br>
+预处理不检查语法错误，只是机械地替换和展开。</p>
+</li>
+</ul>
+<hr>
+<h3>2. 编译 (Compilation)</h3>
+<p><strong>这一步把预处理后的代码翻译成汇编语言。</strong></p>
+<ul>
+<li>
+<p><strong>做什么？</strong></p>
+<ul>
+<li>编译器分析代码的语法和语义，检查是否有错误（比如变量未声明、类型不匹配）。</li>
+<li>将 C++ 代码翻译成目标平台的汇编语言（低级语言，接近机器码）。</li>
+<li>生成的汇编代码以 <code class="notranslate">.s</code> 文件形式存储。</li>
+</ul>
+</li>
+<li>
+<p><strong>例子：</strong><br>
+继续上面的代码，<code class="notranslate">std::cout &lt;&lt; 100 &lt;&lt; std::endl;</code> 可能被翻译成类似 x86 汇编的指令：</p>
+<div class="highlight highlight-source-assembly"><pre class="notranslate"><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">eax</span><span class="pl-s1">,</span><span class="pl-en"> </span><span class="pl-c1">100</span>
+<span class="pl-k">call</span><span class="pl-en"> _ZSt4cout</span></pre></div>
+<p>（具体指令因编译器和平台而异。）</p>
+</li>
+<li>
+<p><strong>如何查看？</strong><br>
+用 GCC：</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">g++ -S source.i -o source.s</pre></div>
+<p><code class="notranslate">source.s</code> 文件就是汇编代码，里面是针对特定 CPU 架构的指令。</p>
+</li>
+<li>
+<p><strong>注意点：</strong></p>
+<ul>
+<li>编译器会优化代码，比如内联函数、删除无用代码（死代码消除）。</li>
+<li>这一步生成的代码还不能直接运行，因为它只是汇编语言。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3>3. 汇编 (Assembly)</h3>
+<p><strong>把汇编代码翻译成机器码，生成目标文件。</strong></p>
+<ul>
+<li>
+<p><strong>做什么？</strong></p>
+<ul>
+<li>汇编器（Assembler）将 <code class="notranslate">.s</code> 文件中的汇编指令转换为二进制机器码。</li>
+<li>生成目标文件（Object File，通常是 <code class="notranslate">.o</code> 或 <code class="notranslate">.obj</code> 文件），包含机器码和符号表（记录函数、变量的地址等）。</li>
+</ul>
+</li>
+<li>
+<p><strong>例子：</strong><br>
+汇编代码中的 <code class="notranslate">mov eax, 100</code> 会被翻译成类似 <code class="notranslate">B8 64 00 00 00</code> 这样的二进制指令（具体取决于 CPU 架构）。</p>
+</li>
+<li>
+<p><strong>如何查看？</strong><br>
+用 GCC：</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">as source.s -o source.o</pre></div>
+<p>（通常 <code class="notranslate">g++</code> 会自动调用汇编器。）</p>
+</li>
+<li>
+<p><strong>注意点：</strong></p>
+<ul>
+<li>目标文件是特定平台的二进制代码，但还不能运行，因为它可能引用了其他文件中的代码或库。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3>4. 链接 (Linking)</h3>
+<p><strong>把多个目标文件和库“缝合”在一起，生成可执行文件。</strong></p>
+<ul>
+<li><strong>做什么？</strong>
+<ul>
+<li>链接器（Linker）将程序的多个 <code class="notranslate">.o</code> 文件、静态库（<code class="notranslate">.a</code>）或动态库（<code class="notranslate">.so</code>、<code class="notranslate">.dll</code>）组合起来。</li>
+<li>解析符号引用（比如 <code class="notranslate">std::cout</code> 的实际地址）。</li>
+<li>分配内存地址，确定每个函数和变量的最终位置。</li>
+<li>生成最终的可执行文件（<code class="notranslate">.exe</code> 或无后缀的二进制文件）。</li>
+</ul>
+</li>
+</ul>
+<p>以下是多文件项目中链接阶段的示意图：</p>
+<ul>
+<li>
+<p><strong>例子：</strong><br>
+在上面的代码中，<code class="notranslate">std::cout</code> 和 <code class="notranslate">std::endl</code> 是标准库中的符号。链接器会找到标准库（比如 <code class="notranslate">libstdc++</code>）的实现，把它们的地址填入代码。</p>
+</li>
+<li>
+<p><strong>如何查看？</strong><br>
+用 GCC 完成整个编译：</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">g++ source.cpp -o program</pre></div>
+<p>或者单独链接：</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">ld source.o -o program -lc</pre></div>
+<p>（<code class="notranslate">-lc</code> 表示链接 C 标准库。）</p>
+</li>
+<li>
+<p><strong>注意点：</strong></p>
+<ul>
+<li>链接分为<strong>静态链接</strong>（把库代码直接打包进可执行文件）和<strong>动态链接</strong>（运行时加载库）。</li>
+<li>链接错误（比如“undefined reference”）通常是因为缺少库或符号未定义。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3>编译完整命令</h3>
+<p>通常，我们用一条命令完成所有步骤：</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">g++ source.cpp -o program</pre></div>
+<p>这会自动调用预处理器、编译器、汇编器和链接器。</p>
+<hr>
+<h3>深入：编译器优化</h3>
+<p>编译器在编译和链接时会进行优化，比如：</p>
+<ul>
+<li><strong>内联函数</strong>：将小函数直接嵌入调用处，减少函数调用开销。</li>
+<li><strong>循环展开</strong>：把循环展开为重复语句，提高执行效率。</li>
+<li><strong>常量折叠</strong>：计算常量表达式（如 <code class="notranslate">2 + 3</code> 直接变成 <code class="notranslate">5</code>）。</li>
+<li>优化级别可以通过选项控制，比如：
+<div class="highlight highlight-source-shell"><pre class="notranslate">g++ -O2 source.cpp -o program</pre></div>
+（<code class="notranslate">-O2</code> 是常用优化级别，<code class="notranslate">-O0</code> 关闭优化，<code class="notranslate">-O3</code> 更激进。）</li>
+</ul>
+<hr>
+<h3>常见问题与调试</h3>
+<ol>
+<li><strong>预处理错误</strong>：通常是宏定义或头文件路径错误。检查 <code class="notranslate">-I</code> 选项或环境变量。</li>
+<li><strong>编译错误</strong>：语法错误、类型错误。仔细读编译器报错信息，通常会指出行号。</li>
+<li><strong>链接错误</strong>：提示“undefined reference”时，检查是否缺少库（用 <code class="notranslate">-l</code> 指定）或源文件。</li>
+<li><strong>运行时错误</strong>：可能是动态库路径问题，设置 <code class="notranslate">LD_LIBRARY_PATH</code>（Linux）或确保 DLL 在正确位置（Windows）。</li>
+</ol></div>
 <div style="font-size:small;margin-top:8px;float:right;">❤️ 转载文章请注明出处，谢谢！❤️</div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
