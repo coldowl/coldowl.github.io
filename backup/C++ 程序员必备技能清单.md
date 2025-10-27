@@ -13,6 +13,7 @@ STL 标准库 | 容器（vector、map、unordered_map、set）、迭代器、算
 调试与性能优化 | 熟悉 GDB / Visual Studio 调试、性能分析（perf、VTune）、时间复杂度分析。
 版本控制 | 熟练使用 Git，理解分支、合并、rebase、提交规范。
 构建系统 | 能配置和阅读 CMakeLists.txt，了解编译、链接、依赖管理。
+ ———————————— | ——————————————————————————————————
 **Level 2** | **具备以下技能对中高级岗位、跨平台开发尤为重要。**
 多线程与并发 | 熟悉 std::thread、mutex、atomic、condition_variable，理解死锁与竞态条件。
 跨平台开发 | 熟悉 Linux / Windows / macOS 平台差异；掌握 GCC / Clang / MSVC 编译选项。
@@ -21,6 +22,7 @@ STL 标准库 | 容器（vector、map、unordered_map、set）、迭代器、算
 模块化与组件化 | 掌握动态库、静态库、插件系统设计。
 单元测试 | 使用 GoogleTest、Catch2 等编写测试用例；掌握持续集成基础。
 日志与异常处理 | 使用 spdlog / log4cplus；合理设计异常机制与错误恢复逻辑。
+ ———————————— | ——————————————————————————————————
 **Level 3** | **用来在简历或面试中脱颖而出。**
 Qt / wxWidgets / MFC / ImGui | 图形界面开发经验是桌面开发岗位的重要加分项。
 数据库开发 | 会用 SQLite / MySQL / PostgreSQL 访问接口，理解 ORM 框架。
