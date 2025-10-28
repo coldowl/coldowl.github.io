@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html data-color-mode="light" data-dark-theme="dark_colorblind" data-light-theme="light" lang="zh-CN">
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href='https://mirrors.sustech.edu.cn/cdnjs/ajax/libs/Primer/21.0.7/primer.css' rel='stylesheet' />
+    <script src='https://blog.meekdai.com/Gmeek/plugins/GmeekBSZ.js'></script><script src='https://coldowl.github.io/GearTOC.js'></script></script><script src='https://coldowl.github.io/mermaidMarkdown.js'></script>
+    <link rel="icon" href="https://coldowl.github.io/avatar.svg"><script>
+        let theme = localStorage.getItem("meek_theme") || "light";
+        document.documentElement.setAttribute("data-color-mode", theme);
+    </script>
+<meta name="description" content="[fetch_wiki_images.py](https://github.com/user-attachments/files/23181190/fetch_wiki_images.py)
+
+引子 — 一次偶然的启发  
+
+前阵子在 Hacker News 刷到一条关于“ADS‑B 数据可视化”的讨论，链接指向 ClickHouse/adsb.exposed 项目。">
+<meta property="og:title" content="从 Hacker News 到飞机图库：我如何用 ClickHouse/adsb.exposed 构建 Aircraft 图片抓取流水线">
+<meta property="og:description" content="[fetch_wiki_images.py](https://github.com/user-attachments/files/23181190/fetch_wiki_images.py)
+
+引子 — 一次偶然的启发  
+
+前阵子在 Hacker News 刷到一条关于“ADS‑B 数据可视化”的讨论，链接指向 ClickHouse/adsb.exposed 项目。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://coldowl.github.io/post/cong-%20Hacker%20News%20-dao-fei-ji-tu-ku-%EF%BC%9A-wo-ru-he-yong-%20ClickHouse-adsb.exposed%20-gou-jian-%20Aircraft%20-tu-pian-zhua-qu-liu-shui-xian.html">
+<meta property="og:image" content="https://coldowl.github.io/avatar.svg">
+<title>从 Hacker News 到飞机图库：我如何用 ClickHouse/adsb.exposed 构建 Aircraft 图片抓取流水线</title>
+
+
+
+</head>
+<style>
+body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;padding: 45px;font-size: 16px;font-family: sans-serif;line-height: 1.25;}
+#header{display:flex;padding-bottom:8px;border-bottom: 1px solid var(--borderColor-muted, var(--color-border-muted));margin-bottom: 16px;}
+#footer {margin-top:64px; text-align: center;font-size: small;}
+
+</style>
+
+<style>
+.postTitle{margin: auto 0;font-size:40px;font-weight:bold;}
+.title-right{display:flex;margin:auto 0 0 auto;}
+.title-right .circle{padding: 14px 16px;margin-right:8px;}
+#postBody{border-bottom: 1px solid var(--color-border-default);padding-bottom:36px;}
+#postBody hr{height:2px;}
+#cmButton{height:48px;margin-top:48px;}
+#comments{margin-top:64px;}
+.g-emoji{font-size:24px;}
+@media (max-width: 600px) {
+    body {padding: 8px;}
+    .postTitle{font-size:24px;}
+}
+
+</style>
+
+
+
+
+<body>
+    <div id="header">
+<h1 class="postTitle">从 Hacker News 到飞机图库：我如何用 ClickHouse/adsb.exposed 构建 Aircraft 图片抓取流水线</h1>
+<div class="title-right">
+    <a href="https://coldowl.github.io" id="buttonHome" class="btn btn-invisible circle" title="首页">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathHome" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+    <a href="https://github.com/coldowl/coldowl.github.io/issues/23" target="_blank" class="btn btn-invisible circle" title="Issue">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathIssue" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+
+    <a class="btn btn-invisible circle" onclick="modeSwitch();" title="切换主题">
+        <svg class="octicon" width="16" height="16" >
+            <path id="themeSwitch" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+
+</div>
+</div>
+    <div id="content">
+<div class="markdown-body" id="postBody"><p><a href="https://github.com/user-attachments/files/23181190/fetch_wiki_images.py">fetch_wiki_images.py</a></p>
+<p>引子 — 一次偶然的启发</p>
+<p>前阵子在 Hacker News 刷到一条关于“ADS‑B 数据可视化”的讨论，链接指向 ClickHouse/adsb.exposed 项目。点进去一看，项目作者Alexey Milovidov 等人使用 GridLayer + ClickHouse 后端，实现了一个出彩的 ADS‑B 可视化工程。项目使用 ClickHouse 作为后端存储与在线查询引擎，以极高的吞吐与并发支持地图瓦片式可视化。并且支持多种数据源（adsbexchange、airplanes.live 等），并把这些数据整合后用于地图渲染与报告生成。</p>
+<p>我注意到在前端（index.html）里有一个“报告”系统，当鼠标悬停在某些字段（如飞机型号）时，会调用维基百科 API 去尝试获取对应图片并显示——这给了我极好的灵感。</p>
+<p>作为正在开发 ADS‑B 接收机的一名爱好者，我一直苦于没有稳定、详实的飞机元数据（例如机型全称、图片、版权信息等），这篇文章恰好触及了我的痛点：如果能把飞机数据和图片结合，就能显著提升我的项目体验与用户界面。于是我开始着手把思路落地。</p>
+<p>我的目标<br>
+把收集到的 ADS‑B 数据（至少有注册号、ICAO hex、可能的型号/业主信息）与一个尽量完整的 Aircraft 数据库（包含图片与版权信息）链接起来，并能自动为每条飞机记录找到一张合理的图片并把图片和版权信息保存下来/展示出来。</p>
+<p>总体思路与流程（从数据到图片）</p>
+<ol>
+<li>数据来源
+<ul>
+<li>实时 ADS‑B 数据：来自本地接收机或上游集成（例如 adsbexchange、airplanes.live）。这些数据提供了 ICAO hex、注册号（N‑号）、航班号、以及部分机型字段。</li>
+<li>补充元数据：通过已有公开数据表（adsb.exposed 示例里有 flickr_mercator、flickr 等预抓取的照片表）或外部数据库（例如 planespotters、airframes）来补充型号/照片索引。</li>
+</ul>
+</li>
+<li>识别候选关键字
+<ul>
+<li>优先使用 model（机型名），若无则尝试 registration（注册号，如 N901GW）、owner/operator（业主）、ICAO hex 等，组合搜索词（如 "A320 aircraft"、"N901GW aircraft"）以提高命中率。</li>
+</ul>
+</li>
+<li>搜索并获取图片（客户端实现思路）
+<ul>
+<li>先尝试精确页面匹配（action=query&amp;titles=...）。</li>
+<li>若精确查无结果，则使用搜索接口（action=query&amp;list=search）取第一个结果作为候选。</li>
+<li>使用 Wikimedia REST API 的 page summary（/api/rest_v1/page/summary/{title}）优先获取 thumbnail 或 originalimage（单次请求通常能得到缩略图信息）。</li>
+<li>若需要更详细版权信息，则调用 action=query&amp;prop=imageinfo&amp;iiprop=extmetadata 对 File:<a target="_blank" rel="noopener noreferrer" href=""><img style="max-width: 100%;"></a> 请求 extmetadata（LicenseShortName、Artist、Credit 等）。</li>
+<li>对返回的缩略图 URL 做合理处理（或直接请求指定尺寸的 pithumbsize），并缓存搜索结果以减少重复请求。</li>
+</ul>
+</li>
+<li>下载与保存
+<ul>
+<li>将图片按规则命名并保存到指定目录（例如以 registration/title 命名），同时记录 image_url 与 attribution（版权/作者）到数据库或 CSV/JSON 记录中。</li>
+</ul>
+</li>
+<li>展示与交互
+<ul>
+<li>在前端（地图或报告）实现 hover 显示图片与版权信息，或在你的接收机界面上显示缩略图和链接到原始维基页面/媒体页。</li>
+</ul>
+</li>
+</ol>
+<p>关键实现细节（我实际做的技术点）</p>
+<ul>
+<li>优先使用 Wikimedia REST summary：它语义清晰，通常能一次性返回摘要、thumbnail/originalimage、pageimage 等字段，比起逐次调用 action=query 的多个参数，效率和稳定性都更好。</li>
+<li>当 REST summary 未提供时，用 pageimages + pithumbsize 强制获取指定尺寸缩略图，避免手工替换 URL 字符串（比起在缩略图 URL 上做正则替换更稳健）。</li>
+<li>为了获取版权/作者信息，必须调用 imageinfo.extmetadata（action=query）。extmetadata 包含 LicenseShortName、Artist、Credit、UsageTerms 等字段，可以合成 attribution 文本。</li>
+<li>做本地缓存：对于同一个搜索词尽量只请求一次（memory cache 或把结果序列化到本地文件），鼠标快速移动或批量处理时能节约很多请求数。</li>
+<li>处理特殊情况：
+<ul>
+<li>Disambiguation 页面：若 summary.type == "disambiguation"，尝试用更具上下文的候选词（比如加上 "aircraft"）。</li>
+<li>无图片时降级：返回失败标记并记录候选词供人工补充或后续批量处理。</li>
+</ul>
+</li>
+<li>速率限制与礼节：对 Wikipedia 等公共服务做适度的请求间隔（比如 0.1–0.2s），并设置合理的 User‑Agent 标识说明用途与联系方式，避免被限流或封禁。</li>
+<li>在 Notebook 中运行脚本时注意 argparse 问题：ipykernel 会传入额外的命令行参数导致 parse_args 报错；解决方案包括直接 import 并调用函数、或者使用 parse_known_args() 忽略未知参数。</li>
+</ul>
+<p>我用到的核心脚本（简述）</p>
+<ul>
+<li>一个轻量的 Python 脚本（requests 依赖）实现了上述流程：从 record（包含 ICAO/reg/owner/model）生成候选搜索词，按优先级查找维基页面，取得图片 URL，再调用 imageinfo.extmetadata 获取版权信息，最后下载图片保存并输出结果。</li>
+<li>脚本包含缓存、简单的重试与节流，并能在 Jupyter Notebook 中显示下载的图片（若需要）。</li>
+</ul>
+
+<p>运行体验与结果</p>
+<ul>
+<li>在本地用几条示例记录测试后（包括只含注册号或仅含 owner 的记录），脚本能成功为大部分记录找到合适的维基图片并把版权信息抓取下来。对于少数没有公开维基条目的个例（例如某些私人小型飞机或老旧注册号），脚本会返回“未找到图片”的结果，这时可以用第三方数据库（FAA、planespotters）补充 model，再重新搜索维基或直接搜 Commons / Flickr 等站点。</li>
+<li>将图片与 ADS‑B 数据结合后，地图/报告界面在视觉上提升很大：用户把鼠标移动到飞机型号/注册号时可以看到飞机外观与授权信息，调试与展示都更直观。</li>
+</ul>
+<p>版权与合规注意事项</p>
+<ul>
+<li>维基百科及 Wikimedia Commons 上的图片由众多不同许可持有人上传，常见许可包括 CC BY、CC BY‑SA、公有领域等。务必在展示或再分发时遵守相应许可（显示作者、链接来源、注明许可类型等）。调用 imageinfo.extmetadata 能获取必要的版权元数据。</li>
+<li>对于商业用途，务必核实图片许可是否允许该用途（部分图片禁止商业用途或有 ShareAlike 的要求）。</li>
+<li>在批量抓取图片时要尊重 remote 服务（限速、不要短时间内大量并发请求），并在 User‑Agent 中留下联系方式便于被联系。</li>
+</ul>
+<p>下一步我打算</p>
+<ul>
+<li>批量化：把脚本改为线程池/异步方式并限制并发（例如 5–10 个并发），对大数据库批量抓取更高效同时安全。</li>
+<li>数据增强：先把 registration 映射到 model（使用 FAA/planespotters API 或本地数据），再用 model 查维基，提高命中率。</li>
+<li>本地镜像或缓存代理：若需要长期大量请求，可以考虑把常用的图片/元数据缓存在自己的存储或 CDN 上（并保留版权信息）。</li>
+<li>更智能的匹配：用自然语言处理或简单规则（如正则清洗型号字符串）来改进搜索词，减少错误匹配。</li>
+</ul>
+<p>结语<br>
+从 Hacker News 的一次浏览，到翻阅 ClickHouse/adsb.exposed 源码并借鉴其思路，再到把维基百科与 ADS‑B 数据结合成一个可用的图片抓取流水线，这个过程既满足了我的工程好奇心，也解决了项目里一个实际的痛点。希望这篇整理能帮助同样在做 ADS‑B 或飞行相关数据可视化的朋友们少走弯路——我可以把用于抓图的脚本（含批处理与 notebook 调用示例）整理好附在文下。</p>
+<p>—— End —</p></div>
+<div style="font-size:small;margin-top:8px;float:right;">❤️ 转载文章请注明出处，谢谢！❤️</div>
+
+<button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
+<div class="comments" id="comments"></div>
+
+</div>
+    <div id="footer"><div id="footer1">Copyright © <span id="copyrightYear"></span> <a href="https://coldowl.github.io">coldowl</a></div>
+<div id="footer2">
+    <span id="runday"></span><span>Powered by <a href="https://meekdai.com/Gmeek.html" target="_blank">Gmeek</a></span>
+</div>
+
+<script>
+var now=new Date();
+document.getElementById("copyrightYear").innerHTML=now.getFullYear();
+
+if("07/10/2024"!=""){
+    var startSite=new Date("07/10/2024");
+    var diff=now.getTime()-startSite.getTime();
+    var diffDay=Math.floor(diff/(1000*60*60*24));
+    document.getElementById("runday").innerHTML="网站运行"+diffDay+"天"+" • ";
+}
+</script></div>
+</body>
+<script>
+var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z'};
+var utterancesLoad=0;
+
+let themeSettings={
+    "dark": ["dark","moon","#00f0ff","dark-blue"],
+    "light": ["light","sun","#ff5000","github-light"],
+    "auto": ["auto","sync","","preferred-color-scheme"]
+};
+function changeTheme(mode, icon, color, utheme){
+    document.documentElement.setAttribute("data-color-mode",mode);
+    document.getElementById("themeSwitch").setAttribute("d",value=IconList[icon]);
+    document.getElementById("themeSwitch").parentNode.style.color=color;
+    if(utterancesLoad==1){utterancesTheme(utheme);}
+}
+function modeSwitch(){
+    let currentMode=document.documentElement.getAttribute('data-color-mode');
+    let newMode = currentMode === "light" ? "dark" : currentMode === "dark" ? "auto" : "light";
+    localStorage.setItem("meek_theme", newMode);
+    if(themeSettings[newMode]){
+        changeTheme(...themeSettings[newMode]);
+    }
+}
+function utterancesTheme(theme){
+    const message={type:'set-theme',theme: theme};
+    const iframe=document.getElementsByClassName('utterances-frame')[0];
+    iframe.contentWindow.postMessage(message,'https://utteranc.es');
+}
+if(themeSettings[theme]){changeTheme(...themeSettings[theme]);}
+console.log("\n %c Gmeek last https://github.com/Meekdai/Gmeek \n","padding:5px 0;background:#02d81d;color:#fff");
+</script>
+
+<script>
+document.getElementById("pathHome").setAttribute("d",IconList["home"]);
+document.getElementById("pathIssue").setAttribute("d",IconList["github"]);
+
+
+
+function openComments(){
+    cm=document.getElementById("comments");
+    cmButton=document.getElementById("cmButton");
+    cmButton.innerHTML="loading";
+    span=document.createElement("span");
+    span.setAttribute("class","AnimatedEllipsis");
+    cmButton.appendChild(span);
+
+    script=document.createElement("script");
+    script.setAttribute("src","https://utteranc.es/client.js");
+    script.setAttribute("repo","coldowl/coldowl.github.io");
+    script.setAttribute("issue-term","title");
+    
+    if(localStorage.getItem("meek_theme")=="dark"){script.setAttribute("theme","dark-blue");}
+    else if(localStorage.getItem("meek_theme")=="light") {script.setAttribute("theme","github-light");}
+    else{script.setAttribute("theme","preferred-color-scheme");}
+    
+    script.setAttribute("crossorigin","anonymous");
+    script.setAttribute("async","");
+    cm.appendChild(script);
+
+    int=self.setInterval("iFrameLoading()",200);
+}
+
+function iFrameLoading(){
+    var utterances=document.getElementsByClassName('utterances');
+    if(utterances.length==1){
+        if(utterances[0].style.height!=""){
+            utterancesLoad=1;
+            int=window.clearInterval(int);
+            document.getElementById("cmButton").style.display="none";
+            console.log("utterances Load OK");
+        }
+    }
+}
+
+
+
+</script>
+<script src='https://blog.meekdai.com/Gmeek/plugins/lightbox.js'></script><script src='https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js'></script><script src='https://coldowl.github.io/EasterEgg.js'></script>
+
+</html>
