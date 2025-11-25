@@ -61,3 +61,5 @@ UPX 是最著名的开源可执行文件压缩/加壳工具，且支持 Windows 
 ### 3 引导安装程序
 
 ### 4 静态编译
+
+<img width="637" height="377" alt="Image" src="https://github.com/user-attachments/assets/2c792930-1a74-4ba8-9015-f2b3cc01b4e0" />
