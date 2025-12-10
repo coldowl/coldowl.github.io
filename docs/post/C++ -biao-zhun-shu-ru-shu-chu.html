@@ -84,16 +84,22 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </div>
     <div id="content">
 <div class="markdown-body" id="postBody"><p>C++语言本身并未定义任何输入输出语句，转而通过 STL 标准库来提供 IO 机制。</p>
+<p>这主要通过三种方式实现：</p>
+<ul>
+<li>OOP-style Stream-based I/O Library - 面向对象风格的基于流的 I/O 库</li>
+<li>Print-based Family Of Functions - 基于打印的函数族，自C++23起</li>
+<li>C-style I/O Functions - C 风格 I/O 函数的标准集合</li>
+</ul>
+<p>现在我们主要谈论基于流的 I/O 机制</p>
 <h3>流的概念</h3>
 <p>IO 库中使用最多的可能是 iostream 库。库名中的“stream”，即“流”，是计算机邻域的核心概念。</p>
-<p>根据书里的说法：<em>The term stream is intended to suggest that the characters are generated, or consumed, sequentially over time.</em> （术语“流”想要表达的是，随着时间的推移，字符是顺序生成或消耗的。）</p>
+<p>根据 <em>C++ Primer, Fifth Edition</em> 里的说法：<em>The term stream is intended to suggest that the characters are generated, or consumed, sequentially over time.</em> （术语“流”想要表达的是，随着时间的推移，字符是顺序生成或消耗的。）</p>
 <p>简单来说，可以认为 IO 设备中写入或读出的字符序列，就像水流一样，从一个地方"流"到另一个地方。</p>
-<blockquote>
-<p>标准输入输出对象</p>
-<p>标准库定义了4个IO对象。为了处理输入，我们使用一个名为cin（发音为see-in） 的istream类型的对象。这个对象也被称为标准输入（standardinput）。对于输出，我们 使用一个名为cout（发音为see-out）的ostream类型的对象。此对象也被称为标准输出（standardoutput）。</p>
-<p>标准库还定义了其他两个ostream对象，名为cerr和clog（发音分别为see-err和see-log）。我们通常用cerr来输出警告和错误消息，因此它也被称为 标准错误（standarderror）。而clog用来输出程序运行时的一般性信息。</p>
+<h3>标准输入输出对象</h3>
+<p>标准库定义了4个IO对象。</p>
+<p>为了处理输入，我们使用一个名为 cin 的 istream 类型的对象。这个对象也被称为标准输入（standard input）。对于输出，我们使用一个名为 cout 的 ostream 类型的对象。此对象也被称为标准输出（standard output）。</p>
+<p>标准库还定义了其他两个 ostream 对象，名为 cerr 和 clog。我们通常用 cerr 来输出警告和错误消息，因此它也被称为标准错误（standarderror）。而 clog 用来输出程序运行时的一般性信息。</p>
 <p>系统通常将程序所运行的窗口与这些对象关联起来。因此，当我们读取cin，数据将从程序正在运行的窗口读入，当我们向cout、cerr和clog写入数据时，将会写到同一个窗口。</p>
-</blockquote>
 <hr>
 <h3>为什么要定义多个输出对象？</h3>
 <p>主要是为了<strong>职责分离</strong>。不同类型的信息放不同的通道里，有几个好处：</p>
