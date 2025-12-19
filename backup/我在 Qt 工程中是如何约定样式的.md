@@ -36,18 +36,23 @@
 ```text
 res/
  └─ qss/
-     ├─ theme.qss      // 唯一入口
+     ├─ theme.json      // 唯一入口
      ├─ base.qss       // 全局基础样式
      ├─ button.qss     // 按钮规范
      └─ view.qss       // View / Item / Scrollbar
 ```
 
-`theme.qss` 本身不写具体样式，只负责组织：
+`theme.json` 本身不写具体样式，只负责组织：
 
-```css
-@import "base.qss";
-@import "button.qss";
-@import "view.qss";
+```json
+{
+  "name": "theme_name",
+  "qss": [
+    ":/res/qss/base.qss",
+    ":/res/qss/button.qss",
+    ":/res/qss/treeview.qss"
+  ]
+}
 ```
 
 这样做的好处是：当你想重构样式时，只需要盯着这一个入口文件。
@@ -58,12 +63,21 @@ res/
 在代码层面，我只允许样式在 `main.cpp` 里出现一次：
 
 ```cpp
-static QString loadQss(const QString &path)
+static QString loadQss(const QString &jsonPath)
 {
-    QFile f(path);
-    if (!f.open(QFile::ReadOnly | QFile::Text))
-        return {};
-    return QString::fromUtf8(f.readAll());
+    QFile f(jsonPath);
+    f.open(QIODevice::ReadOnly | QIODevice::Text);
+
+    const auto doc = QJsonDocument::fromJson(f.readAll());
+    const auto arr = doc["qss"].toArray();
+
+    QString out;
+    for (const auto &v : arr) {
+        QFile qssFile(v.toString());
+        if (qssFile.open(QIODevice::ReadOnly | QIODevice::Text))
+            out += QString::fromUtf8(qssFile.readAll()) + "\n";
+    }
+    return out;
 }
 
 int main(int argc, char *argv[])
