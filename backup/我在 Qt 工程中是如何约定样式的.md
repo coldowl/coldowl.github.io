@@ -83,7 +83,7 @@ static QString loadQss(const QString &jsonPath)
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
-    app.setStyleSheet(loadQss(":/res/qss/theme.qss"));
+    app.setStyleSheet(loadQss(":/res/qss/theme.json"));
 
     MainWindow w;
     w.show();
