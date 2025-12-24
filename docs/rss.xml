@@ -1,5 +1,58 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>coldowl</title><link>https://coldowl.github.io</link><description>完美不在于无以复加，而在于无可删减。</description><copyright>coldowl</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://coldowl.github.io/avatar.svg</url><title>avatar</title><link>https://coldowl.github.io</link></image><lastBuildDate>Fri, 19 Dec 2025 01:34:18 +0000</lastBuildDate><managingEditor>coldowl</managingEditor><ttl>60</ttl><webMaster>coldowl</webMaster><item><title>我在 Qt 工程中是如何约定样式的</title><link>https://coldowl.github.io/post/wo-zai-%20Qt%20-gong-cheng-zhong-shi-ru-he-yue-ding-yang-shi-de.html</link><description>## 一、为什么要专门约定样式
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>coldowl</title><link>https://coldowl.github.io</link><description>完美不在于无以复加，而在于无可删减。</description><copyright>coldowl</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://coldowl.github.io/avatar.svg</url><title>avatar</title><link>https://coldowl.github.io</link></image><lastBuildDate>Wed, 24 Dec 2025 09:11:54 +0000</lastBuildDate><managingEditor>coldowl</managingEditor><ttl>60</ttl><webMaster>coldowl</webMaster><item><title>TQA40I (ARMhf) Qt 5.15.2 交叉编译环境搭建指南</title><link>https://coldowl.github.io/post/TQA40I%20%28ARMhf%29%20Qt%205.15.2%20-jiao-cha-bian-yi-huan-jing-da-jian-zhi-nan.html</link><description>## 环境准备
+查阅厂家文档，得知 TQA40I CoreB 核心板使用的交叉编译器为 
+  - 宿主机: WSL2 (Ubuntu 24.04 LTS)
+  - 目标平台: 全志 A40i (ARMv7 Cortex-A7, 32位)
+  - 工具链: arm-linux-gnueabihf-gcc/g++
+  - Qt版本: 5.15.2
+  
+预先新建 /opt/A40i 文件夹存放搭建环境所需的依赖
+
+## 安装必要依赖
+厂家提供 ubuntu_env_install.sh 脚本，用于在搭建环境前安装一些必要工具
+``` shell
+add-apt-repository ppa:openjdk-r/ppa  
+apt-get update
+echo y | apt-get install openjdk-8-jdk
+echo y | apt-get install m4
+echo y | apt-get install bison
+echo y | apt-get install zlib1g-dev
+echo y | apt-get install g++-multilib gcc-multilib lib32ncurses5-dev
+echo y | apt-get install lib32readline-gplv2-dev lib32z1-dev
+echo y | apt-get install lzop	
+echo y | apt-get install u-boot-tools
+echo y | apt-get install libxml2-utils
+echo y | apt-get install jack
+echo y | apt-get install libz-dev
+echo y | apt-get install lib32z1-dev
+echo y | apt-get install gnupg flex gperf
+echo y | apt-get install genext2fs
+echo y | apt-get install android-tools-fastboot 
+echo y | apt-get install gawk
+echo y | apt-get install curl
+```
+
+## 配置交叉编译工具链
+从官网下载对应的交叉编译器
+[gcc-linaro-5.3.1-2016.05-x86_64_arm-linux-gnueabihf](https://publishing-ie-linaro-org.s3.amazonaws.com/releases/components/toolchain/binaries/5.3-2016.05/arm-linux-gnueabihf/gcc-linaro-5.3.1-2016.05-x86_64_arm-linux-gnueabihf.tar.xz?Signature=ivl0UP99LrgzJuKC%2Bnhv6ZbemkU%3D&amp;Expires=1766543441&amp;AWSAccessKeyId=AKIAIELXV2RYNAHFUP7A)
+``` shell
+sudo mkdir -p /opt/toolchain
+sudo tar -xvf gcc-linaro-5.3.1-2016.05-x86_64_arm-linux-gnueabihf.tar -C /opt/toolchain/
+# 将路径添加到环境变量 (建议写入 ~/.bashrc)
+export PATH=/opt/toolchain/gcc-linaro-5.3.1-2016.05-x86_64_arm-linux-gnueabihf/bin:$PATH
+# 检查是否生效
+arm-linux-gnueabihf-gcc -v
+``` 
+
+## 下载 Qt 源码
+下载并准备 Qt 5.15.2 源码
+``` shell
+wget https://download.qt.io/archive/qt/5.15/5.15.2/single/qt-everywhere-src-5.15.2.tar.xz
+tar -xvf qt-everywhere-src-5.15.2.tar.xz
+cd qt-everywhere-src-5.15.2
+``` 
+## 修改 qmake 配置 
+你需要告诉 Qt 如何使用你的交叉编译器。</description><guid isPermaLink="true">https://coldowl.github.io/post/TQA40I%20%28ARMhf%29%20Qt%205.15.2%20-jiao-cha-bian-yi-huan-jing-da-jian-zhi-nan.html</guid><pubDate>Wed, 24 Dec 2025 09:11:22 +0000</pubDate></item><item><title>我在 Qt 工程中是如何约定样式的</title><link>https://coldowl.github.io/post/wo-zai-%20Qt%20-gong-cheng-zhong-shi-ru-he-yue-ding-yang-shi-de.html</link><description>## 一、为什么要专门约定样式
 
 我是在项目规模变大之后，才意识到样式是一个**必须提前管住的工程问题**。</description><guid isPermaLink="true">https://coldowl.github.io/post/wo-zai-%20Qt%20-gong-cheng-zhong-shi-ru-he-yue-ding-yang-shi-de.html</guid><pubDate>Fri, 19 Dec 2025 01:33:50 +0000</pubDate></item><item><title>External GUI Embedding 设计模式</title><link>https://coldowl.github.io/post/External%20GUI%20Embedding%20-she-ji-mo-shi.html</link><description># External GUI Embedding 设计模式
 
