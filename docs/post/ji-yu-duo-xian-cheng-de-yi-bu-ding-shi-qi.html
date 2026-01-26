@@ -140,6 +140,9 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </ul>
 <h3>整体功能</h3>
 <p>每隔指定的毫秒数（interval_ms），<strong>在后台线程</strong>自动重复执行一次传入的回调函数<code class="notranslate">cb()</code>，直到调用<code class="notranslate">stop()</code>为止。</p>
+<blockquote>
+<p>这里的回调用得很妙。因为回调的核心就是“你先把函数传给别人，别人在某个时机（未来）再反过来调用你的函数”</p>
+</blockquote>
 <h3>核心成员变量</h3>
 <markdown-accessiblity-table><table role="table">
 <thead>
