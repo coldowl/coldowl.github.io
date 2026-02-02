@@ -12,11 +12,11 @@
     </script>
 <meta name="description" content="## 为什么要专门约定样式
 
-我是在项目规模变大之后，才意识到样式是一个**必须提前管住的工程问题**。">
+在项目规模变大之后，我才意识到样式是一个**必须提前管住的工程问题**。">
 <meta property="og:title" content=" Qt 样式二三事">
 <meta property="og:description" content="## 为什么要专门约定样式
 
-我是在项目规模变大之后，才意识到样式是一个**必须提前管住的工程问题**。">
+在项目规模变大之后，我才意识到样式是一个**必须提前管住的工程问题**。">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://coldowl.github.io/post/%20Qt%20-yang-shi-er-san-shi.html">
 <meta property="og:image" content="https://coldowl.github.io/avatar.svg">
@@ -88,27 +88,27 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </div>
     <div id="content">
 <div class="markdown-body" id="postBody"><h2>为什么要专门约定样式</h2>
-<p>我是在项目规模变大之后，才意识到样式是一个<strong>必须提前管住的工程问题</strong>。</p>
+<p>在项目规模变大之后，我才意识到样式是一个<strong>必须提前管住的工程问题</strong>。</p>
 <p>一开始大家都会觉得 QSS 很方便：哪里不好看，哪里 <code class="notranslate">setStyleSheet()</code> 一下。但当窗口和控件数量上来后，很快就会遇到这些情况：</p>
 <ul>
 <li>同类控件外观不一致，只能靠肉眼对齐</li>
 <li>样式分散在构造函数、槽函数甚至业务逻辑里</li>
-<li>Designer、QSS、代码三套东西同时生效，没人说得清谁覆盖谁</li>
-<li>想整体换风格，发现只能全工程搜索字符串</li>
+<li>Designer、QSS、代码里三套样式同时生效，没人说得清谁覆盖谁</li>
+<li>想整体换风格，只能全工程搜索字符串</li>
 </ul>
 <p>到这个阶段，UI 已经不是“不好看”，而是<strong>不敢动</strong>了。</p>
-<h2>我最终坚持的一条原则</h2>
+<h2>坚持一条原则</h2>
 <p>后来我给自己定了一条死规矩：</p>
 <blockquote>
 <p><strong>样式集中管理，业务代码不写外观。</strong></p>
 </blockquote>
-<p>这不是抽象原则，而是可以直接落地的三条约定：</p>
+<p>这不是一句抽象原则，而要直接落地，变成三条约定：</p>
 <ol>
 <li>样式只在应用启动时加载一次</li>
 <li>控件差异通过属性表达，不继承、不写分支</li>
 <li>Qt Designer 只负责布局</li>
 </ol>
-<p>这三条如果能长期坚持，样式问题基本不会失控。</p>
+<p>在项目中严格遵守约定，样式问题就不会失控。</p>
 <h2>样式在工程里的位置</h2>
 <p>我会把样式当成一等工程资源来管理，而不是零散的配置。</p>
 <p>目录结构一般是这样：</p>
@@ -181,7 +181,7 @@ btn-&gt;<span class="pl-en">setProperty</span>(<span class="pl-s"><span class="p
 <li>不引入新的控件类型</li>
 <li>想改风格，直接改 QSS</li>
 </ul>
-<h2>我给 Qt Designer 划的边界</h2>
+<h2>给 Qt Designer 划的边界</h2>
 <p>在我的项目里，Designer 只做三件事：</p>
 <ul>
 <li>摆控件</li>
@@ -228,6 +228,16 @@ btn-&gt;<span class="pl-en">setProperty</span>(<span class="pl-s"><span class="p
 <li>View 类控件要重点看伪元素</li>
 <li>项目越大，样式集中管理的收益越明显</li>
 </ul>
+<h2>样式问题的排查</h2>
+<p>因为 qt 项目可在多个位置设置样式，容易造成样式间的冲突、覆盖等，不符合预期的情况。<br>
+针对样式的最佳实践，应当是：</p>
+<ol>
+<li>用 qApp-&gt;setStyleSheet("...") 在 main() 里就先设好全局或父控件样式</li>
+<li>附带 ui 文件的类，会用 ui-&gt;setupUi(this);   再加载 Designer 中的样式</li>
+<li>然后再在之后的代码中针对单个控件微调（如果需要），类似于 ui-&gt;toolButton_close-&gt;setStyleSheet("...");<br>
+运行时会输出 QSS 语法错误到控制台（debug 模式下看 Application Output）<br>
+按照样式</li>
+</ol>
 <h2>写在最后</h2>
 <p>Qt 的样式本身并不复杂，真正复杂的是<strong>没有工程约定</strong>。</p>
 <p>当你能做到把样式当成配置，而不是散落在代码里的临时修补：</p>
