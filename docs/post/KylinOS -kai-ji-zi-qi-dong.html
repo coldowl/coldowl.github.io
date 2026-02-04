@@ -21,7 +21,7 @@
 <meta property="og:url" content="https://coldowl.github.io/post/KylinOS%20-kai-ji-zi-qi-dong.html">
 <meta property="og:image" content="https://coldowl.github.io/avatar.svg">
 <title>KylinOS 开机自启动</title>
-<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
+
 
 
 </head>
@@ -106,12 +106,13 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <li>c.桌面快捷方式：新建desktop文件</li>
 </ul>
 <p>无论哪种方案，都需要先编写启动软件的脚本。</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#!</span>/bin/sh</span>
-<span class="pl-c"><span class="pl-c">#</span>进入软件安装目录</span>
-<span class="pl-c1">cd</span> /data/客户端打包/pack6/Simulator_client
-<span class="pl-c"><span class="pl-c">#</span>执行软件</span>
+<pre lang="bash" class="notranslate"><code class="notranslate">#!/bin/sh
+#进入软件安装目录
+cd /data/客户端打包/pack6/Simulator_client
+#执行软件
 ./Apprun
-<span class="pl-c1">exit</span> 0</pre></div>
+exit 0
+</code></pre>
 <p>a方案，在测试时，先尝试在脚本执行echo命令，成功了。但是在脚本中加入启动软件的命令，却不能执行。很奇怪。<br>
 总之，这个方案确实可以实现开机启动时执行某些命令，但是不能启动软件。</p>
 <p>b方案，没有尝试。但网上反馈可能会导致系统错误，设备不能正常使用。</p>
@@ -144,9 +145,10 @@ StartupWMClass=generalstartup
 </li>
 <li>
 <p>给 desktop 文件赋权，再移入 /usr/share/applications/ 文件夹。</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span>start.sh</span>
+<pre lang="bash" class="notranslate"><code class="notranslate">#start.sh
 sudo chmod +x 故障仿真终端.desktop
-sudo cp 故障仿真终端.desktop /usr/share/applications/</pre></div>
+sudo cp 故障仿真终端.desktop /usr/share/applications/
+</code></pre>
 </li>
 <li>
 <p>在 <code class="notranslate">系统设置&gt;应用&gt;开机启动</code> 添加 “故障仿真终端.desktop”</p>
@@ -202,10 +204,12 @@ StartupWMClass=generalstartup
 <ul>
 <li>检查是否已经启用输入法框架的自动启动。</li>
 <li>可以通过命令检查输入法框架是否正在运行：
-<div class="highlight highlight-source-shell"><pre class="notranslate">ps aux <span class="pl-k">|</span> grep fcitx</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">ps aux | grep fcitx
+</code></pre>
 </li>
 <li>如果没有运行，可以手动启动：
-<div class="highlight highlight-source-shell"><pre class="notranslate">fcitx <span class="pl-k">&amp;</span></pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">fcitx &amp;
+</code></pre>
 </li>
 </ul>
 </li>
