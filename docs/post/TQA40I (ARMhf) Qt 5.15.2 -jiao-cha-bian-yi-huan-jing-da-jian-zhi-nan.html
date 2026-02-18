@@ -123,7 +123,7 @@ cd qt-everywhere-src-5.15.2
 <meta property="og:url" content="https://coldowl.github.io/post/TQA40I%20%28ARMhf%29%20Qt%205.15.2%20-jiao-cha-bian-yi-huan-jing-da-jian-zhi-nan.html">
 <meta property="og:image" content="https://coldowl.github.io/avatar.svg">
 <title>TQA40I (ARMhf) Qt 5.15.2 交叉编译环境搭建指南</title>
-<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
+
 
 
 </head>
@@ -147,17 +147,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
     body {padding: 8px;}
     .postTitle{font-size:24px;}
 }
-.copy-feedback {
-    display: none;
-    position: absolute;
-    top: 10px;
-    right: 50px;
-    color: var(--color-fg-on-emphasis);
-    background-color: var(--color-fg-muted);
-    border-radius: 3px;
-    padding: 5px 8px;
-    font-size: 12px;
-}
+
 </style>
 
 
@@ -200,76 +190,82 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <p>预先新建 /opt/A40i 文件夹存放搭建环境所需的依赖</p>
 <h2>安装必要依赖</h2>
 <p>厂家提供 ubuntu_env_install.sh 脚本，用于在搭建环境前安装一些必要工具</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">add-apt-repository ppa:openjdk-r/ppa  
+<pre lang="shell" class="notranslate"><code class="notranslate">add-apt-repository ppa:openjdk-r/ppa  
 apt-get update
-<span class="pl-c1">echo</span> y <span class="pl-k">|</span> apt-get install openjdk-8-jdk
-<span class="pl-c1">echo</span> y <span class="pl-k">|</span> apt-get install m4
-<span class="pl-c1">echo</span> y <span class="pl-k">|</span> apt-get install bison
-<span class="pl-c1">echo</span> y <span class="pl-k">|</span> apt-get install zlib1g-dev
-<span class="pl-c1">echo</span> y <span class="pl-k">|</span> apt-get install g++-multilib gcc-multilib lib32ncurses5-dev
-<span class="pl-c1">echo</span> y <span class="pl-k">|</span> apt-get install lib32readline-gplv2-dev lib32z1-dev
-<span class="pl-c1">echo</span> y <span class="pl-k">|</span> apt-get install lzop	
-<span class="pl-c1">echo</span> y <span class="pl-k">|</span> apt-get install u-boot-tools
-<span class="pl-c1">echo</span> y <span class="pl-k">|</span> apt-get install libxml2-utils
-<span class="pl-c1">echo</span> y <span class="pl-k">|</span> apt-get install jack
-<span class="pl-c1">echo</span> y <span class="pl-k">|</span> apt-get install libz-dev
-<span class="pl-c1">echo</span> y <span class="pl-k">|</span> apt-get install lib32z1-dev
-<span class="pl-c1">echo</span> y <span class="pl-k">|</span> apt-get install gnupg flex gperf
-<span class="pl-c1">echo</span> y <span class="pl-k">|</span> apt-get install genext2fs
-<span class="pl-c1">echo</span> y <span class="pl-k">|</span> apt-get install android-tools-fastboot 
-<span class="pl-c1">echo</span> y <span class="pl-k">|</span> apt-get install gawk
-<span class="pl-c1">echo</span> y <span class="pl-k">|</span> apt-get install curl</pre></div>
+echo y | apt-get install openjdk-8-jdk
+echo y | apt-get install m4
+echo y | apt-get install bison
+echo y | apt-get install zlib1g-dev
+echo y | apt-get install g++-multilib gcc-multilib lib32ncurses5-dev
+echo y | apt-get install lib32readline-gplv2-dev lib32z1-dev
+echo y | apt-get install lzop	
+echo y | apt-get install u-boot-tools
+echo y | apt-get install libxml2-utils
+echo y | apt-get install jack
+echo y | apt-get install libz-dev
+echo y | apt-get install lib32z1-dev
+echo y | apt-get install gnupg flex gperf
+echo y | apt-get install genext2fs
+echo y | apt-get install android-tools-fastboot 
+echo y | apt-get install gawk
+echo y | apt-get install curl
+</code></pre>
 <h2>配置交叉编译工具链</h2>
 <p>从官网下载对应的交叉编译器<br>
 <a href="https://publishing-ie-linaro-org.s3.amazonaws.com/releases/components/toolchain/binaries/5.3-2016.05/arm-linux-gnueabihf/gcc-linaro-5.3.1-2016.05-x86_64_arm-linux-gnueabihf.tar.xz?Signature=ivl0UP99LrgzJuKC%2Bnhv6ZbemkU%3D&amp;Expires=1766543441&amp;AWSAccessKeyId=AKIAIELXV2RYNAHFUP7A" rel="nofollow">gcc-linaro-5.3.1-2016.05-x86_64_arm-linux-gnueabihf</a></p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">sudo mkdir -p /opt/toolchain
+<pre lang="shell" class="notranslate"><code class="notranslate">sudo mkdir -p /opt/toolchain
 sudo tar -xvf gcc-linaro-5.3.1-2016.05-x86_64_arm-linux-gnueabihf.tar -C /opt/toolchain/
-<span class="pl-c"><span class="pl-c">#</span> 将路径添加到环境变量 (建议写入 ~/.bashrc)</span>
-<span class="pl-k">export</span> PATH=/opt/toolchain/gcc-linaro-5.3.1-2016.05-x86_64_arm-linux-gnueabihf/bin:<span class="pl-smi">$PATH</span>
-<span class="pl-c"><span class="pl-c">#</span> 检查是否生效</span>
-arm-linux-gnueabihf-gcc -v</pre></div>
+# 将路径添加到环境变量 (建议写入 ~/.bashrc)
+export PATH=/opt/toolchain/gcc-linaro-5.3.1-2016.05-x86_64_arm-linux-gnueabihf/bin:$PATH
+# 检查是否生效
+arm-linux-gnueabihf-gcc -v
+</code></pre>
 <h2>下载 Qt 源码</h2>
 <p>下载并准备 Qt 5.15.2 源码</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">wget https://download.qt.io/archive/qt/5.15/5.15.2/single/qt-everywhere-src-5.15.2.tar.xz
+<pre lang="shell" class="notranslate"><code class="notranslate">wget https://download.qt.io/archive/qt/5.15/5.15.2/single/qt-everywhere-src-5.15.2.tar.xz
 tar -xvf qt-everywhere-src-5.15.2.tar.xz
-<span class="pl-c1">cd</span> qt-everywhere-src-5.15.2</pre></div>
+cd qt-everywhere-src-5.15.2
+</code></pre>
 <h2>修改 qmake 配置</h2>
 <p>你需要告诉 Qt 如何使用你的交叉编译器。我们需要基于 linux-arm-gnueabi-g++ 修改出一个适用于 A40i 的 mkspec。</p>
 <ol>
 <li>复制现有的配置：</li>
 </ol>
-<div class="highlight highlight-source-shell"><pre class="notranslate">cp -r qtbase/mkspecs/linux-arm-gnueabi-g++ qtbase/mkspecs/linux-arm-gnueabihf-g++</pre></div>
+<pre lang="Bash" class="notranslate"><code class="notranslate">cp -r qtbase/mkspecs/linux-arm-gnueabi-g++ qtbase/mkspecs/linux-arm-gnueabihf-g++
+</code></pre>
 <ol start="2">
 <li>修改 qtbase/mkspecs/linux-arm-gnueabihf-g++/qmake.conf： 使用编辑器将文本中的 gnueabi 修改为 gnueabihf</li>
 </ol>
-<div class="highlight highlight-source-qmake"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span></span>
-<span class="pl-c"><span class="pl-c">#</span> qmake configuration for building with arm-linux-gnueabihf-g++</span>
-<span class="pl-c"><span class="pl-c">#</span></span>
+<pre lang="qmake" class="notranslate"><code class="notranslate">#
+# qmake configuration for building with arm-linux-gnueabihf-g++
+#
 
-<span class="pl-c1">MAKEFILE_GENERATOR</span>      = <span class="pl-c1">UNIX</span>
-<span class="pl-c1">CONFIG</span>                 += incremental
-<span class="pl-smi">QMAKE_INCREMENTAL_STYLE</span> = <span class="pl-c1">sublib</span>
+MAKEFILE_GENERATOR      = UNIX
+CONFIG                 += incremental
+QMAKE_INCREMENTAL_STYLE = sublib
 
-<span class="pl-en">include</span>(<span class="pl-v">../common/linux.conf</span>)
-<span class="pl-en">include</span>(<span class="pl-v">../common/gcc-base-unix.conf</span>)
-<span class="pl-en">include</span>(<span class="pl-v">../common/g++-unix.conf</span>)
+include(../common/linux.conf)
+include(../common/gcc-base-unix.conf)
+include(../common/g++-unix.conf)
 
-<span class="pl-c"><span class="pl-c">#</span> modifications to g++.conf</span>
-<span class="pl-smi">QMAKE_CC</span>                = <span class="pl-c1">arm-linux-gnueabihf-gcc</span>
-<span class="pl-smi">QMAKE_CXX</span>               = <span class="pl-c1">arm-linux-gnueabihf-g</span>++
-<span class="pl-smi">QMAKE_LINK</span>              = <span class="pl-c1">arm-linux-gnueabihf-g</span>++
-<span class="pl-smi">QMAKE_LINK_SHLIB</span>        = <span class="pl-c1">arm-linux-gnueabihf-g</span>++
+# modifications to g++.conf
+QMAKE_CC                = arm-linux-gnueabihf-gcc
+QMAKE_CXX               = arm-linux-gnueabihf-g++
+QMAKE_LINK              = arm-linux-gnueabihf-g++
+QMAKE_LINK_SHLIB        = arm-linux-gnueabihf-g++
 
-<span class="pl-c"><span class="pl-c">#</span> modifications to linux.conf</span>
-<span class="pl-smi">QMAKE_AR</span>                = <span class="pl-c1">arm-linux-gnueabihf-ar</span> <span class="pl-c1">cqs</span>
-<span class="pl-smi">QMAKE_OBJCOPY</span>           = <span class="pl-c1">arm-linux-gnueabihf-objcopy</span>
-<span class="pl-smi">QMAKE_NM</span>                = <span class="pl-c1">arm-linux-gnueabihf-nm</span> <span class="pl-c1">-P</span>
-<span class="pl-smi">QMAKE_STRIP</span>             = <span class="pl-c1">arm-linux-gnueabihf-strip</span>
+# modifications to linux.conf
+QMAKE_AR                = arm-linux-gnueabihf-ar cqs
+QMAKE_OBJCOPY           = arm-linux-gnueabihf-objcopy
+QMAKE_NM                = arm-linux-gnueabihf-nm -P
+QMAKE_STRIP             = arm-linux-gnueabihf-strip
 load(qt_config)
-</pre></div>
+
+</code></pre>
 <h2>核心补丁与源码修复</h2>
 <p>由于 Ubuntu 24.04 的编译器较新，必须手动修复以下两处源码 Bug：</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c1">cd</span> /opt/A40i/qt-everywhere-src-5.15.2</pre></div>
+<pre lang="shell" class="notranslate"><code class="notranslate">cd /opt/A40i/qt-everywhere-src-5.15.2
+</code></pre>
 <p><strong>A. 修复 C++ 标准库头文件缺失</strong></p>
 <p>因为我们 在使用Qt 源码在编译 qmake（宿主机工具）时，使用了较新版本的 GCC（WSL Ubuntu 默认通常是 GCC 11 或更高）。</p>
 <p>而在 GCC 11 及后续版本中，C++ 标准库变得更加“精简”，很多以前会被隐式包含的头文件（如 ）现在必须显式包含。</p>
@@ -277,9 +273,11 @@ load(qt_config)
 <p>否则在执行 ./configure 会提示 error: ‘numeric_limits’ is not a class template 的错误。</p>
 <p>理论上，我们需要为报错的文件手动加上<code class="notranslate"> #include &lt;limits&gt;</code></p>
 <p>在受影响的 corelib 文件中添加：</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">grep -r <span class="pl-s"><span class="pl-pds">"</span>std::numeric_limits<span class="pl-pds">"</span></span> qtbase/src/corelib <span class="pl-k">|</span> cut -d: -f1 <span class="pl-k">|</span> sort <span class="pl-k">|</span> uniq <span class="pl-k">|</span> xargs -I {} sed -i <span class="pl-s"><span class="pl-pds">'</span>1i #include &lt;limits&gt;<span class="pl-pds">'</span></span> {}</pre></div>
+<pre lang="shell" class="notranslate"><code class="notranslate">grep -r "std::numeric_limits" qtbase/src/corelib | cut -d: -f1 | sort | uniq | xargs -I {} sed -i '1i #include &lt;limits&gt;' {}
+</code></pre>
 <p>如果仍有此类报错，手动执行一下（以 qtdeclarative 模块为例）</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">sed -i <span class="pl-s"><span class="pl-pds">'</span>1i #include &lt;limits&gt;<span class="pl-pds">'</span></span> qtdeclarative/src/qmldebug/qqmlprofilerevent_p.h</pre></div>
+<pre lang="shell" class="notranslate"><code class="notranslate">sed -i '1i #include &lt;limits&gt;' qtdeclarative/src/qmldebug/qqmlprofilerevent_p.h
+</code></pre>
 <p><strong>B. 修复 zlib 的 Time64 冲突</strong></p>
 <p>zlib 位于 Qt 架构的最底层，是 QtCore 依赖项。</p>
 <ul>
@@ -292,61 +290,61 @@ load(qt_config)
 <p>Qt 的配置中 _FILE_OFFSET_BITS 的定义与其产生了冲突。</p>
 <p>就会出现<code class="notranslate">#error "_TIME_BITS=64 is allowed only with _FILE_OFFSET_BITS=64"</code>的错误。</p>
 <p>因此我们需要修改 <code class="notranslate">qtbase/src/3rdparty/zlib/src/gzguts.h</code>：</p>
-<div class="highlight highlight-source-c"><pre class="notranslate"><span class="pl-c">/* gzguts.h -- zlib internal header definitions for gz* operations</span>
-<span class="pl-c"> * Copyright (C) 2004, 2005, 2010, 2011, 2012, 2013, 2016 Mark Adler</span>
-<span class="pl-c"> * For conditions of distribution and use, see copyright notice in zlib.h</span>
-<span class="pl-c"> */</span>
+<pre lang="C" class="notranslate"><code class="notranslate">/* gzguts.h -- zlib internal header definitions for gz* operations
+ * Copyright (C) 2004, 2005, 2010, 2011, 2012, 2013, 2016 Mark Adler
+ * For conditions of distribution and use, see copyright notice in zlib.h
+ */
 
-<span class="pl-k">#ifdef</span> <span class="pl-s1">_MSC_VER</span>
-<span class="pl-k">#  ifndef</span> <span class="pl-s1">_CRT_SECURE_NO_DEPRECATE</span>
-<span class="pl-k">#    define</span> <span class="pl-s1">_CRT_SECURE_NO_DEPRECATE</span>
-<span class="pl-k">#  endif</span>
-<span class="pl-k">#  ifndef</span> <span class="pl-s1">_CRT_NONSTDC_NO_DEPRECATE</span>
-<span class="pl-k">#    define</span> <span class="pl-s1">_CRT_NONSTDC_NO_DEPRECATE</span>
-<span class="pl-k">#  endif</span>
-<span class="pl-k">#endif</span>
+#ifdef _MSC_VER
+#  ifndef _CRT_SECURE_NO_DEPRECATE
+#    define _CRT_SECURE_NO_DEPRECATE
+#  endif
+#  ifndef _CRT_NONSTDC_NO_DEPRECATE
+#    define _CRT_NONSTDC_NO_DEPRECATE
+#  endif
+#endif
 
-<span class="pl-k">#ifdef</span> <span class="pl-s1">_LARGEFILE64_SOURCE</span>
-<span class="pl-k">#  ifndef</span> <span class="pl-s1">_LARGEFILE_SOURCE</span>
-<span class="pl-k">#    define</span> <span class="pl-s1">_LARGEFILE_SOURCE</span> 1
-<span class="pl-k">#  endif</span>
-<span class="pl-c">// 注释下面三行</span>
-<span class="pl-c">// #  ifdef _FILE_OFFSET_BITS</span>
-<span class="pl-c">// #    undef _FILE_OFFSET_BITS</span>
-<span class="pl-c">// #  endif</span>
-<span class="pl-k">#endif</span>
+#ifdef _LARGEFILE64_SOURCE
+#  ifndef _LARGEFILE_SOURCE
+#    define _LARGEFILE_SOURCE 1
+#  endif
+// 注释下面三行
+// #  ifdef _FILE_OFFSET_BITS
+// #    undef _FILE_OFFSET_BITS
+// #  endif
+#endif
 
-<span class="pl-c">// 新增两宏</span>
-<span class="pl-k">#ifndef</span> <span class="pl-s1">_FILE_OFFSET_BITS</span>
-<span class="pl-k">#  define</span> <span class="pl-s1">_FILE_OFFSET_BITS</span> 64
-<span class="pl-k">#endif</span>
-<span class="pl-k">#ifndef</span> <span class="pl-s1">_TIME_BITS</span>
-<span class="pl-k">#  define</span> <span class="pl-s1">_TIME_BITS</span> 64
-<span class="pl-k">#endif</span>
+// 新增两宏
+#ifndef _FILE_OFFSET_BITS
+#  define _FILE_OFFSET_BITS 64
+#endif
+#ifndef _TIME_BITS
+#  define _TIME_BITS 64
+#endif
 
-<span class="pl-k">#ifndef</span> <span class="pl-c1">QT_BOOTSTRAPPED</span>
-<span class="pl-k">#  include</span> <span class="pl-s">&lt;qconfig.h&gt;</span>
-<span class="pl-k">#endif</span>
+#ifndef QT_BOOTSTRAPPED
+#  include &lt;qconfig.h&gt;
+#endif
 
-<span class="pl-k">#ifdef</span> <span class="pl-c1">QT_VISIBILITY_AVAILABLE</span>
-<span class="pl-k">#define</span> <span class="pl-c1">HAVE_HIDDEN</span>
-<span class="pl-k">#endif</span>
+#ifdef QT_VISIBILITY_AVAILABLE
+#define HAVE_HIDDEN
+#endif
 
 
-<span class="pl-k">#ifdef</span> <span class="pl-c1">HAVE_HIDDEN</span>
-<span class="pl-k">#  define</span> <span class="pl-c1">ZLIB_INTERNAL</span> __attribute__((visibility ("hidden")))
-<span class="pl-k">#else</span>
-<span class="pl-k">#  define</span> <span class="pl-c1">ZLIB_INTERNAL</span>
-<span class="pl-k">#endif</span>
+#ifdef HAVE_HIDDEN
+#  define ZLIB_INTERNAL __attribute__((visibility ("hidden")))
+#else
+#  define ZLIB_INTERNAL
+#endif
 
-<span class="pl-k">#include</span> <span class="pl-s">&lt;stdio.h&gt;</span>
-<span class="pl-k">#include</span> <span class="pl-s">"zlib.h"</span>
-<span class="pl-k">#ifdef</span> <span class="pl-c1">STDC</span>
-<span class="pl-k">#  include</span> <span class="pl-s">&lt;string.h&gt;</span>
-<span class="pl-k"></span></pre></div>
+#include &lt;stdio.h&gt;
+#include "zlib.h"
+#ifdef STDC
+#  include &lt;string.h&gt;
+</code></pre>
 <h2>编译</h2>
 <p>在源码根目录 <code class="notranslate">/opt/A40i/qt-everywhere-src-5.15.2</code> 下创建 <code class="notranslate">autoconfig.sh</code> 脚本，方便调试配置参数：</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#!</span>/bin/bash</span>
+<pre lang="shell" class="notranslate"><code class="notranslate">#!/bin/bash
 ./configure \
   -prefix /opt/qt5.15.2_a40i \
   -release \
@@ -361,21 +359,26 @@ load(qt_config)
   -no-use-gold-linker \
   -no-pkg-config \
   -skip qtlocation \
-  -v</pre></div>
+  -v
+</code></pre>
 <p>注：-prefix 是编译完成后安装的路径。末尾加上 -v (verbose)，精准定位错误位置。</p>
 <p>执行编译：</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">chmod +x autonfig.sh
-./autoconfig.sh</pre></div>
+<pre lang="shell" class="notranslate"><code class="notranslate">chmod +x autonfig.sh
+./autoconfig.sh
+</code></pre>
 <p>如果出现 "Configure summary" 以及 "Target compiler: gcc 5.3.1"，且命令输出的最后一行没有以 <code class="notranslate">ERROR </code>结尾，标志着配置阶段成功。</p>
 <p>此时目录下Makefile 文件已经生成：ls -l Makefile</p>
 <p>如果 configure 成功，继续在 /opt/A40i/qt-everywhere-src-5.15.2 下执行 (启用全部 CPU 核心进行编译)</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">make -j<span class="pl-s"><span class="pl-pds">$(</span>nproc<span class="pl-pds">)</span></span></pre></div>
+<pre lang="shell" class="notranslate"><code class="notranslate">make -j$(nproc)
+</code></pre>
 <p>如果最后输出的 Leaving directory 且没有任何 Error 字样，标志编译成功。</p>
 <h2>安装</h2>
-<div class="highlight highlight-source-shell"><pre class="notranslate">sudo make install</pre></div>
+<pre lang="shell" class="notranslate"><code class="notranslate">sudo make install
+</code></pre>
 <p>这一步通常只需要几分钟。它会将编译好的库文件、头文件、插件和 qmake 工具复制到配置的安装路径 <code class="notranslate">/opt/qt5.15.2_a40i</code> 文件夹中。</p>
 <p>如何验证安装是否成功？执行</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">/opt/qt5.15.2_a40i/bin/qmake -query</pre></div>
+<pre lang="shell" class="notranslate"><code class="notranslate">/opt/qt5.15.2_a40i/bin/qmake -query
+</code></pre>
 <p>如果在输出中看到这一行：<code class="notranslate">QMAKE_SPEC: linux-arm-gnueabihf-g++</code> 说明安装成功</p>
 <h2>配置 Qt Creator 可视化开发</h2></div>
 <div style="font-size:small;margin-top:8px;float:right;">❤️ 转载文章请注明出处，谢谢！❤️</div>
@@ -402,7 +405,7 @@ if("07/10/2024"!=""){
 </script></div>
 </body>
 <script>
-var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z', 'copy': 'M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z', 'check': 'M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z'};
+var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z'};
 var utterancesLoad=0;
 
 let themeSettings={
@@ -476,70 +479,7 @@ function iFrameLoading(){
     }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    const createClipboardHTML = (codeContent, additionalClasses = '') => `
-        <pre class="notranslate"><code class="notranslate">${codeContent}</code></pre>
-        <div class="clipboard-container position-absolute right-0 top-0 ${additionalClasses}">
-            <clipboard-copy class="ClipboardButton btn m-2 p-0" role="button" style="display: inherit;">
-                <svg height="16" width="16" class="octicon octicon-copy m-2"><path d="${IconList["copy"]}"></path></svg>
-                <svg height="16" width="16" class="octicon octicon-check color-fg-success m-2 d-none"><path d="${IconList["check"]}"></path></svg>
-            </clipboard-copy>
-            <div class="copy-feedback">Copied!</div>
-        </div>
-    `;
 
-    const handleCodeElements = (selector = '') => {
-        document.querySelectorAll(selector).forEach(codeElement => {
-            const codeContent = codeElement.innerHTML;
-            const newStructure = document.createElement('div');
-            newStructure.className = 'snippet-clipboard-content position-relative overflow-auto';
-            newStructure.innerHTML = createClipboardHTML(codeContent);
-
-            const parentElement = codeElement.parentElement;
-            if (selector.includes('highlight')) {
-                parentElement.insertBefore(newStructure, codeElement.nextSibling);
-                parentElement.removeChild(codeElement);
-            } else {
-                parentElement.parentElement.replaceChild(newStructure, parentElement);
-            }
-        });
-    };
-
-    handleCodeElements('pre.notranslate > code.notranslate');
-    handleCodeElements('div.highlight > pre.notranslate');
-
-    let currentFeedback = null;
-    document.querySelectorAll('clipboard-copy').forEach(copyButton => {
-        copyButton.addEventListener('click', () => {
-            const codeContent = copyButton.closest('.snippet-clipboard-content').innerText;
-            const tempTextArea = document.createElement('textarea');
-            tempTextArea.value = codeContent;
-            document.body.appendChild(tempTextArea);
-            tempTextArea.select();
-            document.execCommand('copy');
-            document.body.removeChild(tempTextArea);
-
-            const copyIcon = copyButton.querySelector('.octicon-copy');
-            const checkIcon = copyButton.querySelector('.octicon-check');
-            const copyFeedback = copyButton.nextElementSibling;
-
-            if (currentFeedback && currentFeedback !== copyFeedback) {currentFeedback.style.display = 'none';}
-            currentFeedback = copyFeedback;
-
-            copyIcon.classList.add('d-none');
-            checkIcon.classList.remove('d-none');
-            copyFeedback.style.display = 'block';
-            copyButton.style.borderColor = 'var(--color-success-fg)';
-
-            setTimeout(() => {
-                copyIcon.classList.remove('d-none');
-                checkIcon.classList.add('d-none');
-                copyFeedback.style.display = 'none';
-                copyButton.style.borderColor = '';
-            }, 2000);
-        });
-    });
-});
 
 </script>
 <script src='https://blog.meekdai.com/Gmeek/plugins/lightbox.js'></script><script src='https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js'></script><script src='https://coldowl.github.io/EasterEgg.js'></script>
