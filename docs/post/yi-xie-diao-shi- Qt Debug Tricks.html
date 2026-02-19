@@ -17,7 +17,7 @@
 <meta property="og:url" content="https://coldowl.github.io/post/yi-xie-diao-shi-%20Qt%20Debug%20Tricks.html">
 <meta property="og:image" content="https://coldowl.github.io/avatar.svg">
 <title>一些调试 Qt Debug Tricks</title>
-<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
+
 
 
 </head>
@@ -163,7 +163,8 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <p>还可以根据消息的类型使用条件判断，如果希望只当类型匹配时才输出，可以使用 <code class="notranslate">%{if-debug}</code>、<code class="notranslate">%{if-info}</code>、<code class="notranslate">%{if-warning}</code>、<code class="notranslate">%{if-critical}</code> 或 <code class="notranslate">%{if-fatal}</code>，并以 <code class="notranslate">%{endif}</code> 结束。</p>
 <p>此外，<code class="notranslate">%{if-category} ... %{endif}</code> 之间的文本仅在类别不是默认类别时才会被输出。</p>
 <p>示例：</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">QT_MESSAGE_PATTERN=<span class="pl-s"><span class="pl-pds">"</span>[%{time yyyyMMdd h:mm:ss.zzz t} %{if-debug}D%{endif}%{if-info}I%{endif}%{if-warning}W%{endif}%{if-critical}C%{endif}%{if-fatal}F%{endif}] %{file}:%{line} - %{message}<span class="pl-pds">"</span></span></pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">QT_MESSAGE_PATTERN="[%{time yyyyMMdd h:mm:ss.zzz t} %{if-debug}D%{endif}%{if-info}I%{endif}%{if-warning}W%{endif}%{if-critical}C%{endif}%{if-fatal}F%{endif}] %{file}:%{line} - %{message}"
+</code></pre>
 <p>默认的模式是：</p>
 <pre class="notranslate"><code class="notranslate">"%{if-category}%{category}: %{endif}%{message}"
 </code></pre>
