@@ -187,7 +187,66 @@ else: <span class="pl-k">unix</span>:!android: <span class="pl-smi">target.path<
 
 <span class="pl-k">if</span>(QT_VERSION_MAJOR <span class="pl-k">EQUAL</span> 6)
     qt_finalize_executable(untitled8)
-<span class="pl-k">endif</span>()</pre></div></div>
+<span class="pl-k">endif</span>()</pre></div>
+<p>怎么在 CMake 项目中引入 Qt<br>
+Start with find_package to locate the libraries and header files shipped with Qt. Then, you can use these libraries and header files with the target_link_libraries command to build Qt-based libraries and applications. This command automatically adds the appropriate include directories, compile definitions, the position-independent-code flag, and links to the qtmain.lib library on Windows, for example.<br>
+首先使用 find_package 来定位 Qt 附带的库和头文件。然后，通过 target_link_libraries 命令使用这些库和头文件来构建基于 Qt 的库和应用程序。例如，此命令会自动添加相应的包含目录、编译定义、位置无关代码标志，并在Windows上链接到qtmain.lib库。</p>
+<p>Build a GUI executable 构建GUI可执行文件<br>
+To build a helloworld GUI executable, you need the following:<br>
+要构建一个“hello world”图形用户界面可执行文件，您需要以下内容：</p>
+<div class="highlight highlight-source-cmake"><pre class="notranslate"><span class="pl-k">cmake_minimum_required</span>(<span class="pl-e">VERSION</span> 3.1.0)
+
+<span class="pl-k">project</span>(helloworld <span class="pl-e">VERSION</span> 1.0.0 LANGUAGES CXX)
+
+<span class="pl-k">set</span>(CMAKE_CXX_STANDARD 11)
+<span class="pl-k">set</span>(CMAKE_CXX_STANDARD_REQUIRED <span class="pl-k">ON</span>)
+
+<span class="pl-k">set</span>(<span class="pl-v">CMAKE_AUTOMOC</span> <span class="pl-k">ON</span>)
+<span class="pl-k">set</span>(CMAKE_AUTORCC <span class="pl-k">ON</span>)
+<span class="pl-k">set</span>(CMAKE_AUTOUIC <span class="pl-k">ON</span>)
+
+<span class="pl-k">if</span>(<span class="pl-v">CMAKE_VERSION</span> <span class="pl-k">VERSION_LESS</span> <span class="pl-s">"3.7.0"</span>)
+<span class="pl-k">    set</span>(<span class="pl-v">CMAKE_INCLUDE_CURRENT_DIR</span> <span class="pl-k">ON</span>)
+<span class="pl-k">endif</span>()
+
+<span class="pl-k">find_package</span>(Qt5 COMPONENTS Widgets REQUIRED)
+
+<span class="pl-k">add_executable</span>(helloworld
+    mainwindow.ui
+    mainwindow.cpp
+    main.cpp
+    resources.qrc
+)
+
+<span class="pl-k">target_link_libraries</span>(helloworld Qt5::Widgets)</pre></div>
+<p>For find_package to be successful, CMake must find the Qt installation in one of the following ways:<br>
+要使find_package成功，CMake必须通过以下方式之一找到Qt的安装路径：</p>
+<p>Set your CMAKE_PREFIX_PATH environment variable to the Qt 5 installation prefix. This is the recommended way.<br>
+将您的CMAKE_PREFIX_PATH环境变量设置为Qt 5的安装前缀。这是推荐的方法。<br>
+Set the Qt5_DIR in the CMake cache to the location of the Qt5Config.cmake file.<br>
+将CMake缓存中的Qt5_DIR设置为Qt5Config.cmake文件的位置。<br>
+The CMAKE_AUTOMOC setting runs moc automatically when required. For more details, see <a href="https://cmake.org/cmake/help/latest/manual/cmake-qt.7.html#automoc" rel="nofollow">CMake AUTOMOC documentation</a>.<br>
+CMAKE_AUTOMOC 设置会在需要时自动运行 moc。有关更多详细信息，请参见 <a href="https://cmake.org/cmake/help/latest/manual/cmake-qt.7.html#automoc" rel="nofollow">CMake AUTOMOC 文档</a>。</p>
+<p>Imported library targets 导入的库目标<br>
+Each Qt module that is loaded defines a CMake library target. The target names start with Qt5::, followed by the module name. For example: Qt5::Core, Qt5::Gui. Pass the name of the library target to target_link_libraries to use the respective library.<br>
+每个加载的Qt模块都会定义一个CMake库目标。目标名称以Qt5::开头，后跟模块名称。例如：Qt5::Core、Qt5::Gui。将库目标的名称传递给target_link_libraries即可使用相应的库。</p>
+<p>Note: Since Qt 5.15, the CMake targets are also available as Qt::Core, Qt::Gui, and so on. This eases writing CMake code that can work with both Qt 5 and Qt 6.<br>
+注意：从 Qt 5.15 开始，CMake 目标也可作为 Qt::Core、Qt::Gui 等使用。这简化了可同时用于 Qt 5 和 Qt 6 的 CMake 代码的编写。</p>
+<p>Imported targets are created with the same configurations as when Qt was configured. That is:<br>
+导入目标的创建配置与 Qt 配置时的配置相同。即：</p>
+<p>If Qt was configured with the -debug switch, an imported target with the DEBUG configuration is created.<br>
+如果 Qt 是使用 -debug 开关配置的，就会创建一个带有 DEBUG 配置的导入目标。<br>
+If Qt was configured with the -release switch, an imported target with the RELEASE configuration is created.<br>
+如果 Qt 是使用 -release 开关配置的，就会创建一个带有 RELEASE 配置的导入目标。<br>
+If Qt was configured with the -debug-and-release switch, then imported targets are created with both RELEASE and DEBUG configurations.<br>
+如果 Qt 是使用 -debug-and-release 开关配置的，那么导入的目标将同时创建 RELEASE 和 DEBUG 配置。<br>
+If your project has custom CMake build configurations, you have to map your custom configuration to either the debug or the release Qt configuration.<br>
+如果您的项目有自定义的CMake构建配置，则必须将您的自定义配置映射到调试或发布Qt配置。</p>
+<p>find_package(Qt5 COMPONENTS Core REQUIRED)</p>
+<p>set(CMAKE_CXX_FLAGS_COVERAGE "${CMAKE_CXX_FLAGS_RELEASE} -fprofile-arcs -ftest-coverage")</p>
+<h1>set up a mapping so that the Release configuration for the Qt imported target is</h1>
+<h1>used in the COVERAGE CMake configuration.</h1>
+<p>set_target_properties(Qt5::Core PROPERTIES MAP_IMPORTED_CONFIG_COVERAGE "RELEASE")</p></div>
 <div style="font-size:small;margin-top:8px;float:right;">❤️ 转载文章请注明出处，谢谢！❤️</div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
