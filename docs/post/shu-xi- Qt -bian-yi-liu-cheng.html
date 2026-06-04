@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html data-color-mode="light" data-dark-theme="dark_colorblind" data-light-theme="light" lang="zh-CN">
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href='https://mirrors.sustech.edu.cn/cdnjs/ajax/libs/Primer/21.0.7/primer.css' rel='stylesheet' />
+    <script src='https://blog.meekdai.com/Gmeek/plugins/GmeekBSZ.js'></script><script src='https://coldowl.github.io/GearTOC.js'></script></script><script src='https://coldowl.github.io/mermaidMarkdown.js'></script>
+    <link rel="icon" href="https://coldowl.github.io/avatar.svg"><script>
+        let theme = localStorage.getItem("meek_theme") || "light";
+        document.documentElement.setAttribute("data-color-mode", theme);
+    </script>
+<meta name="description" content="
+1.创建一个简单的 Qt 控制台程序 sayhi_qt.cpp
+
+```c++
+#include <QCoreApplication>
+#include <QDebug>
+
+int main(int argc, char \*argv[])
+{
+    QCoreApplication a(argc, argv);
+    qDebug() << 'hello';
+    return 0;
+}
+```
+
+2.简单构建
+
+Qt 是有别于标准库的第三方库，使用 `g++ sayhi_qt.cpp -o sayhi-qt`, 是不足以完成编译的，还缺少：
+
+- 头文件路径
+- 库链接
+- 宏定义
+
+pkg-config 工具可以读取存储系统上的库和软件包的各类信息。">
+<meta property="og:title" content="熟悉 Qt 编译流程">
+<meta property="og:description" content="
+1.创建一个简单的 Qt 控制台程序 sayhi_qt.cpp
+
+```c++
+#include <QCoreApplication>
+#include <QDebug>
+
+int main(int argc, char \*argv[])
+{
+    QCoreApplication a(argc, argv);
+    qDebug() << 'hello';
+    return 0;
+}
+```
+
+2.简单构建
+
+Qt 是有别于标准库的第三方库，使用 `g++ sayhi_qt.cpp -o sayhi-qt`, 是不足以完成编译的，还缺少：
+
+- 头文件路径
+- 库链接
+- 宏定义
+
+pkg-config 工具可以读取存储系统上的库和软件包的各类信息。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://coldowl.github.io/post/shu-xi-%20Qt%20-bian-yi-liu-cheng.html">
+<meta property="og:image" content="https://coldowl.github.io/avatar.svg">
+<title>熟悉 Qt 编译流程</title>
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
+
+
+</head>
+<style>
+body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;padding: 45px;font-size: 16px;font-family: sans-serif;line-height: 1.25;}
+#header{display:flex;padding-bottom:8px;border-bottom: 1px solid var(--borderColor-muted, var(--color-border-muted));margin-bottom: 16px;}
+#footer {margin-top:64px; text-align: center;font-size: small;}
+
+</style>
+
+<style>
+.postTitle{margin: auto 0;font-size:40px;font-weight:bold;}
+.title-right{display:flex;margin:auto 0 0 auto;}
+.title-right .circle{padding: 14px 16px;margin-right:8px;}
+#postBody{border-bottom: 1px solid var(--color-border-default);padding-bottom:36px;}
+#postBody hr{height:2px;}
+#cmButton{height:48px;margin-top:48px;}
+#comments{margin-top:64px;}
+.g-emoji{font-size:24px;}
+@media (max-width: 600px) {
+    body {padding: 8px;}
+    .postTitle{font-size:24px;}
+}
+.copy-feedback {
+    display: none;
+    position: absolute;
+    top: 10px;
+    right: 50px;
+    color: var(--color-fg-on-emphasis);
+    background-color: var(--color-fg-muted);
+    border-radius: 3px;
+    padding: 5px 8px;
+    font-size: 12px;
+}
+</style>
+
+
+
+
+<body>
+    <div id="header">
+<h1 class="postTitle">熟悉 Qt 编译流程</h1>
+<div class="title-right">
+    <a href="https://coldowl.github.io" id="buttonHome" class="btn btn-invisible circle" title="首页">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathHome" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+    <a href="https://github.com/coldowl/coldowl.github.io/issues/38" target="_blank" class="btn btn-invisible circle" title="Issue">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathIssue" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+
+    <a class="btn btn-invisible circle" onclick="modeSwitch();" title="切换主题">
+        <svg class="octicon" width="16" height="16" >
+            <path id="themeSwitch" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+
+</div>
+</div>
+    <div id="content">
+<div class="markdown-body" id="postBody"><p>1.创建一个简单的 Qt 控制台程序 sayhi_qt.cpp</p>
+<div class="highlight highlight-source-c++"><pre class="notranslate">#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>QCoreApplication<span class="pl-pds">&gt;</span></span>
+#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>QDebug<span class="pl-pds">&gt;</span></span>
+
+<span class="pl-k">int</span> <span class="pl-en">main</span>(<span class="pl-k">int</span> argc, <span class="pl-k">char</span> \*argv[])
+{
+    QCoreApplication <span class="pl-smi">a</span>(argc, argv);
+    <span class="pl-c1">qDebug</span>() &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>hello<span class="pl-pds">"</span></span>;
+    <span class="pl-k">return</span> <span class="pl-c1">0</span>;
+}</pre></div>
+<p>2.简单构建</p>
+<p>Qt 是有别于标准库的第三方库，使用 <code class="notranslate">g++ sayhi_qt.cpp -o sayhi-qt</code>, 是不足以完成编译的，还缺少：</p>
+<ul>
+<li>头文件路径</li>
+<li>库链接</li>
+<li>宏定义</li>
+</ul>
+<p>pkg-config 工具可以读取存储系统上的库和软件包的各类信息。</p>
+<p>我确信控制台程序会使用到 QtCore。</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 确认 Qt Qt5Core 存在</span>
+<span class="pl-k">&gt;</span> pkg-config --list-all <span class="pl-k">|</span> grep Qt
+
+Qt5Core                        Qt5 Core - Qt Core module
+Qt5Widgets                     Qt5 Widgets - Qt Widgets module
+Qt5Gui                         Qt5 Gui - Qt Gui module
+
+<span class="pl-c"><span class="pl-c">#</span> 获取预处理宏和头文件路径（编译阶段）</span>
+<span class="pl-k">&gt;</span> pkg-config --cflags Qt5Core
+
+-DQT_CORE_LIB -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/x86_64-linux-gnu/qt5
+
+<span class="pl-c"><span class="pl-c">#</span> 获取库文件链接参数（链接阶段）</span>
+<span class="pl-k">&gt;</span> pkg-config --libs Qt5Core
+
+-lQt5Core</pre></div>
+<p>汇总一下分析命令的返回结果，</p>
+<ul>
+<li>宏（-D = Define）：-DQT_CORE_LIB</li>
+<li>头文件搜素路径（-I = include path）：-I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/x86_64-linux-gnu/qt5</li>
+<li>链接库（-l = link library）：-lQt5Core</li>
+<li>库文件搜索路径（-L = Library path）：这里空缺</li>
+</ul>
+<p>由于我系统上的 Qt 库是用 -reduce-relocations 选项编译的，这要求所有链接到 Qt 的代码也必须是位置无关代码（PIC）。</p>
+<p>所以，还需要额外在末尾添加 -fPIC 参数，来避免编译报错。</p>
+<p>这样，我们就能拼凑出完整的构建命令：<br>
+<code class="notranslate">g++ sayhi_qt.cpp -o sayhi_qt -DQT_CORE_LIB -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/x86_64-linux-gnu/qt5 -lQt5Core -fPIC</code></p>
+<p>知晓原理后，构建命令可以进一步简化：</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">g++ sayhi_qt.cpp -o sayhi_qt -fPIC <span class="pl-s"><span class="pl-pds">`</span>pkg-config --cflags --libs Qt5Core<span class="pl-pds">`</span></span></pre></div>
+<p>3.构建分析</p>
+<p>ldd 命令可以列出可执行文件或共享库所需的动态链接库。</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-k">&gt;</span> ldd sayhi_qt
+
+linux-vdso.so.1 (0x00007ffe6d3dd000)
+libQt5Core.so.5 =<span class="pl-k">&gt;</span> /lib/x86_64-linux-gnu/libQt5Core.so.5 (0x000076fdc9c00000)
+libstdc++.so.6 =<span class="pl-k">&gt;</span> /lib/x86_64-linux-gnu/libstdc++.so.6 (0x000076fdc9800000)
+libgcc_s.so.1 =<span class="pl-k">&gt;</span> /lib/x86_64-linux-gnu/libgcc_s.so.1 (0x000076fdca1c8000)
+libc.so.6 =<span class="pl-k">&gt;</span> /lib/x86_64-linux-gnu/libc.so.6 (0x000076fdc9400000)
+libz.so.1 =<span class="pl-k">&gt;</span> /lib/x86_64-linux-gnu/libz.so.1 (0x000076fdca1ac000)
+libdouble-conversion.so.3 =<span class="pl-k">&gt;</span> /lib/x86_64-linux-gnu/libdouble-conversion.so.3 (0x000076fdca195000)
+libicui18n.so.74 =<span class="pl-k">&gt;</span> /lib/x86_64-linux-gnu/libicui18n.so.74 (0x000076fdc9000000)
+libicuuc.so.74 =<span class="pl-k">&gt;</span> /lib/x86_64-linux-gnu/libicuuc.so.74 (0x000076fdc8c00000)
+libpcre2-16.so.0 =<span class="pl-k">&gt;</span> /lib/x86_64-linux-gnu/libpcre2-16.so.0 (0x000076fdc9b74000)
+libzstd.so.1 =<span class="pl-k">&gt;</span> /lib/x86_64-linux-gnu/libzstd.so.1 (0x000076fdc9aba000)
+libglib-2.0.so.0 =<span class="pl-k">&gt;</span> /lib/x86_64-linux-gnu/libglib-2.0.so.0 (0x000076fdc96b7000)
+libm.so.6 =<span class="pl-k">&gt;</span> /lib/x86_64-linux-gnu/libm.so.6 (0x000076fdc8f17000)
+/lib64/ld-linux-x86-64.so.2 (0x000076fdca217000)
+libicudata.so.74 =<span class="pl-k">&gt;</span> /lib/x86_64-linux-gnu/libicudata.so.74 (0x000076fdc6e00000)
+libpcre2-8.so.0 =<span class="pl-k">&gt;</span> /lib/x86_64-linux-gnu/libpcre2-8.so.0 (0x000076fdc961d000)</pre></div>
+<p>g++ -v 可以输出详细的构建流程</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-k">&gt;</span> g++ -v sayhi_qt.cpp -o sayhi_qt -fPIC <span class="pl-s"><span class="pl-pds">`</span>pkg-config --cflags --libs Qt5Core<span class="pl-pds">`</span></span>
+
+Using built-in specs.
+COLLECT_GCC=g++
+COLLECT_LTO_WRAPPER=/usr/libexec/gcc/x86_64-linux-gnu/13/lto-wrapper
+OFFLOAD_TARGET_NAMES=nvptx-none:amdgcn-amdhsa
+OFFLOAD_TARGET_DEFAULT=1
+Target: x86_64-linux-gnu
+Configured with: ../src/configure -v --with-pkgversion='Ubuntu 13.3.0-6ubuntu2~24.04.1' --with-bugurl=file:///usr/share/doc/gcc-13/README.Bugs --enable-languages=c,ada,c++,go,d,fortran,objc,obj-c++,m2 --prefix=/usr --with-gcc-major-version-only --program-suffix=-13 --program-prefix=x86_64-linux-gnu- --enable-shared --enable-linker-build-id --libexecdir=/usr/libexec --without-included-gettext --enable-threads=posix --libdir=/usr/lib --enable-nls --enable-bootstrap --enable-clocale=gnu --enable-libstdcxx-debug --enable-libstdcxx-time=yes --with-default-libstdcxx-abi=new --enable-libstdcxx-backtrace --enable-gnu-unique-object --disable-vtable-verify --enable-plugin --enable-default-pie --with-system-zlib --enable-libphobos-checking=release --with-target-system-zlib=auto --enable-objc-gc=auto --enable-multiarch --disable-werror --enable-cet --with-arch-32=i686 --with-abi=m64 --with-multilib-list=m32,m64,mx32 --enable-multilib --with-tune=generic --enable-offload-targets=nvptx-none=/build/gcc-13-EldibY/gcc-13-13.3.0/debian/tmp-nvptx/usr,amdgcn-amdhsa=/build/gcc-13-EldibY/gcc-13-13.3.0/debian/tmp-gcn/usr --enable-offload-defaulted --without-cuda-driver --enable-checking=release --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-linux-gnu --with-build-config=bootstrap-lto-lean --enable-link-serialization=2
+Thread model: posix
+Supported LTO compression algorithms: zlib zstd
+gcc version 13.3.0 (Ubuntu 13.3.0-6ubuntu2~24.04.1)
+COLLECT_GCC_OPTIONS=<span class="pl-s"><span class="pl-pds">'</span>-v<span class="pl-pds">'</span></span> <span class="pl-s"><span class="pl-pds">'</span>-o<span class="pl-pds">'</span></span> <span class="pl-s"><span class="pl-pds">'</span>sayhi_qt<span class="pl-pds">'</span></span> <span class="pl-s"><span class="pl-pds">'</span>-fPIC<span class="pl-pds">'</span></span> <span class="pl-s"><span class="pl-pds">'</span>-D<span class="pl-pds">'</span></span> <span class="pl-s"><span class="pl-pds">'</span>QT_CORE_LIB<span class="pl-pds">'</span></span> <span class="pl-s"><span class="pl-pds">'</span>-I<span class="pl-pds">'</span></span> <span class="pl-s"><span class="pl-pds">'</span>/usr/include/x86_64-linux-gnu/qt5/QtCore<span class="pl-pds">'</span></span> <span class="pl-s"><span class="pl-pds">'</span>-I<span class="pl-pds">'</span></span> <span class="pl-s"><span class="pl-pds">'</span>/usr/include/x86_64-linux-gnu/qt5<span class="pl-pds">'</span></span> <span class="pl-s"><span class="pl-pds">'</span>-shared-libgcc<span class="pl-pds">'</span></span> <span class="pl-s"><span class="pl-pds">'</span>-mtune=generic<span class="pl-pds">'</span></span> <span class="pl-s"><span class="pl-pds">'</span>-march=x86-64<span class="pl-pds">'</span></span>
+ /usr/libexec/gcc/x86_64-linux-gnu/13/cc1plus -quiet -v -I /usr/include/x86_64-linux-gnu/qt5/QtCore -I /usr/include/x86_64-linux-gnu/qt5 -imultiarch x86_64-linux-gnu -D_GNU_SOURCE -D QT_CORE_LIB sayhi_qt.cpp -quiet -dumpbase sayhi_qt.cpp -dumpbase-ext .cpp -mtune=generic -march=x86-64 -version -fPIC -fasynchronous-unwind-tables -fstack-protector-strong -Wformat -Wformat-security -fstack-clash-protection -fcf-protection -o /tmp/ccDbLiIw.s
+GNU C++17 (Ubuntu 13.3.0-6ubuntu2~24.04.1) version 13.3.0 (x86_64-linux-gnu)
+        compiled by GNU C version 13.3.0, GMP version 6.3.0, MPFR version 4.2.1, MPC version 1.3.1, isl version isl-0.26-GMP
+
+GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
+ignoring duplicate directory <span class="pl-s"><span class="pl-pds">"</span>/usr/include/x86_64-linux-gnu/c++/13<span class="pl-pds">"</span></span>
+ignoring nonexistent directory <span class="pl-s"><span class="pl-pds">"</span>/usr/local/include/x86_64-linux-gnu<span class="pl-pds">"</span></span>
+ignoring nonexistent directory <span class="pl-s"><span class="pl-pds">"</span>/usr/lib/gcc/x86_64-linux-gnu/13/include-fixed/x86_64-linux-gnu<span class="pl-pds">"</span></span>
+ignoring nonexistent directory <span class="pl-s"><span class="pl-pds">"</span>/usr/lib/gcc/x86_64-linux-gnu/13/include-fixed<span class="pl-pds">"</span></span>
+ignoring nonexistent directory <span class="pl-s"><span class="pl-pds">"</span>/usr/lib/gcc/x86_64-linux-gnu/13/../../../../x86_64-linux-gnu/include<span class="pl-pds">"</span></span>
+<span class="pl-c"><span class="pl-c">#</span>include "..." search starts here:</span>
+<span class="pl-c"><span class="pl-c">#</span>include &lt;...&gt; search starts here:</span>
+ /usr/include/x86_64-linux-gnu/qt5/QtCore
+ /usr/include/x86_64-linux-gnu/qt5
+ /usr/include/c++/13
+ /usr/include/x86_64-linux-gnu/c++/13
+ /usr/include/c++/13/backward
+ /usr/lib/gcc/x86_64-linux-gnu/13/include
+ /usr/local/include
+ /usr/include/x86_64-linux-gnu
+ /usr/include
+End of search list.
+Compiler executable checksum: 7896445e4990772fdae9dc0659a99266
+COLLECT_GCC_OPTIONS=<span class="pl-s"><span class="pl-pds">'</span>-v<span class="pl-pds">'</span></span> <span class="pl-s"><span class="pl-pds">'</span>-o<span class="pl-pds">'</span></span> <span class="pl-s"><span class="pl-pds">'</span>sayhi_qt<span class="pl-pds">'</span></span> <span class="pl-s"><span class="pl-pds">'</span>-fPIC<span class="pl-pds">'</span></span> <span class="pl-s"><span class="pl-pds">'</span>-D<span class="pl-pds">'</span></span> <span class="pl-s"><span class="pl-pds">'</span>QT_CORE_LIB<span class="pl-pds">'</span></span> <span class="pl-s"><span class="pl-pds">'</span>-I<span class="pl-pds">'</span></span> <span class="pl-s"><span class="pl-pds">'</span>/usr/include/x86_64-linux-gnu/qt5/QtCore<span class="pl-pds">'</span></span> <span class="pl-s"><span class="pl-pds">'</span>-I<span class="pl-pds">'</span></span> <span class="pl-s"><span class="pl-pds">'</span>/usr/include/x86_64-linux-gnu/qt5<span class="pl-pds">'</span></span> <span class="pl-s"><span class="pl-pds">'</span>-shared-libgcc<span class="pl-pds">'</span></span> <span class="pl-s"><span class="pl-pds">'</span>-mtune=generic<span class="pl-pds">'</span></span> <span class="pl-s"><span class="pl-pds">'</span>-march=x86-64<span class="pl-pds">'</span></span>
+ as -v -I /usr/include/x86_64-linux-gnu/qt5/QtCore -I /usr/include/x86_64-linux-gnu/qt5 --64 -o /tmp/ccnILArs.o /tmp/ccDbLiIw.s
+GNU assembler version 2.42 (x86_64-linux-gnu) using BFD version (GNU Binutils <span class="pl-k">for</span> Ubuntu) 2.42
+COMPILER_PATH=/usr/libexec/gcc/x86_64-linux-gnu/13/:/usr/libexec/gcc/x86_64-linux-gnu/13/:/usr/libexec/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/13/:/usr/lib/gcc/x86_64-linux-gnu/
+LIBRARY_PATH=/usr/lib/gcc/x86_64-linux-gnu/13/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../:/lib/:/usr/lib/
+COLLECT_GCC_OPTIONS=<span class="pl-s"><span class="pl-pds">'</span>-v<span class="pl-pds">'</span></span> <span class="pl-s"><span class="pl-pds">'</span>-o<span class="pl-pds">'</span></span> <span class="pl-s"><span class="pl-pds">'</span>sayhi_qt<span class="pl-pds">'</span></span> <span class="pl-s"><span class="pl-pds">'</span>-fPIC<span class="pl-pds">'</span></span> <span class="pl-s"><span class="pl-pds">'</span>-D<span class="pl-pds">'</span></span> <span class="pl-s"><span class="pl-pds">'</span>QT_CORE_LIB<span class="pl-pds">'</span></span> <span class="pl-s"><span class="pl-pds">'</span>-I<span class="pl-pds">'</span></span> <span class="pl-s"><span class="pl-pds">'</span>/usr/include/x86_64-linux-gnu/qt5/QtCore<span class="pl-pds">'</span></span> <span class="pl-s"><span class="pl-pds">'</span>-I<span class="pl-pds">'</span></span> <span class="pl-s"><span class="pl-pds">'</span>/usr/include/x86_64-linux-gnu/qt5<span class="pl-pds">'</span></span> <span class="pl-s"><span class="pl-pds">'</span>-shared-libgcc<span class="pl-pds">'</span></span> <span class="pl-s"><span class="pl-pds">'</span>-mtune=generic<span class="pl-pds">'</span></span> <span class="pl-s"><span class="pl-pds">'</span>-march=x86-64<span class="pl-pds">'</span></span> <span class="pl-s"><span class="pl-pds">'</span>-dumpdir<span class="pl-pds">'</span></span> <span class="pl-s"><span class="pl-pds">'</span>sayhi_qt.<span class="pl-pds">'</span></span>
+ /usr/libexec/gcc/x86_64-linux-gnu/13/collect2 -plugin /usr/libexec/gcc/x86_64-linux-gnu/13/liblto_plugin.so -plugin-opt=/usr/libexec/gcc/x86_64-linux-gnu/13/lto-wrapper -plugin-opt=-fresolution=/tmp/cc34UBuF.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --build-id --eh-frame-hdr -m elf_x86_64 --hash-style=gnu --as-needed -dynamic-linker /lib64/ld-linux-x86-64.so.2 -pie -z now -z relro -o sayhi_qt /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/Scrt1.o /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/13/crtbeginS.o -L/usr/lib/gcc/x86_64-linux-gnu/13 -L/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/13/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/13/../../.. /tmp/ccnILArs.o -lQt5Core -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /usr/lib/gcc/x86_64-linux-gnu/13/crtendS.o /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/crtn.o
+COLLECT_GCC_OPTIONS=<span class="pl-s"><span class="pl-pds">'</span>-v<span class="pl-pds">'</span></span> <span class="pl-s"><span class="pl-pds">'</span>-o<span class="pl-pds">'</span></span> <span class="pl-s"><span class="pl-pds">'</span>sayhi_qt<span class="pl-pds">'</span></span> <span class="pl-s"><span class="pl-pds">'</span>-fPIC<span class="pl-pds">'</span></span> <span class="pl-s"><span class="pl-pds">'</span>-D<span class="pl-pds">'</span></span> <span class="pl-s"><span class="pl-pds">'</span>QT_CORE_LIB<span class="pl-pds">'</span></span> <span class="pl-s"><span class="pl-pds">'</span>-I<span class="pl-pds">'</span></span> <span class="pl-s"><span class="pl-pds">'</span>/usr/include/x86_64-linux-gnu/qt5/QtCore<span class="pl-pds">'</span></span> <span class="pl-s"><span class="pl-pds">'</span>-I<span class="pl-pds">'</span></span> <span class="pl-s"><span class="pl-pds">'</span>/usr/include/x86_64-linux-gnu/qt5<span class="pl-pds">'</span></span> <span class="pl-s"><span class="pl-pds">'</span>-shared-libgcc<span class="pl-pds">'</span></span> <span class="pl-s"><span class="pl-pds">'</span>-mtune=generic<span class="pl-pds">'</span></span> <span class="pl-s"><span class="pl-pds">'</span>-march=x86-64<span class="pl-pds">'</span></span> <span class="pl-s"><span class="pl-pds">'</span>-dumpdir<span class="pl-pds">'</span></span> <span class="pl-s"><span class="pl-pds">'</span>sayhi_qt.<span class="pl-pds">'</span></span></pre></div>
+<p>逐段拆解输出，看看 Qt 程序是怎么被编译出来的：</p>
+<ul>
+<li>编译阶段（cc1plus）</li>
+</ul>
+<pre class="notranslate"><code class="notranslate">/usr/libexec/gcc/x86_64-linux-gnu/13/cc1plus ...
+</code></pre>
+<p>GCC 的 C++ 前端，负责把 <code class="notranslate">sayhi_qt.cpp</code> 编译成汇编代码。</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>参数</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="notranslate">-D QT_CORE_LIB</code></td>
+<td>定义了 <code class="notranslate">QT_CORE_LIB</code> 宏，这是 Qt5Core 模块的标准宏</td>
+</tr>
+<tr>
+<td><code class="notranslate">-I /usr/include/x86_64-linux-gnu/qt5/QtCore</code></td>
+<td>QtCore 头文件路径</td>
+</tr>
+<tr>
+<td><code class="notranslate">-I /usr/include/x86_64-linux-gnu/qt5</code></td>
+<td>Qt 总头文件路径</td>
+</tr>
+<tr>
+<td><code class="notranslate">-fPIC</code></td>
+<td>生成位置无关代码（Position Independent Code）</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p>头文件搜索路径（<code class="notranslate">#include &lt;...&gt;</code> search starts here）：</p>
+<pre class="notranslate"><code class="notranslate">/usr/include/x86_64-linux-gnu/qt5/QtCore
+/usr/include/x86_64-linux-gnu/qt5
+/usr/include/c++/13
+...
+</code></pre>
+<p>编译器会按顺序查找 <code class="notranslate">#include &lt;QtCore/...&gt;</code> 和系统头文件。</p>
+<ul>
+<li>汇编阶段（as）</li>
+</ul>
+<pre class="notranslate"><code class="notranslate">as -v ... -o /tmp/ccnILArs.o /tmp/ccDbLiIw.s
+</code></pre>
+<p>把汇编代码翻译成目标文件 <code class="notranslate">/tmp/ccnILArs.o</code>。</p>
+<ul>
+<li>链接阶段（collect2 / ld）</li>
+</ul>
+<pre class="notranslate"><code class="notranslate">/usr/libexec/gcc/x86_64-linux-gnu/13/collect2 ...
+</code></pre>
+<p>这是链接器调用，</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>参数</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="notranslate">-lQt5Core</code></td>
+<td>链接 Qt5Core 共享库</td>
+</tr>
+<tr>
+<td><code class="notranslate">-lstdc++</code></td>
+<td>链接 C++ 标准库</td>
+</tr>
+<tr>
+<td><code class="notranslate">-lm</code></td>
+<td>链接数学库</td>
+</tr>
+<tr>
+<td><code class="notranslate">-pie</code></td>
+<td>生成位置无关的可执行文件（Ubuntu 默认安全特性）</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p><strong>库搜索路径</strong>（<code class="notranslate">-L</code>）：</p>
+<pre class="notranslate"><code class="notranslate">-L/usr/lib/gcc/x86_64-linux-gnu/13
+-L/usr/lib/x86_64-linux-gnu
+-L/usr/lib/...
+</code></pre>
+<p><code class="notranslate">pkg-config --libs Qt5Core</code> 只返回了 <code class="notranslate">-lQt5Core</code>，没有显式 <code class="notranslate">-L</code> 路径。这是因为 Qt5Core 安装在系统标准库路径 <code class="notranslate">/usr/lib/x86_64-linux-gnu</code> 下，链接器默认就会搜索这里，所以不需要额外指定。</p></div>
+<div style="font-size:small;margin-top:8px;float:right;">❤️ 转载文章请注明出处，谢谢！❤️</div>
+
+<button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
+<div class="comments" id="comments"></div>
+
+</div>
+    <div id="footer"><div id="footer1">Copyright © <span id="copyrightYear"></span> <a href="https://coldowl.github.io">coldowl</a></div>
+<div id="footer2">
+    <span id="runday"></span><span>Powered by <a href="https://meekdai.com/Gmeek.html" target="_blank">Gmeek</a></span>
+</div>
+
+<script>
+var now=new Date();
+document.getElementById("copyrightYear").innerHTML=now.getFullYear();
+
+if("07/10/2024"!=""){
+    var startSite=new Date("07/10/2024");
+    var diff=now.getTime()-startSite.getTime();
+    var diffDay=Math.floor(diff/(1000*60*60*24));
+    document.getElementById("runday").innerHTML="网站运行 "+diffDay+" 天"+" • ";
+}
+</script></div>
+</body>
+<script>
+var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z', 'copy': 'M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z', 'check': 'M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z'};
+var utterancesLoad=0;
+
+let themeSettings={
+    "dark": ["dark","moon","#00f0ff","dark-blue"],
+    "light": ["light","sun","#ff5000","github-light"],
+    "auto": ["auto","sync","","preferred-color-scheme"]
+};
+function changeTheme(mode, icon, color, utheme){
+    document.documentElement.setAttribute("data-color-mode",mode);
+    document.getElementById("themeSwitch").setAttribute("d",value=IconList[icon]);
+    document.getElementById("themeSwitch").parentNode.style.color=color;
+    if(utterancesLoad==1){utterancesTheme(utheme);}
+}
+function modeSwitch(){
+    let currentMode=document.documentElement.getAttribute('data-color-mode');
+    let newMode = currentMode === "light" ? "dark" : currentMode === "dark" ? "auto" : "light";
+    localStorage.setItem("meek_theme", newMode);
+    if(themeSettings[newMode]){
+        changeTheme(...themeSettings[newMode]);
+    }
+}
+function utterancesTheme(theme){
+    const message={type:'set-theme',theme: theme};
+    const iframe=document.getElementsByClassName('utterances-frame')[0];
+    iframe.contentWindow.postMessage(message,'https://utteranc.es');
+}
+if(themeSettings[theme]){changeTheme(...themeSettings[theme]);}
+console.log("\n %c Gmeek last https://github.com/Meekdai/Gmeek \n","padding:5px 0;background:#02d81d;color:#fff");
+</script>
+
+<script>
+document.getElementById("pathHome").setAttribute("d",IconList["home"]);
+document.getElementById("pathIssue").setAttribute("d",IconList["github"]);
+
+
+
+function openComments(){
+    cm=document.getElementById("comments");
+    cmButton=document.getElementById("cmButton");
+    cmButton.disabled=true;
+    cmButton.innerHTML="loading";
+    span=document.createElement("span");
+    span.setAttribute("class","AnimatedEllipsis");
+    cmButton.appendChild(span);
+
+    script=document.createElement("script");
+    script.setAttribute("src","https://utteranc.es/client.js");
+    script.setAttribute("repo","coldowl/coldowl.github.io");
+    script.setAttribute("issue-term","title");
+    
+    if(localStorage.getItem("meek_theme")=="dark"){script.setAttribute("theme","dark-blue");}
+    else if(localStorage.getItem("meek_theme")=="light") {script.setAttribute("theme","github-light");}
+    else{script.setAttribute("theme","preferred-color-scheme");}
+    
+    script.setAttribute("crossorigin","anonymous");
+    script.setAttribute("async","");
+    cm.appendChild(script);
+
+    int=self.setInterval("iFrameLoading()",200);
+}
+
+function iFrameLoading(){
+    var utterances=document.getElementsByClassName('utterances');
+    if(utterances.length==1){
+        if(utterances[0].style.height!=""){
+            utterancesLoad=1;
+            int=window.clearInterval(int);
+            document.getElementById("cmButton").style.display="none";
+            console.log("utterances Load OK");
+        }
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const createClipboardHTML = (codeContent, additionalClasses = '') => `
+        <pre class="notranslate"><code class="notranslate">${codeContent}</code></pre>
+        <div class="clipboard-container position-absolute right-0 top-0 ${additionalClasses}">
+            <clipboard-copy class="ClipboardButton btn m-2 p-0" role="button" style="display: inherit;">
+                <svg height="16" width="16" class="octicon octicon-copy m-2"><path d="${IconList["copy"]}"></path></svg>
+                <svg height="16" width="16" class="octicon octicon-check color-fg-success m-2 d-none"><path d="${IconList["check"]}"></path></svg>
+            </clipboard-copy>
+            <div class="copy-feedback">Copied!</div>
+        </div>
+    `;
+
+    const handleCodeElements = (selector = '') => {
+        document.querySelectorAll(selector).forEach(codeElement => {
+            const codeContent = codeElement.innerHTML;
+            const newStructure = document.createElement('div');
+            newStructure.className = 'snippet-clipboard-content position-relative overflow-auto';
+            newStructure.innerHTML = createClipboardHTML(codeContent);
+
+            const parentElement = codeElement.parentElement;
+            if (selector.includes('highlight')) {
+                parentElement.insertBefore(newStructure, codeElement.nextSibling);
+                parentElement.removeChild(codeElement);
+            } else {
+                parentElement.parentElement.replaceChild(newStructure, parentElement);
+            }
+        });
+    };
+
+    handleCodeElements('pre.notranslate > code.notranslate');
+    handleCodeElements('div.highlight > pre.notranslate');
+
+    let currentFeedback = null;
+    document.querySelectorAll('clipboard-copy').forEach(copyButton => {
+        copyButton.addEventListener('click', () => {
+            const codeContent = copyButton.closest('.snippet-clipboard-content').innerText;
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = codeContent;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempTextArea);
+
+            const copyIcon = copyButton.querySelector('.octicon-copy');
+            const checkIcon = copyButton.querySelector('.octicon-check');
+            const copyFeedback = copyButton.nextElementSibling;
+
+            if (currentFeedback && currentFeedback !== copyFeedback) {currentFeedback.style.display = 'none';}
+            currentFeedback = copyFeedback;
+
+            copyIcon.classList.add('d-none');
+            checkIcon.classList.remove('d-none');
+            copyFeedback.style.display = 'block';
+            copyButton.style.borderColor = 'var(--color-success-fg)';
+
+            setTimeout(() => {
+                copyIcon.classList.remove('d-none');
+                checkIcon.classList.add('d-none');
+                copyFeedback.style.display = 'none';
+                copyButton.style.borderColor = '';
+            }, 2000);
+        });
+    });
+});
+
+</script>
+<script src='https://blog.meekdai.com/Gmeek/plugins/lightbox.js'></script><script src='https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js'></script><script src='https://coldowl.github.io/EasterEgg.js'></script>
+
+</html>
