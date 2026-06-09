@@ -170,10 +170,10 @@ else: <span class="pl-k">unix</span>:!android: <span class="pl-smi">target.path<
 <span class="pl-k">if</span>(<span class="pl-smi">${QT_VERSION}</span> <span class="pl-k">VERSION_LESS</span> 6.1.0)
   <span class="pl-c1">set</span>(BUNDLE_ID_OPTION MACOSX_BUNDLE_GUI_IDENTIFIER com.example.untitled8)
 <span class="pl-k">endif</span>()
-<span class="pl-c1">set_target_properties</span>(<span class="pl-s">untitled8</span> <span class="pl-s">PROPERTIES</span>
+<span class="pl-c1">set_target_properties</span>(untitled8 PROPERTIES
     <span class="pl-smi">${BUNDLE_ID_OPTION}</span>
-    <span class="pl-s">MACOSX_BUNDLE_BUNDLE_VERSION</span> <span class="pl-smi">${PROJECT_VERSION}</span>
-    <span class="pl-s">MACOSX_BUNDLE_SHORT_VERSION_STRING</span> <span class="pl-smi">${PROJECT_VERSION_MAJOR}</span><span class="pl-s">.${PROJECT_VERSION_MINOR}</span>
+    MACOSX_BUNDLE_BUNDLE_VERSION <span class="pl-smi">${<span class="pl-c1">PROJECT_VERSION</span>}</span>
+    MACOSX_BUNDLE_SHORT_VERSION_STRING <span class="pl-smi">${<span class="pl-c1">PROJECT_VERSION_MAJOR</span>}</span>.<span class="pl-smi">${<span class="pl-c1">PROJECT_VERSION_MINOR</span>}</span>
     <span class="pl-c1">MACOSX_BUNDLE</span> <span class="pl-c1">TRUE</span>
     <span class="pl-c1">WIN32_EXECUTABLE</span> <span class="pl-c1">TRUE</span>
 )
