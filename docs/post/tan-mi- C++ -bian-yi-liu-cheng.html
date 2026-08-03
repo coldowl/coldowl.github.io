@@ -37,7 +37,7 @@ graph TD
     style J fill:#aaffaa,stroke:#339933,stroke-width:2px
 ```
 
-C++ 的编译过程通常可以分为四个主要阶段：
+cpp 的编译过程通常可以分为四个主要阶段：
 
 1. 预处理（Preprocessing）
 2. 编译（Compilation）
@@ -73,7 +73,7 @@ graph TD
     style J fill:#aaffaa,stroke:#339933,stroke-width:2px
 ```
 
-C++ 的编译过程通常可以分为四个主要阶段：
+cpp 的编译过程通常可以分为四个主要阶段：
 
 1. 预处理（Preprocessing）
 2. 编译（Compilation）
@@ -175,7 +175,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
     <span class="pl-k">style</span> <span class="pl-ent">G</span> <span class="pl-s1"><span class="pl-c1"><span class="pl-c1">fill</span></span>:<span class="pl-c1">#cde4ff</span></span><span class="pl-sg">,</span><span class="pl-s1"><span class="pl-c1"><span class="pl-c1">stroke</span></span>:<span class="pl-c1">#6699ff</span></span><span class="pl-sg">,</span><span class="pl-s1"><span class="pl-c1"><span class="pl-c1">stroke-width</span></span>:<span class="pl-c1">2<span class="pl-k">px</span></span></span>
     <span class="pl-k">style</span> <span class="pl-ent">I</span> <span class="pl-s1"><span class="pl-c1"><span class="pl-c1">fill</span></span>:<span class="pl-c1">#f9f</span></span><span class="pl-sg">,</span><span class="pl-s1"><span class="pl-c1"><span class="pl-c1">stroke</span></span>:<span class="pl-c1">#939</span></span><span class="pl-sg">,</span><span class="pl-s1"><span class="pl-c1"><span class="pl-c1">stroke-width</span></span>:<span class="pl-c1">2<span class="pl-k">px</span></span></span>
     <span class="pl-k">style</span> <span class="pl-ent">J</span> <span class="pl-s1"><span class="pl-c1"><span class="pl-c1">fill</span></span>:<span class="pl-c1">#aaffaa</span></span><span class="pl-sg">,</span><span class="pl-s1"><span class="pl-c1"><span class="pl-c1">stroke</span></span>:<span class="pl-c1">#339933</span></span><span class="pl-sg">,</span><span class="pl-s1"><span class="pl-c1"><span class="pl-c1">stroke-width</span></span>:<span class="pl-c1">2<span class="pl-k">px</span></span></span></pre></div>
-<p>C++ 的编译过程通常可以分为四个主要阶段：</p>
+<p>cpp 的编译过程通常可以分为四个主要阶段：</p>
 <ol>
 <li>预处理（Preprocessing）</li>
 <li>编译（Compilation）</li>
@@ -191,6 +191,138 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
     std::cout &lt;&lt; <span class="pl-c1">GREETING</span> &lt;&lt; std::endl;
     <span class="pl-k">return</span> <span class="pl-c1">0</span>;
 }</pre></div>
+<p>在主流编译器，编译这段代码将会是这样的：</p>
+<ul>
+<li>GCC: g++ main.cpp -o main</li>
+<li>Clang: clang++ main.cpp -o main</li>
+<li>MSVC: cl main.cpp /Fe:main.exe<br>
+这不是某个机构"规定"的，而是<strong>工程实践与计算机体系结构共同演化出的必然结果</strong>。这个四阶段模型（预处理 → 编译 → 汇编 → 链接）源于 C 语言的 Unix 传统，被 C++ 继承并沿用至今。</li>
+</ul>
+<hr>
+<h3>一、历史渊源：从 Unix 工具链演化而来</h3>
+<p>1969–1973 年间，Dennis Ritchie 在开发 C 语言时，Unix 系统已经推崇**"每个工具只做一件事，并做好"**的哲学。当时的编译环境并非一个单体程序，而是多个独立工具的组合：</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>阶段</th>
+<th>早期 Unix 工具</th>
+<th>职责</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>预处理</td>
+<td><code class="notranslate">cpp</code> (C PreProcessor)</td>
+<td>处理 <code class="notranslate">#include</code>、<code class="notranslate">#define</code>、条件编译</td>
+</tr>
+<tr>
+<td>编译</td>
+<td><code class="notranslate">cc</code> (C Compiler)</td>
+<td>将 C 代码翻译成汇编</td>
+</tr>
+<tr>
+<td>汇编</td>
+<td><code class="notranslate">as</code> (Assembler)</td>
+<td>将汇编翻译成机器码（目标文件 <code class="notranslate">.o</code>）</td>
+</tr>
+<tr>
+<td>链接</td>
+<td><code class="notranslate">ld</code> (Linker)</td>
+<td>将多个目标文件和库合并为可执行文件</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p>C++（Bjarne Stroustrup，1979 年起）直接复用了这套成熟的工具链架构。因此，<strong>不是标准强制要求分四步走，而是 C++ 诞生时就寄生在这套已验证的体系上</strong>。</p>
+<hr>
+<h3>二、技术必然性：为什么必须分阶段？</h3>
+<p>即使今天有人想写一个"一体化"编译器，这四个阶段的<strong>分离仍是工程最优解</strong>，原因如下：</p>
+<h4>1. 预处理必须先行</h4>
+<ul>
+<li><code class="notranslate">#include</code> 会物理性地插入文本，改变后续编译器看到的源码</li>
+<li>宏替换 (<code class="notranslate">#define</code>) 发生在词法分析之前</li>
+<li><strong>没有预处理，编译器根本无法获得完整的翻译单元</strong></li>
+</ul>
+<h4>2. 编译与汇编分离</h4>
+<ul>
+<li>编译器前端只需关心<strong>语言语义</strong>，生成中间表示（IR）或汇编</li>
+<li>汇编器只需关心<strong>指令编码</strong>，将助记符转成机器码</li>
+<li>这种分离让编译器可以<strong>轻松支持不同 CPU 架构</strong>：同一套前端 + 不同的汇编器/后端 = 跨平台编译</li>
+</ul>
+<h4>3. 链接必须独立</h4>
+<ul>
+<li><strong>分离编译</strong>（Separate Compilation）是 C/C++ 的核心机制。你可以分别编译 <code class="notranslate">a.cpp</code> 和 <code class="notranslate">b.cpp</code>，最后链接</li>
+<li>链接器解决<strong>符号重定位</strong>（函数地址、全局变量地址在编译时未知，链接时才确定）</li>
+<li>静态库/动态库的复用完全依赖链接阶段</li>
+</ul>
+<hr>
+<h3>三、C++ 标准怎么说？</h3>
+<p>ISO C++ 标准（ISO/IEC 14882）<strong>并不规定编译器必须分四步走</strong>。标准只定义了：</p>
+<blockquote>
+<p><strong>"翻译阶段"（Phases of Translation）</strong>，共 9 个逻辑阶段（C++20 起），例如：</p>
+<ol>
+<li>源文件字符映射</li>
+<li>反斜杠换行符拼接</li>
+<li><strong>预处理</strong>（第 4 阶段）</li>
+<li>字符集转换</li>
+<li>词法分析、预处理指令执行</li>
+<li>拼接相邻字符串字面量</li>
+<li><strong>编译</strong>：进行语法/语义分析，生成目标代码</li>
+<li><strong>链接</strong>：解析外部符号引用</li>
+</ol>
+</blockquote>
+<p>标准只要求<strong>逻辑结果等价于这 9 个阶段的顺序执行</strong>，至于物理上是否分四个工具、是否合并阶段，由实现决定。</p>
+<p><strong>实际案例</strong>：</p>
+<ul>
+<li><code class="notranslate">g++</code> 和 <code class="notranslate">clang++</code> 默认会调用 <code class="notranslate">cc1</code>/<code class="notranslate">clang</code>（编译器前端）、<code class="notranslate">as</code>（汇编器）、<code class="notranslate">collect2</code>/<code class="notranslate">lld</code>（链接器）</li>
+<li>MSVC 的 <code class="notranslate">cl.exe</code> 在内部也走相同逻辑，只是用 <code class="notranslate">/c</code>（只编译不链接）、<code class="notranslate">/link</code> 等开关控制</li>
+<li>某些嵌入式编译器（如 Arduino 的 <code class="notranslate">avr-gcc</code>）会显式调用 <code class="notranslate">avr-objcopy</code> 等工具，但流程不变</li>
+</ul>
+<hr>
+<h3>四、为什么命令不同但流程相同？</h3>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>编译器</th>
+<th>命令差异</th>
+<th>流程一致性原因</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GCC</td>
+<td><code class="notranslate">g++ -c a.cpp -o a.o</code></td>
+<td>遵循 Unix 传统，显式暴露各阶段</td>
+</tr>
+<tr>
+<td>Clang</td>
+<td><code class="notranslate">clang++ -c a.cpp -o a.o</code></td>
+<td>兼容 GCC 命令行，内部架构类似 LLVM</td>
+</tr>
+<tr>
+<td>MSVC</td>
+<td><code class="notranslate">cl /c a.cpp</code> → <code class="notranslate">link a.obj</code></td>
+<td>历史路径不同（DOS/Windows 传统），但阶段逻辑一致</td>
+</tr>
+<tr>
+<td>Intel ICC</td>
+<td><code class="notranslate">icpc -c a.cpp</code></td>
+<td>需兼容 GCC 生态，流程不变</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p><strong>核心原因</strong>：C/C++ 的<strong>语言语义</strong>（头文件包含、宏、外部链接、ODR 规则、模板实例化等）<strong>内在地要求</strong>这些阶段按序发生。改变流程就等于改变语言语义，那就不再是 C++ 了。</p>
+<hr>
+<h3>五、总结</h3>
+<blockquote>
+<p><strong>不是"谁规定"了四阶段流程，而是 C++ 语言的设计与计算机体系结构共同"逼迫"编译器必须如此工作。</strong></p>
+</blockquote>
+<ul>
+<li><strong>历史</strong>：继承自 Unix C 工具链的分工传统</li>
+<li><strong>技术</strong>：每个阶段解决不同抽象层级的问题，分离是工程最优解</li>
+<li><strong>标准</strong>：ISO C++ 定义逻辑翻译阶段，物理实现可合并但效果必须等价</li>
+<li><strong>生态</strong>：分离编译和链接是 C++ 模块化、库复用的基石</li>
+</ul>
+<p>你可以把编译器想象成一条<strong>流水线</strong>：无论工厂品牌（GCC/Clang/MSVC）如何，只要加工的是 C++ 这种"原材料"，就必须经过相同的工序，否则产出的"产品"（可执行文件）就会不符合语言规范。</p>
 <h3>1. 预处理</h3>
 <p>预处理是编译的第一步，处理源代码中的“宏指令”和预处理器命令。</p>
 <ul>
