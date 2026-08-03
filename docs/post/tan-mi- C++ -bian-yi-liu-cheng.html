@@ -10,77 +10,13 @@
         let theme = localStorage.getItem("meek_theme") || "light";
         document.documentElement.setAttribute("data-color-mode", theme);
     </script>
-<meta name="description" content="```mermaid
-graph TD
-    subgraph 'C++ 编译全过程'
-        A['<b>源代码文件</b><br/>main.cpp'] -- '包含头文件、宏替换等' --> B{'1. 预处理器<br/>(Preprocessor)'};
-        B --> C['<b>预处理后的文件</b><br/>main.i'];
-        C -- '词法分析、语法分析、优化' --> D{'2. 编译器<br/>(Compiler)'};
-        D --> E['<b>汇编代码</b><br/>main.s'];
-        E -- '翻译成机器指令' --> F{'3. 汇编器<br/>(Assembler)'};
-        F --> G['<b>目标文件 / 对象文件</b><br/>main.o'];
-        
-        subgraph '链接阶段 (Linking)'
-            G --> H{'4. 链接器<br/>(Linker)'};
-            I['<b>库文件和其他目标文件</b><br/>.lib, .a, .so, other.o'] --> H;
-        end
+<meta name="description" content="当我们在谈论编译时，我们在谈些什么？
 
-        H -- '符号解析、地址重定位' --> J['<b>可执行文件</b><br/>main.exe 或 main'];
-    end
-
-    %% Styling
-    style A fill:#cde4ff,stroke:#6699ff,stroke-width:2px
-    style C fill:#cde4ff,stroke:#6699ff,stroke-width:2px
-    style E fill:#cde4ff,stroke:#6699ff,stroke-width:2px
-    style G fill:#cde4ff,stroke:#6699ff,stroke-width:2px
-    style I fill:#f9f,stroke:#939,stroke-width:2px
-    style J fill:#aaffaa,stroke:#339933,stroke-width:2px
-```
-
-cpp 的编译过程通常可以分为四个主要阶段：
-
-1. 预处理（Preprocessing）
-2. 编译（Compilation）
-3. 汇编（Assembly）
-4. 链接（Linking）
-
-下面以一个简单的 C++ 程序为例，逐步剖析这个过程。">
+高级编程语言的出现，本质是在寻找一种接近自然语言的表达方式来驱使机器，所有的编译器本质上都在做同一件事情——把人类写的高级文本翻译成计算机硬件（CPU）能够直接执行的“0101”机器码。">
 <meta property="og:title" content="探秘 C++ 编译流程">
-<meta property="og:description" content="```mermaid
-graph TD
-    subgraph 'C++ 编译全过程'
-        A['<b>源代码文件</b><br/>main.cpp'] -- '包含头文件、宏替换等' --> B{'1. 预处理器<br/>(Preprocessor)'};
-        B --> C['<b>预处理后的文件</b><br/>main.i'];
-        C -- '词法分析、语法分析、优化' --> D{'2. 编译器<br/>(Compiler)'};
-        D --> E['<b>汇编代码</b><br/>main.s'];
-        E -- '翻译成机器指令' --> F{'3. 汇编器<br/>(Assembler)'};
-        F --> G['<b>目标文件 / 对象文件</b><br/>main.o'];
-        
-        subgraph '链接阶段 (Linking)'
-            G --> H{'4. 链接器<br/>(Linker)'};
-            I['<b>库文件和其他目标文件</b><br/>.lib, .a, .so, other.o'] --> H;
-        end
+<meta property="og:description" content="当我们在谈论编译时，我们在谈些什么？
 
-        H -- '符号解析、地址重定位' --> J['<b>可执行文件</b><br/>main.exe 或 main'];
-    end
-
-    %% Styling
-    style A fill:#cde4ff,stroke:#6699ff,stroke-width:2px
-    style C fill:#cde4ff,stroke:#6699ff,stroke-width:2px
-    style E fill:#cde4ff,stroke:#6699ff,stroke-width:2px
-    style G fill:#cde4ff,stroke:#6699ff,stroke-width:2px
-    style I fill:#f9f,stroke:#939,stroke-width:2px
-    style J fill:#aaffaa,stroke:#339933,stroke-width:2px
-```
-
-cpp 的编译过程通常可以分为四个主要阶段：
-
-1. 预处理（Preprocessing）
-2. 编译（Compilation）
-3. 汇编（Assembly）
-4. 链接（Linking）
-
-下面以一个简单的 C++ 程序为例，逐步剖析这个过程。">
+高级编程语言的出现，本质是在寻找一种接近自然语言的表达方式来驱使机器，所有的编译器本质上都在做同一件事情——把人类写的高级文本翻译成计算机硬件（CPU）能够直接执行的“0101”机器码。">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://coldowl.github.io/post/tan-mi-%20C%2B%2B%20-bian-yi-liu-cheng.html">
 <meta property="og:image" content="https://coldowl.github.io/avatar.svg">
@@ -151,7 +87,9 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </div>
 </div>
     <div id="content">
-<div class="markdown-body" id="postBody"><div class="highlight highlight-source-mermaid"><pre class="notranslate"><span class="pl-k">graph</span> <span class="pl-c1">TD</span>
+<div class="markdown-body" id="postBody"><p>当我们在谈论编译时，我们在谈些什么？</p>
+<p>高级编程语言的出现，本质是在寻找一种接近自然语言的表达方式来驱使机器，所有的编译器本质上都在做同一件事情——把人类写的高级文本翻译成计算机硬件（CPU）能够直接执行的“0101”机器码。</p>
+<div class="highlight highlight-source-mermaid"><pre class="notranslate"><span class="pl-k">graph</span> <span class="pl-c1">TD</span>
     <span class="pl-k">subgraph</span> "<span class="pl-ent">C</span>++ 编译全过程"
         <span class="pl-ent">A</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">[</span></span><span class="pl-s"><span class="pl-pds">"</span>&lt;b&gt;源代码文件&lt;/b&gt;&lt;<span class="pl-ent">br</span>/&gt;main.cpp<span class="pl-pds">"</span></span><span class="pl-pds"><span class="pl-sg">]</span></span></span> <span class="pl-k">--</span> <span class="pl-s">"包含头文件、宏替换等"</span> <span class="pl-k">--&gt;</span> <span class="pl-ent">B</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">{</span></span><span class="pl-s"><span class="pl-pds">"</span>1. 预处理器&lt;<span class="pl-ent">br</span>/&gt;(Preprocessor)<span class="pl-pds">"</span></span><span class="pl-pds"><span class="pl-sg">}</span></span></span><span class="pl-sg">;</span>
         <span class="pl-ent">B</span> <span class="pl-k">--&gt;</span> <span class="pl-ent">C</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">[</span></span><span class="pl-s"><span class="pl-pds">"</span>&lt;b&gt;预处理后的文件&lt;/b&gt;&lt;<span class="pl-ent">br</span>/&gt;main.i<span class="pl-pds">"</span></span><span class="pl-pds"><span class="pl-sg">]</span></span></span><span class="pl-sg">;</span>
