@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>coldowl</title><link>https://coldowl.github.io</link><description>完美不在于无以复加，而在于无可删减。</description><copyright>coldowl</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://coldowl.github.io/avatar.svg</url><title>avatar</title><link>https://coldowl.github.io</link></image><lastBuildDate>Thu, 04 Jun 2026 03:46:33 +0000</lastBuildDate><managingEditor>coldowl</managingEditor><ttl>60</ttl><webMaster>coldowl</webMaster><item><title>熟悉 Qt 编译流程</title><link>https://coldowl.github.io/post/shu-xi-%20Qt%20-bian-yi-liu-cheng.html</link><description>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>coldowl</title><link>https://coldowl.github.io</link><description>完美不在于无以复加，而在于无可删减。</description><copyright>coldowl</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://coldowl.github.io/avatar.svg</url><title>avatar</title><link>https://coldowl.github.io</link></image><lastBuildDate>Mon, 03 Aug 2026 08:40:04 +0000</lastBuildDate><managingEditor>coldowl</managingEditor><ttl>60</ttl><webMaster>coldowl</webMaster><item><title>熟悉 Qt 编译流程</title><link>https://coldowl.github.io/post/shu-xi-%20Qt%20-bian-yi-liu-cheng.html</link><description>
 1.创建一个简单的 Qt 控制台程序 sayhi_qt.cpp
 
 ```c++
@@ -104,7 +104,7 @@ graph TD
             I['&lt;b&gt;库文件和其他目标文件&lt;/b&gt;&lt;br/&gt;.lib, .a, .so, other.o'] --&gt; H;
         end
 
-        H -- '符号解析、地址重定位' --&gt; J['✨ &lt;b&gt;可执行文件&lt;/b&gt;&lt;br/&gt;main.exe 或 main'];
+        H -- '符号解析、地址重定位' --&gt; J['&lt;b&gt;可执行文件&lt;/b&gt;&lt;br/&gt;main.exe 或 main'];
     end
 
     %% Styling
