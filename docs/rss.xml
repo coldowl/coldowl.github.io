@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>coldowl</title><link>https://coldowl.github.io</link><description>完美不在于无以复加，而在于无可删减。</description><copyright>coldowl</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://coldowl.github.io/avatar.svg</url><title>avatar</title><link>https://coldowl.github.io</link></image><lastBuildDate>Mon, 03 Aug 2026 09:21:33 +0000</lastBuildDate><managingEditor>coldowl</managingEditor><ttl>60</ttl><webMaster>coldowl</webMaster><item><title>熟悉 Qt 编译流程</title><link>https://coldowl.github.io/post/shu-xi-%20Qt%20-bian-yi-liu-cheng.html</link><description>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>coldowl</title><link>https://coldowl.github.io</link><description>完美不在于无以复加，而在于无可删减。</description><copyright>coldowl</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://coldowl.github.io/avatar.svg</url><title>avatar</title><link>https://coldowl.github.io</link></image><lastBuildDate>Tue, 04 Aug 2026 03:55:41 +0000</lastBuildDate><managingEditor>coldowl</managingEditor><ttl>60</ttl><webMaster>coldowl</webMaster><item><title>熟悉 Qt 编译流程</title><link>https://coldowl.github.io/post/shu-xi-%20Qt%20-bian-yi-liu-cheng.html</link><description>
 1.创建一个简单的 Qt 控制台程序 sayhi_qt.cpp
 
 ```c++
@@ -89,9 +89,9 @@ cd qt-everywhere-src-5.15.2
 
 技能方向 | 必会要点
 -- | --
-**Level 1** | **招聘方默认你已经熟练掌握，缺一不可。</description><guid isPermaLink="true">https://coldowl.github.io/post/C%2B%2B%20-cheng-xu-yuan-bi-bei-ji-neng-qing-dan.html</guid><pubDate>Mon, 27 Oct 2025 08:43:33 +0000</pubDate></item><item><title>探秘 C++ 编译流程</title><link>https://coldowl.github.io/post/tan-mi-%20C%2B%2B%20-bian-yi-liu-cheng.html</link><description>当我们在谈论编译时，我们在谈些什么？
+**Level 1** | **招聘方默认你已经熟练掌握，缺一不可。</description><guid isPermaLink="true">https://coldowl.github.io/post/C%2B%2B%20-cheng-xu-yuan-bi-bei-ji-neng-qing-dan.html</guid><pubDate>Mon, 27 Oct 2025 08:43:33 +0000</pubDate></item><item><title>探秘 C++ 编译流程</title><link>https://coldowl.github.io/post/tan-mi-%20C%2B%2B%20-bian-yi-liu-cheng.html</link><description>**当我们在谈论编译时，我们在谈些什么？**
 
-高级编程语言的出现，本质是在寻找一种接近自然语言的表达方式来驱使机器，所有的编译器本质上都在做同一件事情——把人类写的高级文本翻译成计算机硬件（CPU）能够直接执行的“0101”机器码。</description><guid isPermaLink="true">https://coldowl.github.io/post/tan-mi-%20C%2B%2B%20-bian-yi-liu-cheng.html</guid><pubDate>Mon, 27 Oct 2025 06:58:28 +0000</pubDate></item><item><title>我有了一块 Arm 板，然后呢？</title><link>https://coldowl.github.io/post/wo-you-le-yi-kuai-%20Arm%20-ban-%EF%BC%8C-ran-hou-ni-%EF%BC%9F.html</link><description>当然是要在 Arm 跑程序啦！
+高级编程语言的出现，是在寻找一种贴近自然语言的方式来驱使机器。</description><guid isPermaLink="true">https://coldowl.github.io/post/tan-mi-%20C%2B%2B%20-bian-yi-liu-cheng.html</guid><pubDate>Mon, 27 Oct 2025 06:58:28 +0000</pubDate></item><item><title>我有了一块 Arm 板，然后呢？</title><link>https://coldowl.github.io/post/wo-you-le-yi-kuai-%20Arm%20-ban-%EF%BC%8C-ran-hou-ni-%EF%BC%9F.html</link><description>当然是要在 Arm 跑程序啦！
 
 问题是怎么才能在 Arm 板上运行自己的程序呢？这就要提到交叉编译的概念了。</description><guid isPermaLink="true">https://coldowl.github.io/post/wo-you-le-yi-kuai-%20Arm%20-ban-%EF%BC%8C-ran-hou-ni-%EF%BC%9F.html</guid><pubDate>Thu, 28 Aug 2025 09:29:05 +0000</pubDate></item><item><title>初探 Socket 通信</title><link>https://coldowl.github.io/post/chu-tan-%20Socket%20-tong-xin.html</link><description>什么是 Socket ？
 

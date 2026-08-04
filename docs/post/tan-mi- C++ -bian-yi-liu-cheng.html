@@ -10,13 +10,13 @@
         let theme = localStorage.getItem("meek_theme") || "light";
         document.documentElement.setAttribute("data-color-mode", theme);
     </script>
-<meta name="description" content="当我们在谈论编译时，我们在谈些什么？
+<meta name="description" content="**当我们在谈论编译时，我们在谈些什么？**
 
-高级编程语言的出现，本质是在寻找一种接近自然语言的表达方式来驱使机器，所有的编译器本质上都在做同一件事情——把人类写的高级文本翻译成计算机硬件（CPU）能够直接执行的“0101”机器码。">
+高级编程语言的出现，是在寻找一种贴近自然语言的方式来驱使机器。">
 <meta property="og:title" content="探秘 C++ 编译流程">
-<meta property="og:description" content="当我们在谈论编译时，我们在谈些什么？
+<meta property="og:description" content="**当我们在谈论编译时，我们在谈些什么？**
 
-高级编程语言的出现，本质是在寻找一种接近自然语言的表达方式来驱使机器，所有的编译器本质上都在做同一件事情——把人类写的高级文本翻译成计算机硬件（CPU）能够直接执行的“0101”机器码。">
+高级编程语言的出现，是在寻找一种贴近自然语言的方式来驱使机器。">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://coldowl.github.io/post/tan-mi-%20C%2B%2B%20-bian-yi-liu-cheng.html">
 <meta property="og:image" content="https://coldowl.github.io/avatar.svg">
@@ -87,11 +87,16 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </div>
 </div>
     <div id="content">
-<div class="markdown-body" id="postBody"><p>当我们在谈论编译时，我们在谈些什么？</p>
-<p>高级编程语言的出现，本质是在寻找一种接近自然语言的表达方式来驱使机器，所有的编译器本质上都在做同一件事情——把人类写的高级文本翻译成计算机硬件（CPU）能够直接执行的“0101”机器码。</p>
-<p>编译得到的最终产物不是凭空出现的代码，而是要交给操作系统（如 Linux 的 ELF 格式、Windows 的 PE/COFF 格式）去加载运行的。</p>
-<p>操作系统只认符合特定格式的二进制文件（包含代码段、数据段、符号表等）。</p>
-<p>为了生成这种操作系统看得懂的格式，编译器必须经历“把代码翻译成机器码（汇编/编译）”以及“把各个模块的符号地址对齐修正（链接）”的过程。这是由操作系统的二进制接口规范（ABI）决定的。</p>
+<div class="markdown-body" id="postBody"><p><strong>当我们在谈论编译时，我们在谈些什么？</strong></p>
+<p>高级编程语言的出现，是在寻找一种贴近自然语言的方式来驱使机器。</p>
+<p>编译器本质上在做同一件事情——把人类写的高级文本翻译成计算机硬件（CPU）能够直接执行的“0101”机器码。</p>
+<p>但是编译器并不负责把机器码送进 CPU，谁来负责呢？操作系统。</p>
+<p>这并不是无条件的，操作系统会确立了一个规范（ABI），它只认符合规范的格式，如 Linux 的 ELF 格式、Windows 的 PE/COFF 格式。</p>
+<blockquote>
+<p>所以，编译器天然平台相关。</p>
+</blockquote>
+<p>格式虽然有差异，但内容是相似的，都是包含代码段、数据段、符号表的二进制文件，这就是编译得到的最终产物，</p>
+<p>为了让操作系统看得懂，编译器必须经历“把代码翻译成机器码（汇编/编译）”以及“把各个模块的符号地址对齐修正（链接）”的过程。</p>
 <div class="highlight highlight-source-mermaid"><pre class="notranslate"><span class="pl-k">graph</span> <span class="pl-c1">TD</span>
     <span class="pl-k">subgraph</span> "<span class="pl-ent">C</span>++ 编译全过程"
         <span class="pl-ent">A</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">[</span></span><span class="pl-s"><span class="pl-pds">"</span>&lt;b&gt;源代码文件&lt;/b&gt;&lt;<span class="pl-ent">br</span>/&gt;main.cpp<span class="pl-pds">"</span></span><span class="pl-pds"><span class="pl-sg">]</span></span></span> <span class="pl-k">--</span> <span class="pl-s">"包含头文件、宏替换等"</span> <span class="pl-k">--&gt;</span> <span class="pl-ent">B</span><span class="pl-s"><span class="pl-pds"><span class="pl-sg">{</span></span><span class="pl-s"><span class="pl-pds">"</span>1. 预处理器&lt;<span class="pl-ent">br</span>/&gt;(Preprocessor)<span class="pl-pds">"</span></span><span class="pl-pds"><span class="pl-sg">}</span></span></span><span class="pl-sg">;</span>
@@ -116,32 +121,15 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
     <span class="pl-k">style</span> <span class="pl-ent">G</span> <span class="pl-s1"><span class="pl-c1"><span class="pl-c1">fill</span></span>:<span class="pl-c1">#cde4ff</span></span><span class="pl-sg">,</span><span class="pl-s1"><span class="pl-c1"><span class="pl-c1">stroke</span></span>:<span class="pl-c1">#6699ff</span></span><span class="pl-sg">,</span><span class="pl-s1"><span class="pl-c1"><span class="pl-c1">stroke-width</span></span>:<span class="pl-c1">2<span class="pl-k">px</span></span></span>
     <span class="pl-k">style</span> <span class="pl-ent">I</span> <span class="pl-s1"><span class="pl-c1"><span class="pl-c1">fill</span></span>:<span class="pl-c1">#f9f</span></span><span class="pl-sg">,</span><span class="pl-s1"><span class="pl-c1"><span class="pl-c1">stroke</span></span>:<span class="pl-c1">#939</span></span><span class="pl-sg">,</span><span class="pl-s1"><span class="pl-c1"><span class="pl-c1">stroke-width</span></span>:<span class="pl-c1">2<span class="pl-k">px</span></span></span>
     <span class="pl-k">style</span> <span class="pl-ent">J</span> <span class="pl-s1"><span class="pl-c1"><span class="pl-c1">fill</span></span>:<span class="pl-c1">#aaffaa</span></span><span class="pl-sg">,</span><span class="pl-s1"><span class="pl-c1"><span class="pl-c1">stroke</span></span>:<span class="pl-c1">#339933</span></span><span class="pl-sg">,</span><span class="pl-s1"><span class="pl-c1"><span class="pl-c1">stroke-width</span></span>:<span class="pl-c1">2<span class="pl-k">px</span></span></span></pre></div>
-<p>cpp 的编译过程通常可以分为四个主要阶段：</p>
+<p>这个过程通常可以分为四个主要阶段：</p>
 <ol>
 <li>预处理（Preprocessing）</li>
 <li>编译（Compilation）</li>
 <li>汇编（Assembly）</li>
 <li>链接（Linking）</li>
 </ol>
-<p>下面以一个简单的 C++ 程序为例，逐步剖析这个过程。</p>
-<div class="highlight highlight-source-c++"><pre class="notranslate">#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>iostream<span class="pl-pds">&gt;</span></span>
-
-#<span class="pl-k">define</span> <span class="pl-en">GREETING</span> <span class="pl-s"><span class="pl-pds">"</span>Hello, C++!<span class="pl-pds">"</span></span>
-
-<span class="pl-k">int</span> <span class="pl-en">main</span>() {
-    std::cout &lt;&lt; <span class="pl-c1">GREETING</span> &lt;&lt; std::endl;
-    <span class="pl-k">return</span> <span class="pl-c1">0</span>;
-}</pre></div>
-<p>在主流编译器，编译这段代码将会是这样的：</p>
-<ul>
-<li>GCC: g++ main.cpp -o main</li>
-<li>Clang: clang++ main.cpp -o main</li>
-<li>MSVC: cl main.cpp /Fe:main.exe<br>
-这不是某个机构"规定"的，而是<strong>工程实践与计算机体系结构共同演化出的必然结果</strong>。这个四阶段模型（预处理 → 编译 → 汇编 → 链接）源于 C 语言的 Unix 传统，被 C++ 继承并沿用至今。</li>
-</ul>
-<hr>
-<h3>一、历史渊源：从 Unix 工具链演化而来</h3>
-<p>1969–1973 年间，Dennis Ritchie 在开发 C 语言时，Unix 系统已经推崇**"每个工具只做一件事，并做好"**的哲学。当时的编译环境并非一个单体程序，而是多个独立工具的组合：</p>
+<p>四阶段模型（预处理 → 编译 → 汇编 → 链接），不是某个机构"规定"的，而是工程实践与计算机体系结构共同演化出的必然结果。</p>
+<p>Unix 系统推崇**"每个工具只做一件事，并做好"**的哲学。1969–1973 年间，Dennis Ritchie 在开发 C 语言，当时的编译环境并非一个单体程序，而是多个独立工具的组合：</p>
 <markdown-accessiblity-table><table role="table">
 <thead>
 <tr>
@@ -173,255 +161,141 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </tr>
 </tbody>
 </table></markdown-accessiblity-table>
-<p>C++（Bjarne Stroustrup，1979 年起）直接复用了这套成熟的工具链架构。因此，<strong>不是标准强制要求分四步走，而是 C++ 诞生时就寄生在这套已验证的体系上</strong>。</p>
-<hr>
-<h3>二、技术必然性：为什么必须分阶段？</h3>
-<p>即使今天有人想写一个"一体化"编译器，这四个阶段的<strong>分离仍是工程最优解</strong>，原因如下：</p>
-<h4>1. 预处理必须先行</h4>
-<ul>
-<li><code class="notranslate">#include</code> 会物理性地插入文本，改变后续编译器看到的源码</li>
-<li>宏替换 (<code class="notranslate">#define</code>) 发生在词法分析之前</li>
-<li><strong>没有预处理，编译器根本无法获得完整的翻译单元</strong></li>
-</ul>
-<h4>2. 编译与汇编分离</h4>
-<ul>
-<li>编译器前端只需关心<strong>语言语义</strong>，生成中间表示（IR）或汇编</li>
-<li>汇编器只需关心<strong>指令编码</strong>，将助记符转成机器码</li>
-<li>这种分离让编译器可以<strong>轻松支持不同 CPU 架构</strong>：同一套前端 + 不同的汇编器/后端 = 跨平台编译</li>
-</ul>
-<h4>3. 链接必须独立</h4>
-<ul>
-<li><strong>分离编译</strong>（Separate Compilation）是 C/C++ 的核心机制。你可以分别编译 <code class="notranslate">a.cpp</code> 和 <code class="notranslate">b.cpp</code>，最后链接</li>
-<li>链接器解决<strong>符号重定位</strong>（函数地址、全局变量地址在编译时未知，链接时才确定）</li>
-<li>静态库/动态库的复用完全依赖链接阶段</li>
-</ul>
-<hr>
-<h3>三、C++ 标准怎么说？</h3>
-<p>ISO C++ 标准（ISO/IEC 14882）<strong>并不规定编译器必须分四步走</strong>。标准只定义了：</p>
-<blockquote>
-<p><strong>"翻译阶段"（Phases of Translation）</strong>，共 9 个逻辑阶段（C++20 起），例如：</p>
-<ol>
-<li>源文件字符映射</li>
-<li>反斜杠换行符拼接</li>
-<li><strong>预处理</strong>（第 4 阶段）</li>
-<li>字符集转换</li>
-<li>词法分析、预处理指令执行</li>
-<li>拼接相邻字符串字面量</li>
-<li><strong>编译</strong>：进行语法/语义分析，生成目标代码</li>
-<li><strong>链接</strong>：解析外部符号引用</li>
-</ol>
-</blockquote>
-<p>标准只要求<strong>逻辑结果等价于这 9 个阶段的顺序执行</strong>，至于物理上是否分四个工具、是否合并阶段，由实现决定。</p>
-<p><strong>实际案例</strong>：</p>
-<ul>
-<li><code class="notranslate">g++</code> 和 <code class="notranslate">clang++</code> 默认会调用 <code class="notranslate">cc1</code>/<code class="notranslate">clang</code>（编译器前端）、<code class="notranslate">as</code>（汇编器）、<code class="notranslate">collect2</code>/<code class="notranslate">lld</code>（链接器）</li>
-<li>MSVC 的 <code class="notranslate">cl.exe</code> 在内部也走相同逻辑，只是用 <code class="notranslate">/c</code>（只编译不链接）、<code class="notranslate">/link</code> 等开关控制</li>
-<li>某些嵌入式编译器（如 Arduino 的 <code class="notranslate">avr-gcc</code>）会显式调用 <code class="notranslate">avr-objcopy</code> 等工具，但流程不变</li>
-</ul>
-<hr>
-<h3>四、为什么命令不同但流程相同？</h3>
-<markdown-accessiblity-table><table role="table">
-<thead>
-<tr>
-<th>编译器</th>
-<th>命令差异</th>
-<th>流程一致性原因</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>GCC</td>
-<td><code class="notranslate">g++ -c a.cpp -o a.o</code></td>
-<td>遵循 Unix 传统，显式暴露各阶段</td>
-</tr>
-<tr>
-<td>Clang</td>
-<td><code class="notranslate">clang++ -c a.cpp -o a.o</code></td>
-<td>兼容 GCC 命令行，内部架构类似 LLVM</td>
-</tr>
-<tr>
-<td>MSVC</td>
-<td><code class="notranslate">cl /c a.cpp</code> → <code class="notranslate">link a.obj</code></td>
-<td>历史路径不同（DOS/Windows 传统），但阶段逻辑一致</td>
-</tr>
-<tr>
-<td>Intel ICC</td>
-<td><code class="notranslate">icpc -c a.cpp</code></td>
-<td>需兼容 GCC 生态，流程不变</td>
-</tr>
-</tbody>
-</table></markdown-accessiblity-table>
-<p><strong>核心原因</strong>：C/C++ 的<strong>语言语义</strong>（头文件包含、宏、外部链接、ODR 规则、模板实例化等）<strong>内在地要求</strong>这些阶段按序发生。改变流程就等于改变语言语义，那就不再是 C++ 了。</p>
-<hr>
-<h3>五、总结</h3>
-<blockquote>
-<p><strong>不是"谁规定"了四阶段流程，而是 C++ 语言的设计与计算机体系结构共同"逼迫"编译器必须如此工作。</strong></p>
-</blockquote>
-<ul>
-<li><strong>历史</strong>：继承自 Unix C 工具链的分工传统</li>
-<li><strong>技术</strong>：每个阶段解决不同抽象层级的问题，分离是工程最优解</li>
-<li><strong>标准</strong>：ISO C++ 定义逻辑翻译阶段，物理实现可合并但效果必须等价</li>
-<li><strong>生态</strong>：分离编译和链接是 C++ 模块化、库复用的基石</li>
-</ul>
-<p>你可以把编译器想象成一条<strong>流水线</strong>：无论工厂品牌（GCC/Clang/MSVC）如何，只要加工的是 C++ 这种"原材料"，就必须经过相同的工序，否则产出的"产品"（可执行文件）就会不符合语言规范。</p>
-<h3>1. 预处理</h3>
-<p>预处理是编译的第一步，处理源代码中的“宏指令”和预处理器命令。</p>
-<ul>
-<li>
-<p><strong>做什么？</strong></p>
-<ul>
-<li>处理以 <code class="notranslate">#</code> 开头的指令，比如 <code class="notranslate">#include</code>、<code class="notranslate">#define</code>、<code class="notranslate">#ifdef</code> 等。</li>
-<li>展开宏定义（把宏替换为实际内容）。</li>
-<li>删除注释（代码中的 <code class="notranslate">//</code> 或 <code class="notranslate">/* */</code> 会被移除）。</li>
-<li>处理条件编译（根据 <code class="notranslate">#ifdef</code>、<code class="notranslate">#else</code> 等决定哪些代码保留）。</li>
-<li>将 <code class="notranslate">#include</code> 的头文件内容插入到源文件中。</li>
-</ul>
-</li>
-<li>
-<p><strong>例子：</strong><br>
-假设你有以下代码：</p>
+<p>等到 Bjarne Stroustrup 在 1979 年起 引入 C++ 的时候，直接复用了这套成熟的工具链架构。</p>
+<p>四阶段模型简单而优雅，即使今天有人想写一个"一体化"编译器，这四个阶段的分离仍是工程最优解。</p>
+<p>以一个简单的 C++ 程序为例，看看一段 C++ 代码是怎样转换成可被 OS 识别的可执行程序的。</p>
 <div class="highlight highlight-source-c++"><pre class="notranslate">#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>iostream<span class="pl-pds">&gt;</span></span>
-#<span class="pl-k">define</span> <span class="pl-en">MAX</span> <span class="pl-c1">100</span>
+
+#<span class="pl-k">define</span> <span class="pl-en">GREETING</span> <span class="pl-s"><span class="pl-pds">"</span>Hello, C++!<span class="pl-pds">"</span></span>
+
 <span class="pl-k">int</span> <span class="pl-en">main</span>() {
-    std::cout &lt;&lt; <span class="pl-c1">MAX</span> &lt;&lt; std::endl;
+    std::cout &lt;&lt; <span class="pl-c1">GREETING</span> &lt;&lt; std::endl; <span class="pl-c"><span class="pl-c">//</span> say hello</span>
     <span class="pl-k">return</span> <span class="pl-c1">0</span>;
 }</pre></div>
-<p>预处理器会：</p>
+<p>在不同的编译器，编译这段代码将会是这样的：</p>
 <ul>
-<li>把 <code class="notranslate">#include &lt;iostream&gt;</code> 替换为 <code class="notranslate">iostream</code> 头文件的实际内容（一大堆标准库代码）。</li>
-<li>把 <code class="notranslate">MAX</code> 替换为 <code class="notranslate">100</code>。</li>
-<li>删除所有注释（如果有）。</li>
-<li>输出一个“纯净”的临时文件（通常以 <code class="notranslate">.i</code> 或 <code class="notranslate">.ii</code> 后缀保存）。</li>
+<li>GCC: g++ main.cpp -o main</li>
+<li>Clang: clang++ main.cpp -o main</li>
+<li>MSVC: cl main.cpp /Fe:main.exe</li>
 </ul>
-</li>
-</ul>
-<p>以下是预处理阶段的详细示意图：</p>
+<p>为了方便，我使用 gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0 来编译这段程序。</p>
+<h3>1. 预处理</h3>
 <ul>
-<li>
-<p><strong>如何查看？</strong><br>
-用 GCC 可以运行：</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">g++ -E source.cpp -o source.i</pre></div>
-<p>打开 <code class="notranslate">source.i</code>，你会看到展开后的代码，可能有几千行，因为头文件内容被全部插入。</p>
-</li>
-<li>
-<p><strong>注意点：</strong><br>
-预处理不检查语法错误，只是机械地替换和展开。</p>
-</li>
+<li>处理以 <code class="notranslate">#</code> 开头的指令，将 <code class="notranslate">#include</code> 的头文件内容插入到源文件中 ，根据 <code class="notranslate">#ifdef</code>、<code class="notranslate">#else</code> 等条件编译决定哪些代码保留。</li>
+<li>展开宏定义，把宏替换为实际内容。</li>
+<li>删除注释。</li>
+<li>输出一个“纯净”的临时文件，通常以 <code class="notranslate">.i</code> 或 <code class="notranslate">.ii</code> 后缀保存。</li>
+<li>预处理不检查语法错误，只是机械地替换和展开。</li>
 </ul>
-<h3>2. 编译 (Compilation)</h3>
-<p><strong>这一步把预处理后的代码翻译成汇编语言。</strong></p>
-<ul>
-<li>
-<p><strong>做什么？</strong></p>
+<p>用 GCC 运行：</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">g++ -E main.cpp -o main.i</pre></div>
+<p>得到的 <a href="https://gist.github.com/coldowl/d32f24877d45b784ddc4665fb1c58872">main.i </a>有上万行，因为 iostream 头文件内容被全部插入。</p>
+<h3>2. 编译</h3>
 <ul>
 <li>编译器分析代码的语法和语义，检查是否有错误（比如变量未声明、类型不匹配）。</li>
 <li>将 C++ 代码翻译成目标平台的汇编语言（低级语言，接近机器码）。</li>
 <li>生成的汇编代码以 <code class="notranslate">.s</code> 文件形式存储。</li>
-</ul>
-</li>
-<li>
-<p><strong>例子：</strong><br>
-继续上面的代码，<code class="notranslate">std::cout &lt;&lt; 100 &lt;&lt; std::endl;</code> 可能被翻译成类似 x86 汇编的指令：</p>
-<div class="highlight highlight-source-assembly"><pre class="notranslate"><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">eax</span><span class="pl-s1">,</span><span class="pl-en"> </span><span class="pl-c1">100</span>
-<span class="pl-k">call</span><span class="pl-en"> _ZSt4cout</span></pre></div>
-<p>（具体指令因编译器和平台而异。）</p>
-</li>
-<li>
-<p><strong>如何查看？</strong><br>
-用 GCC：</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">g++ -S source.i -o source.s</pre></div>
-<p><code class="notranslate">source.s</code> 文件就是汇编代码，里面是针对特定 CPU 架构的指令。</p>
-</li>
-<li>
-<p><strong>注意点：</strong></p>
-<ul>
 <li>编译器会优化代码，比如内联函数、删除无用代码（死代码消除）。</li>
 <li>这一步生成的代码还不能直接运行，因为它只是汇编语言。</li>
 </ul>
-</li>
-</ul>
-<h3>3. 汇编 (Assembly)</h3>
-<p><strong>把汇编代码翻译成机器码，生成目标文件。</strong></p>
-<ul>
-<li>
-<p><strong>做什么？</strong></p>
+<p>用 GCC 运行：</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">g++ -S main.i -o main.s</pre></div>
+<p><a href="https://gist.github.com/coldowl/1d1e0ba4f874e3d7f014786c7675f1b5">main.s</a>文件就是汇编代码，里面是针对特定 CPU 架构的指令。</p>
+<h3>3. 汇编</h3>
 <ul>
 <li>汇编器（Assembler）将 <code class="notranslate">.s</code> 文件中的汇编指令转换为二进制机器码。</li>
 <li>生成目标文件（Object File，通常是 <code class="notranslate">.o</code> 或 <code class="notranslate">.obj</code> 文件），包含机器码和符号表（记录函数、变量的地址等）。</li>
-</ul>
-</li>
-<li>
-<p><strong>例子：</strong><br>
-汇编代码中的 <code class="notranslate">mov eax, 100</code> 会被翻译成类似 <code class="notranslate">B8 64 00 00 00</code> 这样的二进制指令（具体取决于 CPU 架构）。</p>
-</li>
-<li>
-<p><strong>如何查看？</strong><br>
-用 GCC：</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">as source.s -o source.o</pre></div>
-<p>（通常 <code class="notranslate">g++</code> 会自动调用汇编器。）</p>
-</li>
-<li>
-<p><strong>注意点：</strong></p>
-<ul>
 <li>目标文件是特定平台的二进制代码，但还不能运行，因为它可能引用了其他文件中的代码或库。</li>
 </ul>
-</li>
-</ul>
-<h3>4. 链接 (Linking)</h3>
-<p><strong>把多个目标文件和库“缝合”在一起，生成可执行文件。</strong></p>
-<ul>
-<li><strong>做什么？</strong>
+<p>用 GCC：</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">as main.s -o main.o</pre></div>
+<p>（通常 <code class="notranslate">g++</code> 会自动调用汇编器。）</p>
+<p>这一步得到的 <a href="https://gist.github.com/coldowl/cd782501041513e1b2776f9ab21c59d7">mian.o</a> 已经是不可阅读的二进制文件了。<br>
+文件开头的 0x7F 接着 ASCII 字符 E、L、F，表明它是 ELF 格式的二进制文件。</p>
+<pre lang="plain" class="notranslate"><code class="notranslate">┌─────────────────┐
+│    ELF Header   │  ← 文件类型、架构、入口地址、头表位置等元信息
+├─────────────────┤
+│ Program Header  │  ← 运行时视角：告诉 OS "我需要哪些内存段（Segment）"
+│    Table        │
+├─────────────────┤
+│     .text       │  ← 代码段（机器指令）
+│     .rodata     │  ← 只读数据（字符串常量、const 变量）
+│     .data       │  ← 已初始化全局/静态变量
+│     .bss        │  ← 未初始化全局/静态变量（不占文件空间，只占内存）
+│     ...         │
+├─────────────────┤
+│ Section Header  │  ← 链接时视角：告诉链接器 "我有哪些节（Section）"
+│    Table        │
+└─────────────────┘
+</code></pre>
+<h3>4. 链接</h3>
 <ul>
 <li>链接器（Linker）将程序的多个 <code class="notranslate">.o</code> 文件、静态库（<code class="notranslate">.a</code>）或动态库（<code class="notranslate">.so</code>、<code class="notranslate">.dll</code>）组合起来。</li>
 <li>解析符号引用（比如 <code class="notranslate">std::cout</code> 的实际地址）。</li>
 <li>分配内存地址，确定每个函数和变量的最终位置。</li>
 <li>生成最终的可执行文件（<code class="notranslate">.exe</code> 或无后缀的二进制文件）。</li>
-</ul>
-</li>
-</ul>
-<p>以下是多文件项目中链接阶段的示意图：</p>
-<ul>
-<li>
-<p><strong>例子：</strong><br>
-在上面的代码中，<code class="notranslate">std::cout</code> 和 <code class="notranslate">std::endl</code> 是标准库中的符号。链接器会找到标准库（比如 <code class="notranslate">libstdc++</code>）的实现，把它们的地址填入代码。</p>
-</li>
-<li>
-<p><strong>如何查看？</strong><br>
-用 GCC 完成整个编译：</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">g++ source.cpp -o program</pre></div>
-<p>或者单独链接：</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">ld source.o -o program -lc</pre></div>
-<p>（<code class="notranslate">-lc</code> 表示链接 C 标准库。）</p>
-</li>
-<li>
-<p><strong>注意点：</strong></p>
-<ul>
 <li>链接分为<strong>静态链接</strong>（把库代码直接打包进可执行文件）和<strong>动态链接</strong>（运行时加载库）。</li>
 <li>链接错误（比如“undefined reference”）通常是因为缺少库或符号未定义。</li>
 </ul>
-</li>
-</ul>
-<h3>编译完整命令</h3>
-<p>通常，我们用一条命令完成所有步骤：</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">g++ source.cpp -o program</pre></div>
-<p>这会自动调用预处理器、编译器、汇编器和链接器。</p>
-<h3>深入：编译器优化</h3>
-<p>编译器在编译和链接时会进行优化，比如：</p>
-<ul>
-<li><strong>内联函数</strong>：将小函数直接嵌入调用处，减少函数调用开销。</li>
-<li><strong>循环展开</strong>：把循环展开为重复语句，提高执行效率。</li>
-<li><strong>常量折叠</strong>：计算常量表达式（如 <code class="notranslate">2 + 3</code> 直接变成 <code class="notranslate">5</code>）。</li>
-<li>优化级别可以通过选项控制，比如：
-<div class="highlight highlight-source-shell"><pre class="notranslate">g++ -O2 source.cpp -o program</pre></div>
-（<code class="notranslate">-O2</code> 是常用优化级别，<code class="notranslate">-O0</code> 关闭优化，<code class="notranslate">-O3</code> 更激进。）</li>
-</ul>
-<h3>常见问题与调试</h3>
-<ol>
-<li><strong>预处理错误</strong>：通常是宏定义或头文件路径错误。检查 <code class="notranslate">-I</code> 选项或环境变量。</li>
-<li><strong>编译错误</strong>：语法错误、类型错误。仔细读编译器报错信息，通常会指出行号。</li>
-<li><strong>链接错误</strong>：提示“undefined reference”时，检查是否缺少库（用 <code class="notranslate">-l</code> 指定）或源文件。</li>
-<li><strong>运行时错误</strong>：可能是动态库路径问题，设置 <code class="notranslate">LD_LIBRARY_PATH</code>（Linux）或确保 DLL 在正确位置（Windows）。</li>
-</ol></div>
+<p>在上面的代码中，<code class="notranslate">std::cout</code> 和 <code class="notranslate">std::endl</code> 是标准库中的符号。链接器会找到标准库（比如 <code class="notranslate">libstdc++</code>）的实现，把它们的地址填入代码。</p>
+<p>链接过程相当繁琐，如果纯用 ld 手动链接，需要显式把系统的启动文件、C++ 运行库全部喂给 ld。不如用 GCC 完成整个编译，但是通过 -v（verbose）参数看看底层到底做了什么。</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">g++ -v main.o -o main</pre></div>
+<p>从<a href="https://gist.github.com/coldowl/27c26a92152e1732e445ae8de8fb21f4">完整的输出</a>中，拆解出的链接过程将会是：</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">/usr/libexec/gcc/x86_64-linux-gnu/13/collect2 \
+    <span class="pl-c"><span class="pl-c">#</span> === LTO 插件（链接时优化）===</span>
+    -plugin /usr/libexec/gcc/x86_64-linux-gnu/13/liblto_plugin.so \
+    -plugin-opt=/usr/libexec/gcc/x86_64-linux-gnu/13/lto-wrapper \
+    -plugin-opt=-fresolution=/tmp/ccyN0pSi.res \
+    -plugin-opt=-pass-through=-lgcc_s \
+    -plugin-opt=-pass-through=-lgcc \
+    -plugin-opt=-pass-through=-lc \
+    -plugin-opt=-pass-through=-lgcc_s \
+    -plugin-opt=-pass-through=-lgcc \
+    
+    <span class="pl-c"><span class="pl-c">#</span> === 链接器基本配置 ===</span>
+    --build-id <span class="pl-cce">\ </span>             <span class="pl-c"><span class="pl-c">#</span> 生成 .note.gnu.build-id（用于调试和区分版本）</span>
+    --eh-frame-hdr <span class="pl-cce">\ </span>         <span class="pl-c"><span class="pl-c">#</span> 生成异常处理帧头（C++ 异常机制需要）</span>
+    -m elf_x86_64 <span class="pl-cce">\ </span>          <span class="pl-c"><span class="pl-c">#</span> 目标格式：64 位 ELF</span>
+    --hash-style=gnu <span class="pl-cce">\ </span>       <span class="pl-c"><span class="pl-c">#</span> 使用 GNU 风格的符号哈希表（加速动态链接）</span>
+    --as-needed <span class="pl-cce">\ </span>            <span class="pl-c"><span class="pl-c">#</span> 按需链接共享库（避免引入无用依赖）</span>
+    -dynamic-linker /lib64/ld-linux-x86-64.so.2 <span class="pl-cce">\ </span> <span class="pl-c"><span class="pl-c">#</span> 指定动态链接器路径</span>
+    -pie <span class="pl-cce">\ </span>                   <span class="pl-c"><span class="pl-c">#</span> 生成位置无关的可执行文件（PIE）</span>
+    -z now <span class="pl-cce">\ </span>                 <span class="pl-c"><span class="pl-c">#</span> 立即绑定所有符号（RELA NOW）</span>
+    -z relro <span class="pl-cce">\ </span>               <span class="pl-c"><span class="pl-c">#</span> 启用只读重定位（增强安全性）</span>
+    -o main <span class="pl-cce">\ </span>                <span class="pl-c"><span class="pl-c">#</span> 输出文件名</span>
+    
+    <span class="pl-c"><span class="pl-c">#</span> === C 运行时启动文件（入口点 _start 在这里）===</span>
+    /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/Scrt1.o \
+    /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/crti.o \
+    /usr/lib/gcc/x86_64-linux-gnu/13/crtbeginS.o \
+    
+    <span class="pl-c"><span class="pl-c">#</span> === 库搜索路径 ===</span>
+    -L/usr/lib/gcc/x86_64-linux-gnu/13 \
+    -L/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu \
+    -L/usr/lib/gcc/x86_64-linux-gnu/13/../../../../lib \
+    -L/lib/x86_64-linux-gnu \
+    -L/lib/../lib \
+    -L/usr/lib/x86_64-linux-gnu \
+    -L/usr/lib/../lib \
+    -L/usr/lib/gcc/x86_64-linux-gnu/13/../../.. \
+    
+    <span class="pl-c"><span class="pl-c">#</span> === 你的目标文件 ===</span>
+    main.o \
+    
+    <span class="pl-c"><span class="pl-c">#</span> === 需要链接的库（顺序很重要！）===</span>
+    -lstdc++ <span class="pl-cce">\ </span>   <span class="pl-c"><span class="pl-c">#</span> C++ 标准库（你缺的）</span>
+    -lm <span class="pl-cce">\ </span>        <span class="pl-c"><span class="pl-c">#</span> 数学库</span>
+    -lgcc_s <span class="pl-cce">\ </span>    <span class="pl-c"><span class="pl-c">#</span> GCC 共享支持库（异常处理、64 位除法等）</span>
+    -lgcc <span class="pl-cce">\ </span>      <span class="pl-c"><span class="pl-c">#</span> GCC 静态支持库</span>
+    -lc <span class="pl-cce">\ </span>        <span class="pl-c"><span class="pl-c">#</span> C 标准库（libc）</span>
+    -lgcc_s <span class="pl-cce">\ </span>    <span class="pl-c"><span class="pl-c">#</span> 再重复一次，处理循环依赖</span>
+    -lgcc <span class="pl-cce">\ </span>      <span class="pl-c"><span class="pl-c">#</span> 再重复一次</span>
+    
+    <span class="pl-c"><span class="pl-c">#</span> === C 运行时收尾文件 ===</span>
+    /usr/lib/gcc/x86_64-linux-gnu/13/crtendS.o \
+    /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/crtn.o</pre></div>
+<p>不难看到，g++ 在底层调用 collect2 或 ld 时，带了一长串系统的启动目标文件（crt*.o）和一堆库：-lstdc++ -lm -lgcc_s -lc 等等。<br>
+这也是为什么平时我们永远使用 g++ 作为前端驱动程序，而不是直接裸用 ld 的原因——太繁琐了。</p></div>
 <div style="font-size:small;margin-top:8px;float:right;">❤️ 转载文章请注明出处，谢谢！❤️</div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
