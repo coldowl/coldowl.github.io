@@ -17,7 +17,6 @@ https://conventional-branch.github.io/zh/
 
 ```bash
 git clone https://github.com/你的用户名/项目名.git
-cd 项目名
 ```
 
 #### 3. 添加上游（Upstream）远程仓库，这样能随时同步原项目的更新
@@ -56,6 +55,48 @@ git push origin feature/你的修改内容
 * 通过后，维护者会合并你的代码。
 
 ### Git Commit 规范 
+
+一、只git add相关文件提交前先 git status 查看改动，明确git add与本次变更相关的文件（git add <具体路径>），再 git diff --cached --stat 核对。禁止 git add .、-A、--all、* 这类一把梭的操作。暂存错了就 git reset HEAD <路径> 撤销。
+
+二、一次提交只做一件事
+每个提交必须原子、完整、可构建。
+一件不可分割的任务是一个提交
+多个独立任务拆成多个提交
+不提交已知有问题的代码
+不在开发分支上打补丁式（fix-up）提交
+
+如果开发分支上的提交有问题且尚未推送，用 git reset --soft HEAD~1 修正后重新提交；
+已经推送则任何改写、amend、force push 都要先征得同意。
+
+提交前自查：这次改动是否在补完或修正上一个提交？如果是，就 git reset --soft HEAD~1 合并进去重提，而不是新建提交。即便两个提交各自干净，后一个补完前一个也属于 fix-up 提交。
+
+探索性工作可用 temp/、wip/、scratch/ 分支，别直接合并，要另建干净的分支再按原子提交整理。三、提交信息内容subject说明改了什么；正文在问题或修复方式不明显时解释为什么。
+
+subject规则：祈使语气，不超过 72 字符，结尾不加句号描述行为或能力
+正文规则：非简单改动必须有正文，主题完全自明时可以省略正文解释根因和修复理由，讲清为什么这是个 bug、为什么需要这次改动不逐文件罗列改动，不赘述 diff 已经能看出来的实现步骤只描述最终状态相对父提交的变化，不描述同一补丁各中间版本之间的差异（如“v2 修复了 X”）
+
+四、相信读者默认读者是熟悉项目的合格开发者，不要解释他们已知的东西：项目编译方法，属于文档而非提交信息显而易见的方法陈述，
+反面案例：    Example usage:
+      # use mkv container:
+      ffmpeg -hwaccel d3d12va -hwaccel_output_format d3d12 -i input.mp4 -c:v av1_d3d12va output.mkv
+
+构建成功、“测试全绿”之类的信息——git提交能存在就说明它通过了
+
+仅在真正不显然时才写：
+项目里还不存在的新测试命令或工具
+复现结果所需的非标准配置
+影响数据解读的异常约束
+
+- 暂存区
+
+在使用 git add 将工作区的修改添加到暂存区前，先用 git status 查看改动，明确添加的是与本次变更相关的文件（git add <具体路径>），再 git diff --cached --stat 核对。
+
+禁止 git add .、-A、--all、* 这类一把梭的操作。暂存错了就 git reset HEAD <路径> 撤销。
+
+- 
+
+
+
 Conventional Commits（约定式提交）
 `<type>(<scope>): <subject>`
 - type
