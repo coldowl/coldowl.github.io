@@ -170,11 +170,11 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <div class="highlight highlight-source-c++"><pre class="notranslate">QPushButton *btn = <span class="pl-k">new</span> QPushButton(<span class="pl-s"><span class="pl-pds">"</span>确定<span class="pl-pds">"</span></span>);
 btn-&gt;<span class="pl-en">setProperty</span>(<span class="pl-s"><span class="pl-pds">"</span>type<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>primary<span class="pl-pds">"</span></span>);</pre></div>
 <p>对应的 QSS：</p>
-<div class="highlight highlight-source-css"><pre class="notranslate"><span class="pl-ent">QPushButton</span>[<span class="pl-c1">type</span><span class="pl-c1">=</span><span class="pl-s">"primary"</span>] {
-    <span class="pl-c1">background</span><span class="pl-kos">:</span> <span class="pl-pds"><span class="pl-kos">#</span>2563eb</span>;
-    <span class="pl-c1">color</span><span class="pl-kos">:</span> white;
-    <span class="pl-c1">border-radius</span><span class="pl-kos">:</span> <span class="pl-c1">6<span class="pl-smi">px</span></span>;
-}</pre></div>
+<div class="highlight highlight-source-css"><pre class="notranslate"><span class="pl-ent">QPushButton</span>[<span class="pl-c1">type</span><span class="pl-c1">=</span><span class="pl-s">"primary"</span>] <span class="pl-kos">{</span>
+    <span class="pl-c1">background</span><span class="pl-kos">:</span> <span class="pl-pds"><span class="pl-kos">#</span>2563eb</span><span class="pl-kos">;</span>
+    <span class="pl-c1">color</span><span class="pl-kos">:</span> white<span class="pl-kos">;</span>
+    <span class="pl-c1">border-radius</span><span class="pl-kos">:</span> <span class="pl-c1">6<span class="pl-smi">px</span></span><span class="pl-kos">;</span>
+<span class="pl-kos">}</span></pre></div>
 <p>这种方式的优点很实际：</p>
 <ul>
 <li>业务代码只表达“语义”，不关心长什么样</li>
@@ -205,22 +205,22 @@ btn-&gt;<span class="pl-en">setProperty</span>(<span class="pl-s"><span class="p
 <span class="pl-c">*/</span></pre></div>
 <p>这看起来只是注释，但它能有效避免工程里到处出现随手写的数值。</p>
 <h2>一个我常用的基础样式示例</h2>
-<div class="highlight highlight-source-css"><pre class="notranslate"><span class="pl-ent">QTreeView</span> {
-    <span class="pl-c1">background</span><span class="pl-kos">:</span> <span class="pl-pds"><span class="pl-kos">#</span>f9fafb</span>;
-    <span class="pl-c1">border</span><span class="pl-kos">:</span> none;
-    <span class="pl-c1">outline</span><span class="pl-kos">:</span> <span class="pl-c1">0</span>;
-}
+<div class="highlight highlight-source-css"><pre class="notranslate"><span class="pl-ent">QTreeView</span> <span class="pl-kos">{</span>
+    <span class="pl-c1">background</span><span class="pl-kos">:</span> <span class="pl-pds"><span class="pl-kos">#</span>f9fafb</span><span class="pl-kos">;</span>
+    <span class="pl-c1">border</span><span class="pl-kos">:</span> none<span class="pl-kos">;</span>
+    <span class="pl-c1">outline</span><span class="pl-kos">:</span> <span class="pl-c1">0</span><span class="pl-kos">;</span>
+<span class="pl-kos">}</span>
 
-<span class="pl-c1">QTreeView</span>::<span class="pl-c1">item</span><span class="pl-kos">:</span><span class="pl-c1">selected</span> {
-    <span class="pl-c1">background</span><span class="pl-kos">:</span> <span class="pl-pds"><span class="pl-kos">#</span>2563eb</span>;
-    <span class="pl-c1">color</span><span class="pl-kos">:</span> white;
-}
+<span class="pl-c1">QTreeView</span><span class="pl-kos">::</span><span class="pl-c1">item</span><span class="pl-kos">:</span><span class="pl-c1">selected</span> <span class="pl-kos">{</span>
+    <span class="pl-c1">background</span><span class="pl-kos">:</span> <span class="pl-pds"><span class="pl-kos">#</span>2563eb</span><span class="pl-kos">;</span>
+    <span class="pl-c1">color</span><span class="pl-kos">:</span> white<span class="pl-kos">;</span>
+<span class="pl-kos">}</span>
 
-<span class="pl-ent">QPushButton</span> {
-    <span class="pl-c1">height</span><span class="pl-kos">:</span> <span class="pl-c1">32<span class="pl-smi">px</span></span>;
-    <span class="pl-c1">padding</span><span class="pl-kos">:</span> <span class="pl-c1">0</span> <span class="pl-c1">12<span class="pl-smi">px</span></span>;
-    <span class="pl-c1">border-radius</span><span class="pl-kos">:</span> <span class="pl-c1">6<span class="pl-smi">px</span></span>;
-}</pre></div>
+<span class="pl-ent">QPushButton</span> <span class="pl-kos">{</span>
+    <span class="pl-c1">height</span><span class="pl-kos">:</span> <span class="pl-c1">32<span class="pl-smi">px</span></span><span class="pl-kos">;</span>
+    <span class="pl-c1">padding</span><span class="pl-kos">:</span> <span class="pl-c1">0</span> <span class="pl-c1">12<span class="pl-smi">px</span></span><span class="pl-kos">;</span>
+    <span class="pl-c1">border-radius</span><span class="pl-kos">:</span> <span class="pl-c1">6<span class="pl-smi">px</span></span><span class="pl-kos">;</span>
+<span class="pl-kos">}</span></pre></div>
 <p>配合属性选择器，这一套基本能覆盖大多数桌面项目的需求。</p>
 <h2>踩坑之后留下的几条经验</h2>
 <ul>
