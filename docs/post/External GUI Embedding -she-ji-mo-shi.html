@@ -21,7 +21,7 @@
 <meta property="og:url" content="https://coldowl.github.io/post/External%20GUI%20Embedding%20-she-ji-mo-shi.html">
 <meta property="og:image" content="https://coldowl.github.io/avatar.svg">
 <title>External GUI Embedding 设计模式</title>
-
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
 
 
 </head>
@@ -246,86 +246,85 @@ Veyon 不允许修改源码<br>
 系统运行在 Linux + X11 环境</p>
 <p>解决方案：<br>
 使用 External GUI Embedding Pattern，将 Veyon 主窗口嵌入到 Qt 教学平台中。</p>
-<pre lang="c++" class="notranslate"><code class="notranslate">TVeyonWidget::TVeyonWidget(QWidget *parent)
+<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-en">TVeyonWidget::TVeyonWidget</span>(QWidget *parent)
     : QWidget(parent)
-    , m_process(new QProcess(this))
+    , m_process(<span class="pl-k">new</span> QProcess(<span class="pl-c1">this</span>))
 {
-    auto *layout = new QHBoxLayout(this);
-    layout-&gt;setContentsMargins(0,0,0,0);
+    <span class="pl-k">auto</span> *layout = <span class="pl-k">new</span> <span class="pl-c1">QHBoxLayout</span>(<span class="pl-c1">this</span>);
+    layout-&gt;<span class="pl-c1">setContentsMargins</span>(<span class="pl-c1">0</span>,<span class="pl-c1">0</span>,<span class="pl-c1">0</span>,<span class="pl-c1">0</span>);
 
-    connect(m_process, &amp;QProcess::started, this, &amp;TVeyonWidget::onProcessStarted);
-    connect(m_process, QOverload&lt;int, QProcess::ExitStatus&gt;::of(&amp;QProcess::finished),
-            this, &amp;TVeyonWidget::onProcessFinished);
+    <span class="pl-c1">connect</span>(m_process, &amp;QProcess::started, <span class="pl-c1">this</span>, &amp;TVeyonWidget::onProcessStarted);
+    <span class="pl-c1">connect</span>(m_process, QOverload&lt;<span class="pl-k">int</span>, QProcess::ExitStatus&gt;::<span class="pl-c1">of</span>(&amp;QProcess::finished),
+            <span class="pl-c1">this</span>, &amp;TVeyonWidget::onProcessFinished);
 
-    m_process-&gt;start(m_program);
+    m_process-&gt;<span class="pl-c1">start</span>(m_program);
 }
 
-TVeyonWidget::~TVeyonWidget()
+<span class="pl-en">TVeyonWidget::~TVeyonWidget</span>()
 {
-    if (m_veyonWindow) {
-        m_veyonWindow-&gt;close();
+    <span class="pl-k">if</span> (m_veyonWindow) {
+        m_veyonWindow-&gt;<span class="pl-c1">close</span>();
     }
-    if (m_process-&gt;state() != QProcess::NotRunning) {
-        m_process-&gt;terminate();
-        m_process-&gt;waitForFinished(3000);
+    <span class="pl-k">if</span> (m_process-&gt;<span class="pl-c1">state</span>() != QProcess::NotRunning) {
+        m_process-&gt;<span class="pl-c1">terminate</span>();
+        m_process-&gt;<span class="pl-c1">waitForFinished</span>(<span class="pl-c1">3000</span>);
     }
 }
 
-void TVeyonWidget::onProcessStarted()
+<span class="pl-k">void</span> <span class="pl-en">TVeyonWidget::onProcessStarted</span>()
 {
-    m_pid = m_process-&gt;processId();
+    m_pid = m_process-&gt;<span class="pl-c1">processId</span>();
 
-    auto *timer = new QTimer(this);
-    timer-&gt;setInterval(200);
+    <span class="pl-k">auto</span> *timer = <span class="pl-k">new</span> <span class="pl-c1">QTimer</span>(<span class="pl-c1">this</span>);
+    timer-&gt;<span class="pl-c1">setInterval</span>(<span class="pl-c1">200</span>);
 
-    connect(timer, &amp;QTimer::timeout, this, [this, timer]() {
-        WId wid = findWindowByPid(m_pid);
-        if (wid) {
-            timer-&gt;stop();
-            timer-&gt;deleteLater();
-            embedWindow(wid);
+    <span class="pl-c1">connect</span>(timer, &amp;QTimer::timeout, <span class="pl-c1">this</span>, [<span class="pl-c1">this</span>, timer]() {
+        WId wid = <span class="pl-c1">findWindowByPid</span>(m_pid);
+        <span class="pl-k">if</span> (wid) {
+            timer-&gt;<span class="pl-c1">stop</span>();
+            timer-&gt;<span class="pl-c1">deleteLater</span>();
+            <span class="pl-c1">embedWindow</span>(wid);
         }
     });
 
-    timer-&gt;start();
+    timer-&gt;<span class="pl-c1">start</span>();
 }
 
-void TVeyonWidget::onProcessFinished()
+<span class="pl-k">void</span> <span class="pl-en">TVeyonWidget::onProcessFinished</span>()
 {
-    qWarning() &lt;&lt; "Veyon process exited";
+    <span class="pl-c1">qWarning</span>() &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>Veyon process exited<span class="pl-pds">"</span></span>;
 }
 
-void TVeyonWidget::embedWindow(WId wid)
+<span class="pl-k">void</span> <span class="pl-en">TVeyonWidget::embedWindow</span>(WId wid)
 {
-    m_veyonWindow = QWindow::fromWinId(wid);
-    m_veyonContainer = QWidget::createWindowContainer(m_veyonWindow, this);
-    layout()-&gt;addWidget(m_veyonContainer);
+    m_veyonWindow = <span class="pl-c1">QWindow::fromWinId</span>(wid);
+    m_veyonContainer = <span class="pl-c1">QWidget::createWindowContainer</span>(m_veyonWindow, <span class="pl-c1">this</span>);
+    <span class="pl-c1">layout</span>()-&gt;<span class="pl-c1">addWidget</span>(m_veyonContainer);
 }
 
-WId TVeyonWidget::findWindowByPid(qint64 pid)
+WId <span class="pl-en">TVeyonWidget::findWindowByPid</span>(qint64 pid)
 {
     QProcess proc;
-    proc.start("xprop -root _NET_CLIENT_LIST");
-    proc.waitForFinished();
+    proc.<span class="pl-c1">start</span>(<span class="pl-s"><span class="pl-pds">"</span>xprop -root _NET_CLIENT_LIST<span class="pl-pds">"</span></span>);
+    proc.<span class="pl-c1">waitForFinished</span>();
 
-    const QString out = proc.readAllStandardOutput();
-    const auto ids = out.split(",", Qt::SkipEmptyParts);
+    <span class="pl-k">const</span> QString out = proc.<span class="pl-c1">readAllStandardOutput</span>();
+    <span class="pl-k">const</span> <span class="pl-k">auto</span> ids = out.<span class="pl-c1">split</span>(<span class="pl-s"><span class="pl-pds">"</span>,<span class="pl-pds">"</span></span>, Qt::SkipEmptyParts);
 
-    for (const QString &amp;idStr : ids) {
-        bool ok = false;
-        WId wid = idStr.trimmed().remove("0x").toULong(&amp;ok, 16);
-        if (!ok) continue;
+    <span class="pl-k">for</span> (<span class="pl-k">const</span> QString &amp;idStr : ids) {
+        <span class="pl-k">bool</span> ok = <span class="pl-c1">false</span>;
+        WId wid = idStr.<span class="pl-c1">trimmed</span>().<span class="pl-c1">remove</span>(<span class="pl-s"><span class="pl-pds">"</span>0x<span class="pl-pds">"</span></span>).<span class="pl-c1">toULong</span>(&amp;ok, <span class="pl-c1">16</span>);
+        <span class="pl-k">if</span> (!ok) <span class="pl-k">continue</span>;
 
         QProcess p;
-        p.start(QString("xprop -id 0x%1 _NET_WM_PID").arg(QString::number(wid, 16)));
-        p.waitForFinished();
-        if (p.readAllStandardOutput().contains(QString::number(pid))) {
-            return wid;
+        p.<span class="pl-c1">start</span>(<span class="pl-c1">QString</span>(<span class="pl-s"><span class="pl-pds">"</span>xprop -id 0x%1 _NET_WM_PID<span class="pl-pds">"</span></span>).<span class="pl-c1">arg</span>(<span class="pl-c1">QString::number</span>(wid, <span class="pl-c1">16</span>)));
+        p.<span class="pl-c1">waitForFinished</span>();
+        <span class="pl-k">if</span> (p.<span class="pl-c1">readAllStandardOutput</span>().<span class="pl-c1">contains</span>(<span class="pl-c1">QString::number</span>(pid))) {
+            <span class="pl-k">return</span> wid;
         }
     }
-    return 0;
-}
-</code></pre>
+    <span class="pl-k">return</span> <span class="pl-c1">0</span>;
+}</pre></div>
 <h2>什么时候不该使用该模式</h2>
 <p>明确的一条工程红线：</p>
 <blockquote>
